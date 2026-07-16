@@ -5,21 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Porto Seguro — Cotação de Plano de Saúde</title>
 
-<!-- Prévia usada pelo WhatsApp, Facebook, Instagram etc. (Open Graph) -->
 <meta property="og:title" content="Porto Saúde — Peça sua cotação">
 <meta property="og:description" content="2ª fatura grátis em planos PME e empresariais, de 3 a 199 vidas. Clique para pedir sua cotação.">
 <meta property="og:image" content="https://raw.githubusercontent.com/livecarebr-prog/cotacao/main/Porto%20Seguro.jpeg">
 <meta property="og:url" content="https://livecarebr-prog.github.io/cotacao/porto-seguro.html">
 <meta property="og:type" content="website">
 
-<!-- Prévia usada pelo Twitter/X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Porto Saúde — Peça sua cotação">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/livecarebr-prog/cotacao/main/Porto%20Seguro.jpeg">
-
-<!-- Redireciona automaticamente pro formulário assim que a página abre -->
-<meta http-equiv="refresh" content="0; url=https://tally.so/r/5BV58N">
-<script>window.location.replace("https://tally.so/r/5BV58N");</script>
 
 <style>
   body { font-family: -apple-system, Arial, sans-serif; background:#f1f5f9; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; text-align:center; }
@@ -32,7 +26,22 @@
   <div class="card">
     <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/main/Porto%20Seguro.jpeg" alt="Porto Saúde">
     <p>Redirecionando para o formulário de cotação...</p>
-    <p><a href="https://tally.so/r/5BV58N">Clique aqui se não for redirecionado automaticamente</a></p>
+    <p><a id="linkManual" href="https://tally.so/r/5BV58N">Clique aqui se não for redirecionado automaticamente</a></p>
   </div>
+
+<script>
+  var params  = new URLSearchParams(window.location.search);
+  var trackId = params.get('id');
+  var destino = 'https://tally.so/r/5BV58N';
+
+  if (trackId) {
+    var img = new Image();
+    img.src = 'https://livecare-track.livecarebr.workers.dev/?action=view&id=' + encodeURIComponent(trackId) + '&campanha=porto_seguro_whatsapp';
+    document.getElementById('linkManual').href = destino;
+    setTimeout(function() { window.location.replace(destino); }, 400);
+  } else {
+    window.location.replace(destino);
+  }
+</script>
 </body>
 </html>
