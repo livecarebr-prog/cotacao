@@ -35,8 +35,12 @@
   var destino = 'https://tally.so/r/5BV58N';
 
   if (trackId) {
+    // Prefixo "WPP-" direto no id (em vez de um parâmetro separado
+    // "campanha") — assim funciona mesmo que o Worker do Cloudflare
+    // só repasse action e id pro backend, que já é o caminho testado
+    // e confirmado que funciona no rastreio de e-mail.
     var img = new Image();
-    img.src = 'https://livecare-track.livecarebr.workers.dev/?action=view&id=' + encodeURIComponent(trackId) + '&campanha=porto_seguro_whatsapp';
+    img.src = 'https://livecare-track.livecarebr.workers.dev/?action=view&id=WPP-' + encodeURIComponent(trackId);
     document.getElementById('linkManual').href = destino;
     setTimeout(function() { window.location.replace(destino); }, 400);
   } else {
