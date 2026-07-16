@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livecare Corretora — Peça sua cotação</title>
+
+<meta property="og:title" content="Livecare Corretora — Peça sua cotação">
+<meta property="og:description" content="Planos de saúde com CNPJ. Fale com um especialista agora.">
+<meta property="og:image" content="https://raw.githubusercontent.com/livecarebr-prog/cotacao/main/WAPP%201.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+  body { font-family: -apple-system, Arial, sans-serif; background:#f1f5f9; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; text-align:center; }
+  .card { padding:24px; }
+  img { max-width:280px; border-radius:12px; margin-bottom:16px; }
+  a { color:#2563eb; font-weight:bold; text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img id="banner" src="" alt="Livecare Corretora">
+    <p>Redirecionando para o formulário de cotação...</p>
+    <p><a id="linkManual" href="https://tally.so/r/5BV58N">Clique aqui se não for redirecionado automaticamente</a></p>
+  </div>
+
+<script>
+  // Redireciona automaticamente (sem exigir clique), mas o
+  // RASTREIO só dispara depois de ~900ms E se a aba ainda estiver
+  // visível/em foco nesse momento — a maioria dos "preview bots"
+  // (tipo o preview inteligente do Google Sheets) renderiza rápido
+  // e sai antes disso, então não deixam a página "visível" por
+  // tempo suficiente. Não é garantia 100%, mas filtra a maior
+  // parte dos falsos-positivos sem exigir nenhuma ação extra de
+  // quem clicou de verdade.
+  var params   = new URLSearchParams(window.location.search);
+  var trackId  = params.get('id');
+  var template = params.get('tpl') || '1';
+  var destino  = 'https://tally.so/r/5BV58N';
+
+  document.getElementById('banner').src = 'https://raw.githubusercontent.com/livecarebr-prog/cotacao/main/WAPP%20' + template + '.jpg';
+  document.getElementById('linkManual').href = destino;
+
+  // Redireciona rápido pra não atrasar a experiência do cliente real
+  setTimeout(function() { window.location.replace(destino); }, 1200);
+
+  // Rastreio separado, com checagem de visibilidade
+  if (trackId) {
+    setTimeout(function() {
+      if (document.visibilityState === 'visible') {
+        var img = new Image();
+        img.src = 'https://livecare-track.livecarebr.workers.dev/?action=view&id=WA-' + encodeURIComponent(trackId);
+      }
+    }, 900);
+  }
+</script>
+</body>
+</html>
