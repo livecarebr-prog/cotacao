@@ -1152,10 +1152,15 @@
     submitBtn.disabled = true;
     submitBtn.classList.remove('ready');
     submitBtn.innerHTML = '<span class="loader"></span>Enviando...';
-    sendFinalSubmission().finally(function(){
+    // Dispara o envio mas NÃO espera o backend terminar (Apps Script pode
+    // demorar por causa de cold start + Sheets + Telegram + e-mail).
+    // O fetch já saiu do navegador e continua em segundo plano mesmo
+    // depois de trocarmos de tela — é tudo a mesma página, sem navegação.
+    sendFinalSubmission();
+    setTimeout(function(){
       document.getElementById('successName').textContent = state.nome.split(' ')[0] + '!';
       showStep(5);
-    });
+    }, 600);
   });
 
   // ---------------- BACKEND HOOKS ----------------
