@@ -57,45 +57,7 @@
     min-height:100vh;
     display:flex;
     flex-direction:column;
-  }
-
-  .brand{
-    display:flex;
     justify-content:center;
-    padding:6px 0 20px;
-  }
-  .brand img{
-    height:38px;
-    width:auto;
-    opacity:0;
-    transform:translateY(-6px);
-    animation: brandIn .7s cubic-bezier(.2,.7,.3,1) .1s forwards;
-  }
-  @keyframes brandIn{
-    to{ opacity:1; transform:translateY(0); }
-  }
-
-  .progress-wrap{
-    height:4px;
-    width:100%;
-    background:var(--border);
-    border-radius:99px;
-    overflow:hidden;
-    margin-bottom:8px;
-  }
-  .progress-bar{
-    height:100%;
-    width:8%;
-    background:linear-gradient(90deg, var(--blue), #5C9BFF);
-    border-radius:99px;
-    transition:width .5s cubic-bezier(.3,.7,.3,1);
-  }
-  .progress-label{
-    font-size:12px;
-    color:var(--ink-soft);
-    margin:0 0 22px;
-    display:flex;
-    justify-content:space-between;
   }
 
   .card{
@@ -491,9 +453,8 @@
     *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
   }
 
-  /* ===== NOVO: trava a altura do card no tamanho da primeira tela,
-     evitando que a caixa "pule" de tamanho ao trocar de etapa.
-     Etapas maiores ganham rolagem interna em vez de esticar o card. */
+  /* trava a altura do card no tamanho da primeira tela, evitando que
+     a caixa "pule" de tamanho ao trocar de etapa. */
   .card{
     overflow: hidden;
   }
@@ -506,12 +467,6 @@
 <body>
 
 <div class="shell">
-  <div class="brand" style="display:none;">
-    <img src="" alt="Livecare Planos de Saúde">
-  </div>
-
-  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
-  <p class="progress-label"><span id="progressText">Etapa 1 de 6</span><span id="progressPct">16%</span></p>
 
   <form class="card" id="formCard" novalidate>
 
@@ -705,18 +660,10 @@
         <h2>Tudo certo, <span id="successName">!</span></h2>
         <p>Recebemos seus dados e já estamos preparando sua cotação.<br>Em breve, você receberá pelo WhatsApp ou e-mail as melhores opções para o seu perfil.<br>Obrigado pela confiança!</p>
         <a href="https://www.livecare.top/" target="_blank" rel="noopener" style="font-size:13.5px; color:var(--blue); font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">Visite nosso site: livecare.top</a>
-        <img src="" alt="Livecare Planos de Saúde" style="height:30px; width:auto; margin-top:26px; opacity:0.9;">
       </div>
     </div>
 
   </form>
-
-  <p class="progress-label" style="margin-top:14px;"><span id="progressText2">Etapa 1 de 6</span><span id="progressPct2">16%</span></p>
-  <div class="progress-wrap"><div class="progress-bar" id="progressBar2"></div></div>
-
-  <div style="text-align:center; margin-top:18px; opacity:0.8;">
-    <img src="" alt="Livecare Planos de Saúde" style="height:26px; width:auto;">
-  </div>
 
 </div>
 
@@ -736,8 +683,8 @@
   let current = 0;
   const flow = [0,1,2,3,4,5];
 
-  // ===== NOVO: trava o card no tamanho da tela inicial, pra não
-  // "pular" de tamanho conforme o usuário avança pelas etapas. =====
+  // trava o card no tamanho da tela inicial, pra não "pular" de
+  // tamanho conforme o usuário avança pelas etapas.
   const cardEl = document.getElementById('formCard');
   function lockCardHeight(){
     const h = steps[0].scrollHeight;
@@ -746,40 +693,11 @@
   window.addEventListener('load', lockCardHeight);
   window.addEventListener('resize', lockCardHeight);
 
-  const progressBar = document.getElementById('progressBar');
-  const progressText = document.getElementById('progressText');
-  const progressPct = document.getElementById('progressPct');
-  const progressBar2 = document.getElementById('progressBar2');
-  const progressText2 = document.getElementById('progressText2');
-  const progressPct2 = document.getElementById('progressPct2');
-
-  function totalVisibleSteps(){
-    return flow.filter(s => s !== 5).length;
-  }
-
-  function renderProgress(){
-    const idxInFlow = flow.indexOf(current);
-    const totalCount = totalVisibleSteps();
-    const pct = current === 5 ? 100 : Math.round(((idxInFlow+1)/totalCount)*100);
-    progressBar.style.width = pct + '%';
-    progressPct.textContent = pct + '%';
-    if (progressBar2) progressBar2.style.width = pct + '%';
-    if (progressPct2) progressPct2.textContent = pct + '%';
-    if(current === 5){
-      progressText.textContent = 'Concluído';
-      if (progressText2) progressText2.textContent = 'Concluído';
-    } else {
-      progressText.textContent = 'Etapa ' + (idxInFlow+1) + ' de ' + totalCount;
-      if (progressText2) progressText2.textContent = 'Etapa ' + (idxInFlow+1) + ' de ' + totalCount;
-    }
-  }
-
   function showStep(stepIndex){
     steps.forEach(s => s.classList.remove('active'));
     const el = steps.find(s => Number(s.dataset.step) === stepIndex);
     el.classList.add('active');
     current = stepIndex;
-    renderProgress();
     window.scrollTo({top:0, behavior:'smooth'});
     flashAnswerButtons(el);
   }
@@ -1182,8 +1100,6 @@
       body: JSON.stringify(Object.assign({evento:'cotacao_completa', ts:new Date().toISOString()}, state))
     }).catch(function(){});
   }
-
-  renderProgress();
 })();
 </script>
 </body>
