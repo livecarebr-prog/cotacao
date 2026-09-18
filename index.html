@@ -483,7 +483,7 @@
       </div>
       <div class="field" id="f-telefone">
         <label for="telefone">Telefone / WhatsApp</label>
-        <input type="tel" id="telefone" placeholder="(11) 91234-5678" autocomplete="tel" inputmode="numeric">
+        <input type="tel" id="telefone" placeholder="11 91234-5678" autocomplete="tel" inputmode="numeric">
         <div class="err-msg">Digite um telefone válido com DDD.</div>
       </div>
       <div class="field" id="f-email">
@@ -726,10 +726,16 @@
   function validPhone(v){ return v.replace(/\D/g,'').length >= 10; }
 
   function maskPhone(v){
-    v = v.replace(/\D/g,'').slice(0,11);
-    if(v.length > 6) return v.replace(/(\d{2})(\d{5})(\d{0,4})/, function(m,a,b,c){ return '('+a+') '+b+(c?'-'+c:''); });
-    if(v.length > 2) return v.replace(/(\d{2})(\d{0,5})/, function(m,a,b){ return '('+a+') '+b; });
-    if(v.length > 0) return '('+v;
+    v = v.replace(/\D/g,'');
+    // Remove o código do país (55) quando alguém digita ele na frente —
+    // sem isso, o corte pros 11 dígitos do DDD+celular cortava o final
+    // do número em vez do "55" do início.
+    if(v.length > 11 && v.startsWith('55')){
+      v = v.slice(2);
+    }
+    v = v.slice(0,11);
+    // Sem parênteses e sem traço: só "DD NNNNNNNNN"
+    if(v.length > 2) return v.slice(0,2) + ' ' + v.slice(2);
     return v;
   }
 
