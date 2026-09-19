@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Cotação Livecare | Planos de Saúde Empresariais</title>
 
 <meta property="og:type" content="website">
@@ -10,665 +10,1001 @@
 <meta property="og:description" content="Peça sua cotação online. Leva menos de 1 minuto.">
 <meta property="og:image" content="https://livecarebr-prog.github.io/cotacao/cotacao.png">
 <meta property="og:url" content="https://livecarebr-prog.github.io/cotacao/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Planos de Saúde com o Seu CNPJ">
-<meta name="twitter:description" content="Peça sua cotação online. Leva menos de 1 minuto.">
-<meta name="twitter:image" content="https://livecarebr-prog.github.io/cotacao/cotacao.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --ink:#0B1220;
-    --ink-soft:#4A5568;
-    --blue:#2F6FED;
-    --blue-deep:#1A4FC4;
-    --gold:#F5C451;
-    --green:#22A06B;
-    --green-light:#E6F8F0;
-    --green-light-border:#B7EAD3;
-    --red:#E53E3E;
-    --red-light:#FDECEC;
-    --red-light-border:#F6C6C6;
-    --amber-light:#FFF6DD;
-    --amber-light-border:#F6E1A0;
-    --bg:#F5F7FB;
-    --card:#FFFFFF;
-    --border:#E4E9F2;
-    --border-strong:#CBD5E1;
-    --radius:18px;
-    --shadow: 0 20px 45px -18px rgba(15, 35, 80, 0.18);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background: radial-gradient(120% 140% at 50% -10%, #EFF4FF 0%, var(--bg) 55%);
-    font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    color:var(--ink);
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.jakarta{ font-family:'Plus Jakarta Sans', 'Inter', sans-serif; }
-
-  .shell{
-    max-width:560px;
-    margin:0 auto;
-    padding:28px 20px 60px;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
+  :root {
+    --ink: #0B1220;
+    --ink-soft: #4A5568;
+    --blue: #2F6FED;
+    --blue-deep: #1A4FC4;
+    --green: #22A06B;
+    --green-bright: #10B981;
+    --green-light: #E6F8F0;
+    --green-light-border: #B7EAD3;
+    --red: #E53E3E;
+    --red-light: #FDECEC;
+    --bg: #F5F7FB;
+    --card: #FFFFFF;
+    --border: #E4E9F2;
+    --border-strong: #CBD5E1;
+    --radius: 20px;
+    --radius-btn: 99px;
+    --shadow: 0 24px 50px -15px rgba(15, 35, 80, 0.22);
   }
 
-  .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:32px 26px;
-    position:relative;
-    overflow:hidden;
-    flex:1;
-    display:flex;
-    flex-direction:column;
-  }
-  .step{ display:none; flex-direction:column; flex:1; }
-  .step.active{ display:flex; animation: stepIn .38s cubic-bezier(.25,.7,.3,1); }
-  @keyframes stepIn{
-    from{ opacity:0; transform:translateX(14px); }
-    to{ opacity:1; transform:translateX(0); }
-  }
+  * { box-sizing: border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
 
-  .eyebrow{
-    font-size:13px;
-    font-weight:600;
-    color:var(--blue);
-    margin:0 0 8px;
-  }
-  .step h2{
-    font-size:22px;
-    font-weight:700;
-    line-height:1.3;
-    margin:0 0 8px;
-    color:var(--ink);
-  }
-  .step p.hint{
-    font-size:14.5px;
-    color:var(--ink-soft);
-    line-height:1.55;
-    margin:0 0 22px;
-  }
-  .subhead{
-    font-size:15px;
-    font-weight:700;
-    color:var(--ink);
-    margin:22px 0 10px;
-  }
-  .subhead.first{ margin-top:2px; }
-  .subhint{
-    font-size:13px;
-    color:var(--ink-soft);
-    margin:-4px 0 12px;
-    line-height:1.5;
-  }
-  hr.divider{
-    border:none;
-    border-top:1px solid var(--border);
-    margin:22px 0 0;
-  }
-
-  .field{
-    margin-bottom:14px;
-  }
-  .field label{
-    display:block;
-    font-size:13px;
-    font-weight:600;
-    color:var(--ink);
-    margin-bottom:7px;
-  }
-  .field input{
-    width:100%;
-    padding:15px 16px;
-    font-size:16px;
-    font-family:inherit;
-    border:1.5px solid var(--border-strong);
-    border-radius:12px;
-    background:#FCFDFF;
-    color:var(--ink);
-    outline:none;
-    transition:border-color .18s, box-shadow .18s, background .18s;
-  }
-  .field input::placeholder{ color:#A0AEC0; }
-  .field input:focus{
-    border-color:var(--blue);
-    background:#fff;
-    box-shadow:0 0 0 4px rgba(47,111,237,0.12);
-  }
-  .field.error input{
-    border-color:var(--red);
-    box-shadow:0 0 0 4px rgba(229,62,62,0.10);
-  }
-  .field .err-msg{
-    display:none;
-    font-size:12.5px;
-    color:var(--red);
-    margin-top:6px;
-    font-weight:500;
-  }
-  .field.error .err-msg{ display:block; }
-
-  .option-grid{
-    display:grid;
-    gap:10px;
-    margin-bottom:6px;
-  }
-  .option-grid.cols-2{ grid-template-columns:1fr 1fr; }
-  .option-grid.cols-6{ grid-template-columns:repeat(6,1fr); }
-  .option-grid.plan-grid{
-    grid-template-columns:1fr 1fr;
-  }
-  .opt-card.premium-card{
-    grid-column: 1 / -1;
-  }
-  .opt-card .row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-  }
-  .opt-card .price{
-    font-size:13px;
-    font-weight:800;
-    letter-spacing:0.5px;
-    color:var(--blue);
-    flex:none;
-  }
-
-  .opt{
-    border:1.5px solid var(--border-strong);
-    background:#FCFDFF;
-    border-radius:12px;
-    padding:14px 10px;
-    text-align:center;
-    font-size:14.5px;
-    font-weight:600;
-    color:var(--ink);
-    cursor:pointer;
-    transition: border-color .15s, background .15s, transform .1s, color .15s;
-    user-select:none;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .opt:active{ transform:scale(.97); }
-  .opt.small{ padding:13px 4px; font-size:14px; }
-  .opt.selected{
-    border-color:var(--blue);
-    background:rgba(47,111,237,0.08);
-    color:var(--blue-deep);
-  }
-  .opt.selected.positive{
-    border-color:var(--green);
-    background:var(--green-light);
-    color:#136B49;
-  }
-  .opt.selected.negative{
-    border-color:var(--red);
-    background:var(--red-light);
-    color:#B42A2A;
-  }
-
-  .opt-card{
-    border:1.5px solid var(--border-strong);
-    background:#FCFDFF;
-    border-radius:14px;
-    padding:13px 14px;
-    cursor:pointer;
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-    transition: border-color .15s, background .15s, transform .1s, box-shadow .15s;
-  }
-  .opt-card:active{ transform:scale(.985); }
-  .opt-card .t{ font-size:14.5px; font-weight:700; color:var(--ink); }
-  .opt-card .d{ font-size:12.5px; color:var(--ink-soft); }
-
-  .opt-card.eco{ background:var(--green-light); border-color:var(--green-light-border); }
-  .opt-card.eco.selected{ border-color:var(--green); box-shadow:0 0 0 2px rgba(34,160,107,0.25); }
-  .opt-card.eco .t{ color:#136B49; }
-  .opt-card.eco .price{ color:#136B49; }
-
-  .opt-card.inter{ background:#EEF3FC; border-color:#CFDDF6; }
-  .opt-card.inter.selected{ border-color:var(--blue); box-shadow:0 0 0 2px rgba(47,111,237,0.22); }
-  .opt-card.inter .t{ color:var(--blue-deep); }
-  .opt-card.inter .price{ color:var(--blue-deep); }
-
-  .opt-card.premium{ background:#0B0B10; border-color:#0B0B10; }
-  .opt-card.premium .t{ color:#fff; }
-  .opt-card.premium .d{ color:#C7CDDA; font-weight:600; font-size:13px; }
-  .opt-card.premium .price{ color:#fff; }
-  .opt-card.premium.selected{ box-shadow:0 0 0 2px #fff; }
-
-  .logo-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:8px;
-    margin-bottom:6px;
-  }
-  .logo-card{
-    border:1.5px solid var(--border-strong);
-    background:#FCFDFF;
-    border-radius:12px;
-    padding:10px 6px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    height:46px;
-    cursor:pointer;
-    transition: border-color .15s, background .15s, transform .1s;
-  }
-  .logo-card:active{ transform:scale(.97); }
-  .logo-card img{
-    max-height:20px;
-    max-width:100%;
-    object-fit:contain;
-  }
-  .logo-card.selected{
-    border-color:var(--blue);
-    background:rgba(47,111,237,0.06);
-    box-shadow:0 0 0 2px rgba(47,111,237,0.18);
-  }
-  .logo-card.outros{
-    font-size:14px;
-    font-weight:700;
-    color:var(--ink-soft);
-  }
-  .logo-card.outros.selected{ color:var(--blue-deep); }
-
-  .age-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-bottom:6px;
-  }
-  .age-field label{ font-size:12.5px; }
-  .age-field input{ padding:12px 14px; font-size:15px; }
-
-  .collapsible{
-    max-height:0;
-    overflow:hidden;
-    opacity:0;
-    transition: max-height .35s ease, opacity .3s ease, margin .35s ease;
-  }
-  .collapsible.open{
-    max-height:700px;
-    opacity:1;
-  }
-
-  .nav{
-    margin-top:auto;
-    padding-top:22px;
-    display:flex;
-    gap:10px;
-  }
-  .btn{
-    flex:1;
-    padding:15px 20px;
-    border-radius:99px;
-    font-family:inherit;
-    font-size:15px;
-    font-weight:700;
-    border:none;
-    cursor:pointer;
-    transition: filter .15s, transform .1s, opacity .15s, background .25s, box-shadow .25s;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .btn:active{ transform:scale(.98); }
-  .btn-primary{
-    background: linear-gradient(135deg, var(--blue), var(--blue-deep));
-    color:#fff;
-    box-shadow: 0 12px 24px -8px rgba(47,111,237,0.45);
-  }
-  .btn-primary:disabled{
-    opacity:.45;
-    box-shadow:none;
-    cursor:not-allowed;
-    animation:none;
-  }
-  .btn-primary.ready{
-    background: linear-gradient(135deg, var(--green), #17845A);
-    box-shadow: 0 12px 26px -8px rgba(34,160,107,0.55);
-    animation: pulseGreen 0.9s ease-in-out infinite;
-  }
-  @keyframes flashPositive{
-    0%, 100%{ background-color:var(--green-light); }
-    35%{ background-color:#22A06B; border-color:#22A06B; }
-  }
-  @keyframes flashNegative{
-    0%, 100%{ background-color:#fff; }
-    35%{ background-color:#E5484D; border-color:#E5484D; }
-  }
-  @keyframes flashCard{
-    0%, 100%{ box-shadow:none; }
-    35%{ box-shadow:0 0 0 3px rgba(47,111,237,0.45); }
-  }
-  .opt.flash-attn.positive{ animation: flashPositive 0.6s ease-out; }
-  .opt.flash-attn.negative{ animation: flashNegative 0.6s ease-out; }
-  .opt-card.flash-attn, .logo-card.flash-attn{ animation: flashCard 0.6s ease-out; }
-  @keyframes pulseGreen{
-    0%, 100%{ box-shadow: 0 10px 20px -6px rgba(34,160,107,0.45); transform:scale(1); }
-    50%{ box-shadow: 0 18px 46px -2px rgba(34,160,107,0.95); transform:scale(1.035); }
-  }
-  .btn-ghost{
-    flex:0 0 auto;
-    width:48px;
-    background:#F1F5F9;
-    color:var(--ink-soft);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-  }
-
-  .trust-line{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    justify-content:center;
-    font-size:12px;
-    color:var(--ink-soft);
-    margin-top:16px;
-  }
-  .trust-line svg{ width:13px; height:13px; flex:none; }
-
-  .review-list{ display:flex; flex-direction:column; gap:0; margin-bottom:6px; border-top:1px solid var(--border); }
-  .review-row{
-    display:flex;
-    justify-content:space-between;
-    gap:14px;
-    padding:13px 0;
-    border-bottom:1px solid var(--border);
-    font-size:14px;
-  }
-  .review-list.compact .review-row{ padding:8px 0; font-size:12.5px; }
-  .review-list.compact .review-row .v{ max-width:60%; }
-  .review-row .k{ color:var(--ink-soft); flex:0 0 auto; }
-  .review-row .v{ font-weight:600; text-align:right; color:var(--ink); }
-  .edit-link{
-    font-size:12.5px;
-    font-weight:600;
-    color:var(--blue);
-    background:none;
-    border:none;
-    cursor:pointer;
-    padding:0;
-    margin-left:8px;
-  }
-
-  .success-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    justify-content:center;
-    flex:1;
-    padding:20px 0;
-  }
-  .success-icon{
-    width:74px; height:74px;
-    border-radius:50%;
-    background:rgba(34,160,107,0.12);
-    display:flex; align-items:center; justify-content:center;
-    margin-bottom:22px;
-    animation: pop .5s cubic-bezier(.2,.9,.3,1.3);
-  }
-  @keyframes pop{
-    0%{ transform:scale(0); opacity:0; }
-    100%{ transform:scale(1); opacity:1; }
-  }
-  .success-icon svg{ width:34px; height:34px; }
-  .success-wrap h2{ font-size:21px; margin-bottom:8px; }
-  .success-wrap p{ font-size:14.5px; color:var(--ink-soft); line-height:1.6; max-width:340px; }
-
-  .loader{
-    width:18px; height:18px;
-    border:2.5px solid rgba(255,255,255,0.35);
-    border-top-color:#fff;
-    border-radius:50%;
-    animation: spin .7s linear infinite;
-    display:inline-block;
-    vertical-align:-3px;
-    margin-right:8px;
-  }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
-
-  @media (max-width:380px){
-    .option-grid.cols-6{ grid-template-columns:repeat(3,1fr); gap:8px; }
-    .opt.small{ padding:11px 2px; font-size:13px; }
-    .card{ padding:26px 18px; }
-    .logo-card{ height:50px; }
-    .logo-card img{ max-height:22px; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
-  }
-
-  /* trava a altura do card no tamanho da primeira tela, evitando que
-     a caixa "pule" de tamanho ao trocar de etapa. */
-  .card{
+  /* FIXA A ALTURA DA TELA - NUNCA PULA NEM REDIMENSIONA O CARD */
+  html, body {
+    height: 100%;
+    height: 100dvh;
     overflow: hidden;
   }
-  .step{
+
+  body {
+    background: radial-gradient(120% 140% at 50% -10%, #EFF4FF 0%, var(--bg) 55%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+  /* CONTAINER ESTRUTURAL COM TAMANHO TRAVADO */
+  .shell {
+    width: 100%;
+    max-width: 580px;
+    height: 100%;
+    max-height: 840px;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* BARRA DE PROGRESSO FIXADA NO TOPO */
+  .progress-track {
+    flex: 0 0 5px;
+    height: 5px;
+    background: #EDF2F7;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 20%;
+    background: linear-gradient(90deg, var(--blue), var(--green-bright));
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ÁREA INTERNA COM ROLAGEM INDEPENDENTE - ZERO OSCILAÇÃO DE ALTURA */
+  .card-body {
+    flex: 1 1 auto;
     overflow-y: auto;
-    max-height: 100%;
+    overflow-x: hidden;
+    padding: 26px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .step {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+  .step.active {
+    display: flex;
+    animation: stepIn 0.32s cubic-bezier(.25,.7,.3,1);
+  }
+
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateX(12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* TIPOGRAFIA */
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin: 0 0 6px;
+  }
+  .step h2 {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  .step p.hint {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0 0 20px;
+  }
+  .subhead {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 20px 0 10px;
+  }
+  .subhead.first { margin-top: 4px; }
+  .subhint {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: -4px 0 12px;
+    line-height: 1.5;
+  }
+
+  /* INPUTS */
+  .field {
+    margin-bottom: 14px;
+  }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 7px;
+  }
+  .field input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15.5px;
+    font-family: inherit;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 12px;
+    background: #FCFDFF;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+  }
+  .field input::placeholder { color: #A0AEC0; }
+  .field input:focus {
+    border-color: var(--blue);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(47,111,237,0.12);
+  }
+  .field.error input {
+    border-color: var(--red);
+    background: #FEF2F2;
+    box-shadow: 0 0 0 4px rgba(229,62,62,0.10);
+  }
+  .field .err-msg {
+    display: none;
+    font-size: 12.5px;
+    color: var(--red);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .field.error .err-msg { display: block; }
+
+  /* ========================================================
+     ANIMAÇÕES DE ATENÇÃO (FLASH NAS OPÇÕES DAS PERGUNTAS)
+     ======================================================== */
+  @keyframes flashPositive {
+    0%, 100% { background-color: #FFFFFF; transform: scale(1); }
+    35% { background-color: #22A06B; border-color: #22A06B; color: #FFFFFF; transform: scale(1.03); box-shadow: 0 4px 14px rgba(34,160,107,0.35); }
+  }
+  @keyframes flashNegative {
+    0%, 100% { background-color: #FFFFFF; transform: scale(1); }
+    35% { background-color: #E53E3E; border-color: #E53E3E; color: #FFFFFF; transform: scale(1.03); box-shadow: 0 4px 14px rgba(229,62,62,0.3); }
+  }
+  @keyframes flashCardAttention {
+    0%, 100% { transform: scale(1); box-shadow: none; }
+    35% { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(47,111,237,0.22); border-color: var(--blue); }
+  }
+  @keyframes flashPillAttention {
+    0%, 100% { transform: scale(1); }
+    35% { transform: scale(1.06); border-color: var(--blue); background: #F0F6FF; color: var(--blue-deep); }
+  }
+
+  .opt.flash-attn.positive { animation: flashPositive 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .opt.flash-attn.negative { animation: flashNegative 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .opt.flash-attn.pill { animation: flashPillAttention 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .plan-card.flash-attn, .logo-card.flash-attn { animation: flashCardAttention 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+  /* ========================================================
+     BOTÕES DE ESCOLHA (SIM/NÃO, NÚMEROS)
+     ======================================================== */
+  .option-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .option-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .option-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+  .opt {
+    border: 1.5px solid var(--border-strong);
+    background: #FCFDFF;
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color .18s, background .18s, transform .12s, box-shadow .18s, color .18s;
+    user-select: none;
+  }
+  .opt:hover { border-color: #94A3B8; background: #F8FAFC; }
+  .opt:active { transform: scale(.96); }
+  .opt.small { padding: 13px 4px; font-size: 14px; }
+  .opt.selected {
+    border-color: var(--blue);
+    background: rgba(47,111,237,0.08);
+    color: var(--blue-deep);
+    font-weight: 700;
+    box-shadow: 0 0 0 2px rgba(47,111,237,0.22);
+  }
+  .opt.selected.positive {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: #136B49;
+    box-shadow: 0 0 0 2px rgba(34,160,107,0.28);
+  }
+  .opt.selected.negative {
+    border-color: var(--red);
+    background: var(--red-light);
+    color: #B42A2A;
+    box-shadow: 0 0 0 2px rgba(229,62,62,0.22);
+  }
+
+  /* ========================================================
+     CARDS DE PLANO - SUPER EVIDENTES E CLAROS
+     ======================================================== */
+  .plan-card-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .plan-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    border-radius: 15px;
+    border: 2px solid var(--border-strong);
+    background: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .plan-card:hover {
+    border-color: #94A3B8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  }
+  .plan-card:active { transform: scale(0.985); }
+
+  .plan-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+  }
+
+  .plan-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+  .plan-avatar svg { width: 22px; height: 22px; }
+
+  .plan-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .plan-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .plan-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .plan-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .plan-subtitle {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* Seletor redondo de confirmação visual */
+  .plan-selector {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #CBD5E1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 12px;
+    flex-shrink: 0;
+    background: #FFFFFF;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .plan-selector svg {
+    width: 15px;
+    height: 15px;
+    color: #FFFFFF;
+    stroke-width: 3.2;
+    transform: scale(0);
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Variações e Estados Selecionados */
+  .plan-card.plan-eco .plan-avatar { background: var(--green-light); color: var(--green); }
+  .plan-card.plan-eco .plan-tag { background: var(--green-light); color: #047857; border: 1px solid var(--green-light-border); }
+  .plan-card.plan-eco.selected {
+    border-color: var(--green);
+    background: #F4FDF8;
+    transform: scale(1.015);
+    box-shadow: 0 0 0 3px rgba(34,160,107,0.28), 0 10px 24px -4px rgba(34,160,107,0.25);
+  }
+  .plan-card.plan-eco.selected .plan-selector {
+    border-color: var(--green);
+    background: var(--green);
+    transform: scale(1.1);
+  }
+  .plan-card.plan-eco.selected .plan-selector svg { transform: scale(1); }
+
+  .plan-card.plan-inter .plan-avatar { background: #EEF3FC; color: var(--blue); }
+  .plan-card.plan-inter .plan-tag { background: #EEF3FC; color: var(--blue-deep); border: 1px solid #CFDDF6; }
+  .plan-card.plan-inter.selected {
+    border-color: var(--blue);
+    background: #F6F9FE;
+    transform: scale(1.015);
+    box-shadow: 0 0 0 3px rgba(47,111,237,0.28), 0 10px 24px -4px rgba(47,111,237,0.25);
+  }
+  .plan-card.plan-inter.selected .plan-selector {
+    border-color: var(--blue);
+    background: var(--blue);
+    transform: scale(1.1);
+  }
+  .plan-card.plan-inter.selected .plan-selector svg { transform: scale(1); }
+
+  .plan-card.plan-prem .plan-avatar { background: #0B0B10; color: #FFFFFF; }
+  .plan-card.plan-prem .plan-tag { background: #0B0B10; color: #FFFFFF; }
+  .plan-card.plan-prem.selected {
+    border-color: #0B0B10;
+    background: #0B0B10;
+    transform: scale(1.015);
+    box-shadow: 0 0 0 3px rgba(11,11,16,0.3), 0 12px 28px -4px rgba(0,0,0,0.4);
+  }
+  .plan-card.plan-prem.selected .plan-name { color: #FFFFFF; }
+  .plan-card.plan-prem.selected .plan-subtitle { color: #CBD5E1; }
+  .plan-card.plan-prem.selected .plan-tag { background: #FFFFFF; color: #0B0B10; }
+  .plan-card.plan-prem.selected .plan-avatar { background: #FFFFFF; color: #0B0B10; }
+  .plan-card.plan-prem.selected .plan-selector {
+    border-color: #FFFFFF;
+    background: #FFFFFF;
+    transform: scale(1.1);
+  }
+  .plan-card.plan-prem.selected .plan-selector svg { color: #0B0B10; transform: scale(1); }
+
+  /* ========================================================
+     LOGOTIPOS OFICIAIS & ONDA EM CASCATA
+     ======================================================== */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+    margin-bottom: 6px;
+  }
+
+  .logo-card {
+    border: 1.5px solid var(--border-strong);
+    background: #FCFDFF;
+    border-radius: 12px;
+    padding: 8px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 52px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .18s, background .18s, transform .15s, box-shadow .18s;
+  }
+  .logo-card:hover { border-color: #94A3B8; background: #F8FAFC; }
+  .logo-card:active { transform: scale(.96); }
+
+  .logo-card img {
+    max-width: 90%;
+    max-height: 28px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+  }
+
+  /* Ajuste de escala específico para SulAmérica */
+  .logo-card img.logo-sulamerica {
+    max-height: 38px;
+    max-width: 98%;
+    transform: scale(1.35);
+    transform-origin: center;
+  }
+
+  .logo-card.selected {
+    border-color: var(--blue);
+    background: #F4F8FF;
+    box-shadow: 0 0 0 2.5px rgba(47,111,237,0.3), 0 4px 12px rgba(47,111,237,0.15);
+  }
+  .logo-card.selected img { transform: scale(1.08); }
+  .logo-card.selected img.logo-sulamerica { transform: scale(1.42); }
+
+  .logo-card.outros {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .logo-card.outros.selected { color: var(--blue-deep); }
+
+  /* Animação em onda para operadoras */
+  @keyframes logoWavePulse {
+    0% { transform: scale(1); box-shadow: none; border-color: var(--border-strong); }
+    40% { transform: scale(1.08); box-shadow: 0 0 0 3px rgba(47,111,237,0.45), 0 8px 18px rgba(47,111,237,0.25); border-color: var(--blue); background: #EFF6FF; }
+    100% { transform: scale(1); box-shadow: none; border-color: var(--border-strong); }
+  }
+  .logo-card.wave-active {
+    animation: logoWavePulse 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  /* Seções retráteis */
+  .collapsible {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.35s ease;
+  }
+  .collapsible.open {
+    max-height: 700px;
+    opacity: 1;
+    margin-top: 6px;
+  }
+
+  .age-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .age-field label { font-size: 12px; }
+  .age-field input { padding: 11px 12px; font-size: 14.5px; }
+
+  /* Resumo */
+  .review-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #F8FAFC;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .review-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .review-row:last-child { border-bottom: none; }
+  .review-row .k { color: var(--ink-soft); }
+  .review-row .v { font-weight: 600; text-align: right; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .edit-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+  }
+  .edit-link:hover { text-decoration: underline; }
+
+  /* ========================================================
+     RODAPÉ FIXO & BOTÃO CONTINUAR PULSANTE VERDE VIVO
+     ======================================================== */
+  .card-footer {
+    flex: 0 0 auto;
+    padding: 14px 24px 20px;
+    background: var(--card);
+    border-top: 1px solid #F1F5F9;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.03);
+    z-index: 20;
+  }
+  .nav {
+    display: flex;
+    gap: 10px;
+  }
+  .btn {
+    flex: 1;
+    padding: 16px 22px;
+    border-radius: var(--radius-btn);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15.5px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: filter .15s, transform .12s, opacity .15s, background .25s, box-shadow .25s;
+    user-select: none;
+  }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+    color: #FFFFFF;
+    box-shadow: 0 10px 24px -8px rgba(47,111,237,0.45);
+  }
+  .btn-primary:disabled {
+    opacity: 0.45;
+    box-shadow: none;
+    cursor: not-allowed;
+    animation: none !important;
+  }
+
+  /* ANIMAÇÃO VERDE PULSANTE INTENSA COM GLOW */
+  @keyframes pulseGreen {
+    0%, 100% {
+      box-shadow: 0 10px 20px -6px rgba(34,160,107,0.5), 0 0 0 0 rgba(34,160,107,0.4);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 18px 46px -2px rgba(34,160,107,0.95), 0 0 0 6px rgba(34,160,107,0.25);
+      transform: scale(1.035);
+    }
+  }
+
+  .btn-primary.ready {
+    background: linear-gradient(135deg, var(--green), #17845A) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 12px 26px -8px rgba(34,160,107,0.65);
+    animation: pulseGreen 0.9s ease-in-out infinite !important;
+  }
+
+  .btn-ghost {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-btn);
+    background: #F1F5F9;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-ghost:hover { background: #E2E8F0; }
+
+  .loader {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Tela de Sucesso */
+  .success-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 30px 10px;
+    flex: 1;
+  }
+  .success-icon {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: rgba(34,160,107,0.12);
+    border: 2px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+    animation: pop .5s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes pop {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .success-icon svg { width: 34px; height: 34px; }
+  .success-wrap h2 { font-size: 22px; margin-bottom: 8px; }
+  .success-wrap p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; max-width: 360px; margin-bottom: 16px; }
+
+  /* MOBILE FULLSCREEN REAL SEM PULOS */
+  @media (max-width: 580px) {
+    body {
+      padding: 0;
+      background: var(--card);
+    }
+    .shell {
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      min-height: 100%;
+    }
+    .card {
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      height: 100%;
+    }
+    .card-body {
+      padding: 20px 18px 10px;
+    }
+    .card-footer {
+      padding: 12px 18px 18px;
+    }
+    .step h2 { font-size: 20px; }
+    .logo-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .logo-card { height: 48px; }
   }
 </style>
 </head>
 <body>
 
-<div class="shell">
-
+<div class="shell" id="appShell">
   <form class="card" id="formCard" novalidate>
 
-    <!-- STEP 0 — CONTATO -->
-    <div class="step active" data-step="0">
-      <p class="eyebrow">Vamos começar</p>
-      <h2>Pra quem enviamos sua cotação?</h2>
-      <p class="hint"><strong style="color:var(--blue-deep, #0A2540); font-weight:700;">⏱️ Leva menos de 1 minuto.</strong> Sem compromisso — você decide com os números na mão.</p>
-
-      <div class="field" id="f-nome">
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name">
-        <div class="err-msg">Digite seu nome.</div>
-      </div>
-      <div class="field" id="f-telefone">
-        <label for="telefone">Telefone / WhatsApp</label>
-        <input type="tel" id="telefone" placeholder="11 91234-5678 — Digite somente números" autocomplete="tel" inputmode="numeric">
-        <div class="err-msg">Digite um telefone válido com DDD.</div>
-      </div>
-      <div class="field" id="f-email">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="voce@empresa.com.br" autocomplete="email">
-        <div class="err-msg">Digite um e-mail válido.</div>
-      </div>
-
-      <div class="nav">
-        <button type="button" class="btn btn-primary" data-next>Continuar</button>
-      </div>
-      <div class="trust-line">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z" stroke="#22A06B" stroke-width="1.6"/><path d="m9 12 2 2 4-4" stroke="#22A06B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Seus dados são usados só para preparar sua cotação
-      </div>
+    <!-- Barra de Progresso Superior Fixa -->
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
     </div>
 
-    <!-- STEP 1 — QUANTAS PESSOAS + IDADES (mesma tela) -->
-    <div class="step" data-step="1">
-      <p class="eyebrow">Dados básicos</p>
-      <h2>Quantas pessoas vão participar do plano?</h2>
-      <p class="hint">Conte titular e dependentes que vão usar o plano.</p>
-      <div class="option-grid cols-6" id="qtyGrid">
-        <div class="opt small" data-value="1">1</div>
-        <div class="opt small" data-value="2">2</div>
-        <div class="opt small" data-value="3">3</div>
-        <div class="opt small" data-value="4">4</div>
-        <div class="opt small" data-value="5">5</div>
-        <div class="opt small" data-value="6+">6+</div>
-      </div>
+    <!-- Área de Conteúdo Rolável (Zero pulos) -->
+    <div class="card-body" id="cardBody">
 
-      <div class="collapsible" id="totalWrap">
-        <div class="field" id="f-totalPessoas" style="margin-top:14px;">
-          <label for="totalPessoas">Quantas pessoas ao todo?</label>
-          <input type="tel" id="totalPessoas" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="Ex: 8">
-          <div class="err-msg">Digite um número a partir de 6.</div>
+      <!-- ==========================================
+           ETAPA 0 — CONTATO (SEM ESCUDO)
+           ========================================== -->
+      <div class="step active" data-step="0">
+        <p class="eyebrow">Vamos começar</p>
+        <h2>Pra quem enviamos sua cotação?</h2>
+        <p class="hint"><strong style="color:var(--blue-deep);">⏱️ Leva menos de 1 minuto.</strong> Sem compromisso — compare valores com clareza.</p>
+
+        <div class="field" id="f-nome">
+          <label for="nome">Nome Completo</label>
+          <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name">
+          <div class="err-msg">Por favor, digite seu nome.</div>
+        </div>
+        <div class="field" id="f-telefone">
+          <label for="telefone">Telefone / WhatsApp</label>
+          <input type="tel" id="telefone" placeholder="11 91234-5678 — Digite somente números" autocomplete="tel" inputmode="numeric">
+          <div class="err-msg">Digite um telefone válido com DDD.</div>
+        </div>
+        <div class="field" id="f-email">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" placeholder="voce@empresa.com.br" autocomplete="email">
+          <div class="err-msg">Digite um e-mail válido.</div>
         </div>
       </div>
 
-      <div class="collapsible" id="ageWrap">
-        <p class="subhead">Idade de cada participante</p>
-        <div class="age-grid" id="ageGrid"></div>
-      </div>
-      <p class="subhint" id="skipAgesHint" style="display:none;">Pra grupos maiores, calculamos a faixa etária média na cotação — sem precisar digitar uma por uma.</p>
+      <!-- ==========================================
+           ETAPA 1 — QUANTIDADE DE PESSOAS E IDADES
+           ========================================== -->
+      <div class="step" data-step="1">
+        <p class="eyebrow">Dados básicos</p>
+        <h2>Quantas pessoas vão participar do plano?</h2>
+        <p class="hint">Conte titular e dependentes que vão usar o plano.</p>
 
-      <div class="nav">
-        <button type="button" class="btn btn-ghost" data-back>&larr;</button>
-        <button type="button" class="btn btn-primary" data-next disabled>Continuar</button>
-      </div>
-    </div>
-
-    <!-- STEP 2 — TIPO DE PLANO + TEM PLANO + PLANO ATUAL (mesma tela) -->
-    <div class="step" data-step="2">
-      <p class="eyebrow">Preferências</p>
-      <h2>Sobre o plano que você busca</h2>
-
-      <p class="subhead first">Qual tipo de plano você busca?</p>
-      <div class="option-grid plan-grid" id="planGrid">
-        <div class="opt-card eco" data-value="Econômico - Enfermaria - baixo custo">
-          <div class="row"><span class="t">Econômico</span><span class="price">$</span></div>
-          <span class="d">Enfermaria — baixo custo</span>
+        <div class="option-grid cols-6" id="qtyGrid">
+          <div class="opt small pill" data-value="1">1</div>
+          <div class="opt small pill" data-value="2">2</div>
+          <div class="opt small pill" data-value="3">3</div>
+          <div class="opt small pill" data-value="4">4</div>
+          <div class="opt small pill" data-value="5">5</div>
+          <div class="opt small pill" data-value="6+">6+</div>
         </div>
-        <div class="opt-card inter" data-value="Intermediário - Apartamento - Ótimos hospitais">
-          <div class="row"><span class="t">Intermediário</span><span class="price">$$</span></div>
-          <span class="d">Apartamento — ótimos hospitais</span>
-        </div>
-        <div class="opt-card premium premium-card" data-value="Premium - Albert Einstein, Sírio-Libanês, Fleury e Alta.">
-          <div class="row"><span class="t">Premium</span><span class="price">$$$</span></div>
-          <span class="d">Einstein, Sírio-Libanês, Fleury e Alta</span>
-        </div>
-      </div>
 
-      <p class="subhead">Você já tem plano de saúde?</p>
-      <div class="option-grid cols-2" id="hasPlanGrid">
-        <div class="opt positive" data-value="SIM">Sim</div>
-        <div class="opt negative" data-value="Não">Não</div>
+        <div class="collapsible" id="totalWrap">
+          <div class="field" id="f-totalPessoas" style="margin-top:14px;">
+            <label for="totalPessoas">Quantas pessoas ao todo?</label>
+            <input type="tel" id="totalPessoas" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="Ex: 8">
+            <div class="err-msg">Digite um número a partir de 6.</div>
+          </div>
+        </div>
+
+        <div class="collapsible" id="ageWrap">
+          <p class="subhead">Idade de cada participante</p>
+          <div class="age-grid" id="ageGrid"></div>
+        </div>
+        <p class="subhint" id="skipAgesHint" style="display:none;">Pra grupos maiores, calculamos a faixa etária média na cotação — sem precisar digitar uma por uma.</p>
       </div>
 
-      <div class="collapsible" id="planoAtualWrap">
-        <p class="subhead">Qual é o seu plano de saúde atual?</p>
-        <div class="logo-grid" id="logoGrid">
-          <div class="logo-card" data-name="Amil"><img src="" alt="Amil"></div>
-          <div class="logo-card" data-name="SulAmérica"><img src="" alt="SulAmérica"></div>
-          <div class="logo-card" data-name="Bradesco Saúde"><img src="" alt="Bradesco Saúde"></div>
-          <div class="logo-card" data-name="Porto Saúde"><img src="" alt="Porto Saúde"></div>
-          <div class="logo-card" data-name="Hapvida NotreDame"><img src="" alt="Hapvida NotreDame"></div>
-          <div class="logo-card" data-name="Alice"><img src="" alt="Alice"></div>
-          <div class="logo-card" data-name="Omint"><img src="" alt="Omint"></div>
-          <div class="logo-card" data-name="Seguros Unimed"><img src="" alt="Seguros Unimed"></div>
-          <div class="logo-card outros" data-name="Outros">Outros</div>
+      <!-- ==========================================
+           ETAPA 2 — TIPO DE PLANO + TEM PLANO + ATUAL
+           ========================================== -->
+      <div class="step" data-step="2">
+        <p class="eyebrow">Preferências</p>
+        <h2>Sobre o plano que você busca</h2>
+
+        <p class="subhead first">Qual tipo de plano você busca?</p>
+        <div class="plan-card-stack" id="planGrid">
+          
+          <!-- Econômico -->
+          <div class="plan-card plan-eco" data-value="Econômico - Enfermaria - baixo custo">
+            <div class="plan-info">
+              <div class="plan-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div class="plan-details">
+                <div class="plan-title-row">
+                  <span class="plan-name">Econômico</span>
+                  <span class="plan-tag">Custo-Benefício</span>
+                </div>
+                <span class="plan-subtitle">Enfermaria — Baixo custo e atendimento ágil</span>
+              </div>
+            </div>
+            <div class="plan-selector">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Intermediário -->
+          <div class="plan-card plan-inter" data-value="Intermediário - Apartamento - Ótimos hospitais">
+            <div class="plan-info">
+              <div class="plan-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 21h18"/>
+                  <path d="M5 21V7l8-4v18"/>
+                  <path d="M19 21V11l-6-4"/>
+                </svg>
+              </div>
+              <div class="plan-details">
+                <div class="plan-title-row">
+                  <span class="plan-name">Intermediário</span>
+                  <span class="plan-tag">Mais Escolhido</span>
+                </div>
+                <span class="plan-subtitle">Apartamento (quarto privativo) — Ótimos hospitais</span>
+              </div>
+            </div>
+            <div class="plan-selector">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Premium -->
+          <div class="plan-card plan-prem" data-value="Premium - Albert Einstein, Sírio-Libanês, Fleury e Alta.">
+            <div class="plan-info">
+              <div class="plan-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </div>
+              <div class="plan-details">
+                <div class="plan-title-row">
+                  <span class="plan-name">Premium</span>
+                  <span class="plan-tag">Linha Black</span>
+                </div>
+                <span class="plan-subtitle">Albert Einstein, Sírio-Libanês, Fleury, Alta e altos reembolsos</span>
+              </div>
+            </div>
+            <div class="plan-selector">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+
         </div>
-        <div class="collapsible" id="planoOutroWrap">
-          <div class="field" id="f-planoAtual" style="margin-top:4px;">
-            <label for="planoAtual">Qual o nome do plano?</label>
-            <input type="text" id="planoAtual" placeholder="Ex: NotreDame, Golden Cross...">
-            <div class="err-msg">Digite o nome do plano atual.</div>
+
+        <p class="subhead">Você já tem plano de saúde?</p>
+        <div class="option-grid cols-2" id="hasPlanGrid">
+          <div class="opt positive" data-value="SIM">Sim</div>
+          <div class="opt negative" data-value="Não">Não</div>
+        </div>
+
+        <div class="collapsible" id="planoAtualWrap">
+          <p class="subhead">Qual é o seu plano de saúde atual?</p>
+          <div class="logo-grid" id="logoGrid">
+            
+            <!-- Amil -->
+            <div class="logo-card" data-name="Amil" title="Amil">
+              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/logo-amil.svg" alt="Amil" loading="lazy">
+            </div>
+
+            <!-- SulAmérica (Tamanho corrigido) -->
+            <div class="logo-card" data-name="SulAmérica" title="SulAmérica">
+              <img src="https://github.com/livecarebr-prog/cotacao/blob/main/Sulam%C3%A9rica.png?raw=true" alt="SulAmérica" class="logo-sulamerica" loading="lazy">
+            </div>
+
+            <!-- Bradesco Saúde -->
+            <div class="logo-card" data-name="Bradesco Saúde" title="Bradesco Saúde">
+              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/bradesco-logo.svg" alt="Bradesco Saúde" loading="lazy">
+            </div>
+
+            <!-- Porto Saúde -->
+            <div class="logo-card" data-name="Porto Saúde" title="Porto Saúde">
+              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/porto-saude.svg" alt="Porto Saúde" loading="lazy">
+            </div>
+
+            <!-- Hapvida NotreDame -->
+            <div class="logo-card" data-name="Hapvida NotreDame" title="Hapvida NotreDame">
+              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/Hapvida_logo.svg" alt="Hapvida NotreDame" loading="lazy">
+            </div>
+
+            <!-- Alice -->
+            <div class="logo-card" data-name="Alice" title="Alice">
+              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/alice-logo.svg" alt="Alice" loading="lazy">
+            </div>
+
+            <!-- Omint -->
+            <div class="logo-card" data-name="Omint" title="Omint">
+              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/57cd80d626014bbafa6c7f67fffaecad2a25116b/omint.svg" alt="Omint" loading="lazy">
+            </div>
+
+            <!-- Seguros Unimed -->
+            <div class="logo-card" data-name="Seguros Unimed" title="Seguros Unimed">
+              <span style="font-weight:800; color:#00995D; font-size:13.5px;">UNIMED</span>
+            </div>
+
+            <!-- Outros -->
+            <div class="logo-card outros" data-name="Outros">Outros</div>
+          </div>
+
+          <div class="collapsible" id="planoOutroWrap">
+            <div class="field" id="f-planoAtual" style="margin-top:6px;">
+              <label for="planoAtual">Qual o nome do plano?</label>
+              <input type="text" id="planoAtual" placeholder="Ex: Prevent Senior, NotreDame, Care Plus...">
+              <div class="err-msg">Digite o nome do plano atual.</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="nav">
-        <button type="button" class="btn btn-ghost" data-back>&larr;</button>
-        <button type="button" class="btn btn-primary" data-next disabled>Continuar</button>
-      </div>
-    </div>
+      <!-- ==========================================
+           ETAPA 3 — CNPJ + CIDADE
+           ========================================== -->
+      <div class="step" data-step="3">
+        <p class="eyebrow">Dados da empresa e localização</p>
+        <h2>Um pouco mais sobre você</h2>
 
-    <!-- STEP 3 — CNPJ + RESIDE SP + CIDADE (mesma tela) -->
-    <div class="step" data-step="3">
-      <p class="eyebrow">Dados da empresa e localização</p>
-      <h2>Um pouco mais sobre você</h2>
-
-      <p class="subhead first">Você tem CNPJ?</p>
-      <p class="subhint">Planos empresariais costumam ter condições melhores que os individuais.</p>
-      <div class="option-grid cols-2" id="cnpjGrid">
-        <div class="opt positive" data-value="SIM">Sim</div>
-        <div class="opt negative" data-value="Não">Não</div>
-      </div>
-
-      <p class="subhead">Reside em São Paulo capital?</p>
-      <div class="option-grid cols-2" id="spGrid">
-        <div class="opt positive" data-value="SIM">Sim</div>
-        <div class="opt negative" data-value="NÃO">Não</div>
-      </div>
-
-      <div class="collapsible" id="cidadeWrap">
-        <div class="field" id="f-cidade" style="margin-top:14px;">
-          <label for="cidade">Qual cidade você reside?</label>
-          <input type="text" id="cidade" placeholder="Ex: Guarulhos, Barueri...">
-          <div class="err-msg">Digite sua cidade.</div>
-        </div>
-      </div>
-
-      <div class="nav">
-        <button type="button" class="btn btn-ghost" data-back>&larr;</button>
-        <button type="button" class="btn btn-primary" data-next disabled>Continuar</button>
-      </div>
-    </div>
-
-    <!-- STEP 4 — HOSPITAL PREFERÊNCIA + REVISÃO (mesma tela) -->
-    <div class="step" data-step="4">
-      <div id="hospQuestionWrap">
-        <p class="eyebrow">Última pergunta</p>
-        <h2>Tem hospital ou laboratório de preferência?</h2>
-        <div class="option-grid cols-2" id="hospGrid">
-          <div class="opt positive" data-value="Tenho Preferência">Tenho preferência</div>
-          <div class="opt negative" data-value="Não tenho Preferência">Não tenho</div>
+        <p class="subhead first">Você tem CNPJ?</p>
+        <p class="subhint">Planos empresariais costumam ter condições e tabelas melhores que os individuais.</p>
+        <div class="option-grid cols-2" id="cnpjGrid">
+          <div class="opt positive" data-value="SIM">Sim</div>
+          <div class="opt negative" data-value="Não">Não</div>
         </div>
 
-        <div class="collapsible" id="hospitalWrap">
-          <div class="field" id="f-hospital" style="margin-top:12px;">
-            <label for="hospital">Qual hospital ou laboratório?</label>
-            <input type="text" id="hospital" placeholder="Ex: Albert Einstein, Samaritano...">
-            <div class="err-msg">Digite o nome do hospital ou laboratório.</div>
+        <p class="subhead">Reside em São Paulo capital?</p>
+        <div class="option-grid cols-2" id="spGrid">
+          <div class="opt positive" data-value="SIM">Sim</div>
+          <div class="opt negative" data-value="NÃO">Não</div>
+        </div>
+
+        <div class="collapsible" id="cidadeWrap">
+          <div class="field" id="f-cidade" style="margin-top:14px;">
+            <label for="cidade">Qual cidade você reside?</label>
+            <input type="text" id="cidade" placeholder="Ex: Guarulhos, Barueri, Campinas...">
+            <div class="err-msg">Digite sua cidade.</div>
           </div>
         </div>
       </div>
 
-      <hr class="divider" style="margin:16px 0;">
-      <p class="subhead first" style="margin-bottom:8px;">Confira e envie</p>
-      <div class="review-list compact" id="reviewList"></div>
+      <!-- ==========================================
+           ETAPA 4 — HOSPITAL + REVISÃO
+           ========================================== -->
+      <div class="step" data-step="4">
+        <div id="hospQuestionWrap">
+          <p class="eyebrow">Última pergunta</p>
+          <h2>Tem hospital ou laboratório de preferência?</h2>
+          <div class="option-grid cols-2" id="hospGrid">
+            <div class="opt positive" data-value="Tenho Preferência">Tenho preferência</div>
+            <div class="opt negative" data-value="Não tenho Preferência">Não tenho</div>
+          </div>
 
-      <div class="nav">
-        <button type="button" class="btn btn-ghost" data-back>&larr;</button>
-        <button type="button" class="btn btn-primary" id="submitBtn" disabled>Enviar e receber cotação</button>
+          <div class="collapsible" id="hospitalWrap">
+            <div class="field" id="f-hospital" style="margin-top:12px;">
+              <label for="hospital">Qual hospital ou laboratório?</label>
+              <input type="text" id="hospital" placeholder="Ex: Samaritano, Fleury, São Luiz...">
+              <div class="err-msg">Digite o nome do hospital ou laboratório.</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="subhead" style="margin-top:16px;">Confira e envie</p>
+        <div class="review-list" id="reviewList"></div>
       </div>
+
+      <!-- ==========================================
+           ETAPA 5 — SUCESSO
+           ========================================== -->
+      <div class="step" data-step="5">
+        <div class="success-wrap">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="#22A06B" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2>Tudo certo, <span id="successName">!</span></h2>
+          <p>Recebemos seus dados e já estamos preparando sua cotação.<br>Em breve, você receberá pelo WhatsApp as melhores opções para o seu perfil.<br>Obrigado pela confiança!</p>
+          <a href="https://www.livecare.top/" target="_blank" rel="noopener" style="font-size:14px; color:var(--blue); font-weight:700; text-decoration:none;">Visite nosso site: livecare.top &rarr;</a>
+        </div>
+      </div>
+
     </div>
 
-    <!-- STEP 5 — SUCESSO -->
-    <div class="step" data-step="5">
-      <div class="success-wrap">
-        <div class="success-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="#22A06B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h2>Tudo certo, <span id="successName">!</span></h2>
-        <p>Recebemos seus dados e já estamos preparando sua cotação.<br>Em breve, você receberá pelo WhatsApp ou e-mail as melhores opções para o seu perfil.<br>Obrigado pela confiança!</p>
-        <a href="https://www.livecare.top/" target="_blank" rel="noopener" style="font-size:13.5px; color:var(--blue); font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">Visite nosso site: livecare.top</a>
+    <!-- RODAPÉ FIXO COM BOTÕES DE AÇÃO -->
+    <div class="card-footer" id="cardFooter">
+      <div class="nav">
+        <button type="button" class="btn btn-ghost" id="backBtn" data-back style="display:none;" aria-label="Voltar">&larr;</button>
+        <button type="button" class="btn btn-primary ready" id="nextBtn" data-next>Continuar</button>
       </div>
     </div>
 
   </form>
-
 </div>
 
 <script>
 (function(){
+  // Estado central do formulário
   const state = {
     nome:'', telefone:'', email:'',
     qty:null, totalPessoas:null, ages:[],
@@ -680,144 +1016,249 @@
   };
 
   const steps = Array.from(document.querySelectorAll('.step'));
-  let current = 0;
-  const flow = [0,1,2,3,4,5];
+  let currentStep = 0;
+  const progressFill = document.getElementById('progressFill');
+  const cardBody = document.getElementById('cardBody');
+  const cardFooter = document.getElementById('cardFooter');
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
 
-  // trava o card no tamanho da tela inicial, pra não "pular" de
-  // tamanho conforme o usuário avança pelas etapas.
-  const cardEl = document.getElementById('formCard');
-  function lockCardHeight(){
-    const h = steps[0].scrollHeight;
-    cardEl.style.minHeight = h + 'px';
+  // Suporte a teclado virtual no mobile sem alterar a estrutura da janela
+  function setupKeyboardAdaptation() {
+    if (!window.visualViewport) return;
+
+    function handleResize() {
+      const vh = window.visualViewport.height;
+      const totalH = window.innerHeight;
+      const keyboardOpen = totalH - vh > 140;
+
+      if (keyboardOpen) {
+        document.getElementById('appShell').style.height = `${vh}px`;
+        setTimeout(() => {
+          const activeEl = document.activeElement;
+          if (activeEl && activeEl.tagName === 'INPUT') {
+            activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+      } else {
+        document.getElementById('appShell').style.height = '100%';
+      }
+    }
+
+    window.visualViewport.addEventListener('resize', handleResize);
+    window.visualViewport.addEventListener('scroll', handleResize);
   }
-  window.addEventListener('load', lockCardHeight);
-  window.addEventListener('resize', lockCardHeight);
+  setupKeyboardAdaptation();
 
-  function showStep(stepIndex){
-    steps.forEach(s => s.classList.remove('active'));
-    const el = steps.find(s => Number(s.dataset.step) === stepIndex);
-    el.classList.add('active');
-    current = stepIndex;
-    window.scrollTo({top:0, behavior:'smooth'});
-    flashAnswerButtons(el);
-  }
-
-  function flashAnswerButtons(stepEl){
-    const targets = stepEl.querySelectorAll('.opt.positive, .opt.negative, .opt-card, .logo-card');
-    targets.forEach(function(t, i){
+  // ATIVA AS ANIMAÇÕES DE FLASH EM TODAS AS PERGUNTAS AO MUDAR DE TELA
+  function flashAnswerButtons(stepEl) {
+    const targets = stepEl.querySelectorAll('.opt.positive, .opt.negative, .opt.pill, .plan-card, .logo-card');
+    targets.forEach(function(t, i) {
       t.classList.remove('flash-attn');
-      void t.offsetWidth;
-      setTimeout(function(){ t.classList.add('flash-attn'); }, 120 + i * 40);
+      void t.offsetWidth; // Força repaint
+      setTimeout(function() {
+        t.classList.add('flash-attn');
+      }, 100 + i * 45);
     });
   }
 
-  function setNextReady(btn, ready){
-    btn.disabled = !ready;
-    btn.classList.toggle('ready', ready);
+  function updateProgressBar(idx) {
+    const percentages = [20, 40, 60, 80, 100, 100];
+    progressFill.style.width = percentages[idx] + '%';
   }
 
-  function setError(fieldId, hasError){
-    const wrap = document.getElementById('f-'+fieldId);
-    if(!wrap) return;
-    wrap.classList.toggle('error', hasError);
+  // ATUALIZA O ESTADO DO BOTÃO E ATIVA O PULSO VERDE
+  function setNextReady(ready) {
+    nextBtn.disabled = !ready;
+    nextBtn.classList.toggle('ready', ready);
   }
 
-  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-  function validPhone(v){ return v.replace(/\D/g,'').length >= 10; }
+  function showStep(idx) {
+    currentStep = idx;
+    steps.forEach(s => s.classList.remove('active'));
+    const target = steps.find(s => Number(s.dataset.step) === idx);
+    if (!target) return;
 
-  function maskPhone(v){
-    v = v.replace(/\D/g,'');
-    // Remove o código do país (55) quando alguém digita ele na frente —
-    // sem isso, o corte pros 11 dígitos do DDD+celular cortava o final
-    // do número em vez do "55" do início.
-    if(v.length > 11 && v.startsWith('55')){
+    target.classList.add('active');
+    updateProgressBar(idx);
+    cardBody.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Dispara animações de destaque
+    flashAnswerButtons(target);
+
+    // Controle do botão Voltar
+    backBtn.style.display = (idx > 0 && idx < 5) ? 'flex' : 'none';
+
+    // Gerenciamento de texto e prontidão do botão
+    if (idx === 4) {
+      nextBtn.innerHTML = 'Enviar e receber cotação';
+      checkStep4Valid();
+    } else if (idx === 5) {
+      cardFooter.style.display = 'none';
+      document.querySelector('.progress-track').style.display = 'none';
+    } else {
+      nextBtn.innerHTML = 'Continuar';
+      validateCurrentStep();
+    }
+  }
+
+  function setError(fieldId, hasError) {
+    const el = document.getElementById('f-' + fieldId);
+    if (el) el.classList.toggle('error', hasError);
+  }
+
+  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function validPhone(v) { return v.replace(/\D/g, '').length >= 10; }
+
+  function maskPhone(v) {
+    v = v.replace(/\D/g, '');
+    if (v.length > 11 && v.startsWith('55')) {
       v = v.slice(2);
     }
-    v = v.slice(0,11);
-    // Sem parênteses e sem traço: só "DD NNNNNNNNN"
-    if(v.length > 2) return v.slice(0,2) + ' ' + v.slice(2);
+    v = v.slice(0, 11);
+    if (v.length > 2) return v.slice(0, 2) + ' ' + v.slice(2);
     return v;
   }
 
-  document.getElementById('telefone').addEventListener('input', function(e){
+  document.getElementById('telefone').addEventListener('input', function(e) {
     e.target.value = maskPhone(e.target.value);
+    checkStep0LiveValidation();
   });
+  document.getElementById('nome').addEventListener('input', checkStep0LiveValidation);
+  document.getElementById('email').addEventListener('input', checkStep0LiveValidation);
 
-  const step0NextBtn = steps[0].querySelector('[data-next]');
-  step0NextBtn.addEventListener('click', function(){
+  function checkStep0LiveValidation() {
+    if (currentStep !== 0) return;
+    const nome = document.getElementById('nome').value.trim();
+    const tel = document.getElementById('telefone').value.trim();
+    const mail = document.getElementById('email').value.trim();
+    const isValid = nome.length >= 2 && validPhone(tel) && validEmail(mail);
+    setNextReady(isValid);
+  }
+
+  // ==========================================
+  // ANIMAÇÃO EM ONDA (RIPPLE WAVE NAS OPERADORAS)
+  // ==========================================
+  function playOperatorWaveAnimation() {
+    const cards = document.querySelectorAll('.logo-grid .logo-card');
+    cards.forEach((card, index) => {
+      card.classList.remove('wave-active');
+      setTimeout(() => {
+        card.classList.add('wave-active');
+      }, index * 80);
+      setTimeout(() => {
+        card.classList.remove('wave-active');
+      }, index * 80 + 700);
+    });
+  }
+
+  // ==========================================
+  // ETAPA 0 - VALIDAÇÃO & AVANÇO
+  // ==========================================
+  function handleStep0() {
     const nome = document.getElementById('nome').value.trim();
     const telefone = document.getElementById('telefone').value.trim();
     const email = document.getElementById('email').value.trim();
 
-    let ok = true;
-    if(nome.length < 2){ setError('nome', true); ok = false; } else setError('nome', false);
-    if(!validPhone(telefone)){ setError('telefone', true); ok = false; } else setError('telefone', false);
-    if(!validEmail(email)){ setError('email', true); ok = false; } else setError('email', false);
-    if(!ok) return;
+    let valid = true;
+    if (nome.length < 2) { setError('nome', true); valid = false; } else setError('nome', false);
+    if (!validPhone(telefone)) { setError('telefone', true); valid = false; } else setError('telefone', false);
+    if (!validEmail(email)) { setError('email', true); valid = false; } else setError('email', false);
 
-    state.nome = nome; state.telefone = telefone; state.email = email;
+    if (!valid) return;
+
+    state.nome = nome;
+    state.telefone = telefone;
+    state.email = email;
     sendLeadCapture();
     showStep(1);
-  });
+  }
 
+  // ==========================================
+  // ETAPA 1 - QUANTIDADE & IDADES
+  // ==========================================
   const qtyGrid = document.getElementById('qtyGrid');
   const totalWrap = document.getElementById('totalWrap');
   const totalPessoasInput = document.getElementById('totalPessoas');
   const ageWrap = document.getElementById('ageWrap');
   const ageGrid = document.getElementById('ageGrid');
   const skipAgesHint = document.getElementById('skipAgesHint');
-  const step1NextBtn = steps[1].querySelector('[data-next]');
 
-  function participantCount(){
-    if(state.qty === '6+'){
+  function participantCount() {
+    if (state.qty === '6+') {
       const v = parseInt(totalPessoasInput.value, 10);
       return (!isNaN(v) && v >= 6) ? v : 0;
     }
     return state.qty ? parseInt(state.qty, 10) : 0;
   }
 
-  function buildAgeFields(){
+  function buildAgeFields() {
     const n = state.qty === '6+' ? 0 : participantCount();
     ageGrid.innerHTML = '';
-    if(n <= 0){ ageWrap.classList.remove('open'); return; }
+    if (n <= 0) {
+      ageWrap.classList.remove('open');
+      return;
+    }
     const labels = ['Titular'];
-    for(let i=2;i<=n;i++){ labels.push(i+'ª pessoa'); }
-    for(let i=0;i<n;i++){
+    for (let i = 2; i <= n; i++) labels.push(i + 'ª pessoa');
+    for (let i = 0; i < n; i++) {
       const div = document.createElement('div');
       div.className = 'field age-field';
-      div.innerHTML = '<label>Idade — '+labels[i]+'</label><input type="number" inputmode="numeric" min="0" max="120" data-age-idx="'+i+'" placeholder="Ex: 34">';
+      div.innerHTML = '<label>Idade (' + labels[i] + ')</label><input type="number" inputmode="numeric" min="0" max="120" placeholder="Ex: 35">';
       ageGrid.appendChild(div);
     }
     ageWrap.classList.add('open');
+
+    // Dispara animação de flash escalonada nos campos de idade
+    setTimeout(() => {
+      const inputs = ageGrid.querySelectorAll('input');
+      inputs.forEach((input, idx) => {
+        input.classList.remove('flash-attn');
+        void input.offsetWidth;
+        setTimeout(() => {
+          input.classList.add('flash-attn');
+          if (idx === 0) input.focus();
+        }, idx * 60);
+      });
+    }, 150);
   }
 
-  function checkStep1Valid(){
-    if(!state.qty){ setNextReady(step1NextBtn, false); return; }
-    if(state.qty === '6+'){
+  function checkStep1Valid() {
+    if (!state.qty) { setNextReady(false); return; }
+    if (state.qty === '6+') {
       const v = parseInt(totalPessoasInput.value, 10);
-      setNextReady(step1NextBtn, !isNaN(v) && v >= 6);
+      setNextReady(!isNaN(v) && v >= 6);
       return;
     }
     const inputs = ageGrid.querySelectorAll('input');
     let ok = inputs.length > 0;
-    inputs.forEach(inp=>{
-      const v = parseInt(inp.value,10);
-      if(isNaN(v) || v < 0 || v > 120) ok = false;
+    inputs.forEach(inp => {
+      const v = parseInt(inp.value, 10);
+      if (isNaN(v) || v < 0 || v > 120) ok = false;
     });
-    setNextReady(step1NextBtn, ok);
+    setNextReady(ok);
   }
 
-  qtyGrid.addEventListener('click', function(e){
+  qtyGrid.addEventListener('click', function(e) {
     const opt = e.target.closest('.opt');
-    if(!opt) return;
-    qtyGrid.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    if (!opt) return;
+    qtyGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     state.qty = opt.dataset.value;
-    if(state.qty === '6+'){
+
+    if (state.qty === '6+') {
       totalWrap.classList.add('open');
       ageGrid.innerHTML = '';
       ageWrap.classList.remove('open');
       skipAgesHint.style.display = 'block';
+
+      // Dispara animação de flash no campo de 6+ pessoas
+      setTimeout(() => {
+        totalPessoasInput.classList.remove('flash-attn');
+        void totalPessoasInput.offsetWidth;
+        totalPessoasInput.classList.add('flash-attn');
+        totalPessoasInput.focus();
+      }, 150);
     } else {
       totalWrap.classList.remove('open');
       totalPessoasInput.value = '';
@@ -829,61 +1270,60 @@
   totalPessoasInput.addEventListener('input', checkStep1Valid);
   ageGrid.addEventListener('input', checkStep1Valid);
 
-  step1NextBtn.addEventListener('click', function(){
-    const inputs = ageGrid.querySelectorAll('input');
-    state.ages = Array.from(inputs).map(i=>i.value);
-    state.totalPessoas = participantCount();
-    showStep(2);
-  });
-  steps[1].querySelector('[data-back]').addEventListener('click', function(){ showStep(0); });
-
+  // ==========================================
+  // ETAPA 2 - PLANOS & OPERADORAS
+  // ==========================================
   const planGrid = document.getElementById('planGrid');
   const hasPlanGrid = document.getElementById('hasPlanGrid');
   const planoAtualWrap = document.getElementById('planoAtualWrap');
   const logoGrid = document.getElementById('logoGrid');
   const planoOutroWrap = document.getElementById('planoOutroWrap');
   const planoAtualInput = document.getElementById('planoAtual');
-  const step2NextBtn = steps[2].querySelector('[data-next]');
-  let planoAtualSelectedName = null;
+  let selectedOperator = null;
 
-  function checkStep2Valid(){
-    if(!state.tipoPlano){ setNextReady(step2NextBtn, false); return; }
-    if(state.temPlano === 'SIM'){
-      if(!planoAtualSelectedName){ setNextReady(step2NextBtn, false); return; }
-      if(planoAtualSelectedName === 'Outros'){
-        setNextReady(step2NextBtn, planoAtualInput.value.trim().length >= 2);
+  function checkStep2Valid() {
+    if (!state.tipoPlano) { setNextReady(false); return; }
+    if (state.temPlano === 'SIM') {
+      if (!selectedOperator) { setNextReady(false); return; }
+      if (selectedOperator === 'Outros') {
+        setNextReady(planoAtualInput.value.trim().length >= 2);
       } else {
-        setNextReady(step2NextBtn, true);
+        setNextReady(true);
       }
-    } else if(state.temPlano === 'Não'){
-      setNextReady(step2NextBtn, true);
+    } else if (state.temPlano === 'Não') {
+      setNextReady(true);
     } else {
-      setNextReady(step2NextBtn, false);
+      setNextReady(false);
     }
   }
 
-  planGrid.addEventListener('click', function(e){
-    const card = e.target.closest('.opt-card');
-    if(!card) return;
-    planGrid.querySelectorAll('.opt-card').forEach(c=>c.classList.remove('selected'));
+  planGrid.addEventListener('click', function(e) {
+    const card = e.target.closest('.plan-card');
+    if (!card) return;
+    planGrid.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     state.tipoPlano = card.dataset.value;
     checkStep2Valid();
   });
 
-  hasPlanGrid.addEventListener('click', function(e){
+  hasPlanGrid.addEventListener('click', function(e) {
     const opt = e.target.closest('.opt');
-    if(!opt) return;
-    hasPlanGrid.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    if (!opt) return;
+    hasPlanGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     state.temPlano = opt.dataset.value;
-    if(state.temPlano === 'SIM'){
+
+    if (state.temPlano === 'SIM') {
       planoAtualWrap.classList.add('open');
+      setTimeout(() => {
+        planoAtualWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        playOperatorWaveAnimation();
+      }, 150);
     } else {
       planoAtualWrap.classList.remove('open');
       planoOutroWrap.classList.remove('open');
-      logoGrid.querySelectorAll('.logo-card').forEach(c=>c.classList.remove('selected'));
-      planoAtualSelectedName = null;
+      logoGrid.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
+      selectedOperator = null;
       state.planoAtual = '';
       planoAtualInput.value = '';
       setError('planoAtual', false);
@@ -891,14 +1331,16 @@
     checkStep2Valid();
   });
 
-  logoGrid.addEventListener('click', function(e){
+  logoGrid.addEventListener('click', function(e) {
     const card = e.target.closest('.logo-card');
-    if(!card) return;
-    logoGrid.querySelectorAll('.logo-card').forEach(c=>c.classList.remove('selected'));
+    if (!card) return;
+    logoGrid.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
-    planoAtualSelectedName = card.dataset.name;
-    if(planoAtualSelectedName === 'Outros'){
+    selectedOperator = card.dataset.name;
+
+    if (selectedOperator === 'Outros') {
       planoOutroWrap.classList.add('open');
+      setTimeout(() => planoAtualInput.focus(), 120);
     } else {
       planoOutroWrap.classList.remove('open');
       planoAtualInput.value = '';
@@ -908,55 +1350,44 @@
   });
   planoAtualInput.addEventListener('input', checkStep2Valid);
 
-  step2NextBtn.addEventListener('click', function(){
-    if(state.temPlano === 'SIM'){
-      if(planoAtualSelectedName === 'Outros'){
-        const v = planoAtualInput.value.trim();
-        if(v.length < 2){ setError('planoAtual', true); return; }
-        state.planoAtual = v;
-        setError('planoAtual', false);
-      } else {
-        state.planoAtual = planoAtualSelectedName;
-      }
-    }
-    showStep(3);
-  });
-  steps[2].querySelector('[data-back]').addEventListener('click', function(){ showStep(1); });
-
+  // ==========================================
+  // ETAPA 3 - CNPJ & CIDADE
+  // ==========================================
   const cnpjGrid = document.getElementById('cnpjGrid');
   const spGrid = document.getElementById('spGrid');
   const cidadeWrap = document.getElementById('cidadeWrap');
   const cidadeInput = document.getElementById('cidade');
-  const step3NextBtn = steps[3].querySelector('[data-next]');
 
-  function checkStep3Valid(){
-    if(!state.cnpj){ setNextReady(step3NextBtn, false); return; }
-    if(state.residesSP === 'NÃO'){
-      setNextReady(step3NextBtn, cidadeInput.value.trim().length >= 2);
-    } else if(state.residesSP === 'SIM'){
-      setNextReady(step3NextBtn, true);
+  function checkStep3Valid() {
+    if (!state.cnpj) { setNextReady(false); return; }
+    if (state.residesSP === 'NÃO') {
+      setNextReady(cidadeInput.value.trim().length >= 2);
+    } else if (state.residesSP === 'SIM') {
+      setNextReady(true);
     } else {
-      setNextReady(step3NextBtn, false);
+      setNextReady(false);
     }
   }
 
-  cnpjGrid.addEventListener('click', function(e){
+  cnpjGrid.addEventListener('click', function(e) {
     const opt = e.target.closest('.opt');
-    if(!opt) return;
-    cnpjGrid.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    if (!opt) return;
+    cnpjGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     state.cnpj = opt.dataset.value;
     checkStep3Valid();
   });
 
-  spGrid.addEventListener('click', function(e){
+  spGrid.addEventListener('click', function(e) {
     const opt = e.target.closest('.opt');
-    if(!opt) return;
-    spGrid.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    if (!opt) return;
+    spGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     state.residesSP = opt.dataset.value;
-    if(state.residesSP === 'NÃO'){
+
+    if (state.residesSP === 'NÃO') {
       cidadeWrap.classList.add('open');
+      setTimeout(() => cidadeInput.focus(), 150);
     } else {
       cidadeWrap.classList.remove('open');
       state.cidade = '';
@@ -967,31 +1398,21 @@
   });
   cidadeInput.addEventListener('input', checkStep3Valid);
 
-  step3NextBtn.addEventListener('click', function(){
-    if(state.residesSP === 'NÃO'){
-      const v = cidadeInput.value.trim();
-      if(v.length < 2){ setError('cidade', true); return; }
-      state.cidade = v;
-      setError('cidade', false);
-    }
-    setupStep4();
-    showStep(4);
-  });
-  steps[3].querySelector('[data-back]').addEventListener('click', function(){ showStep(2); });
-
+  // ==========================================
+  // ETAPA 4 - HOSPITAL & REVISÃO
+  // ==========================================
   const hospQuestionWrap = document.getElementById('hospQuestionWrap');
   const hospGrid = document.getElementById('hospGrid');
   const hospitalWrap = document.getElementById('hospitalWrap');
   const hospitalInput = document.getElementById('hospital');
   const reviewList = document.getElementById('reviewList');
-  const submitBtn = document.getElementById('submitBtn');
 
-  function isPremium(){
+  function isPremium() {
     return (state.tipoPlano || '').indexOf('Premium') === 0;
   }
 
-  function setupStep4(){
-    if(isPremium()){
+  function setupStep4() {
+    if (isPremium()) {
       hospQuestionWrap.style.display = 'none';
       state.hospPref = null;
       state.hospital = '';
@@ -1002,48 +1423,54 @@
     checkStep4Valid();
   }
 
-  function buildReview(){
-    let hospitalLine;
-    if(isPremium()){
-      hospitalLine = 'Rede Premium (Einstein, Sírio-Libanês, Fleury, Alta)';
+  function buildReview() {
+    let hospDisplay;
+    if (isPremium()) {
+      hospDisplay = 'Rede Premium (Einstein, Sírio-Libanês, Fleury, Alta)';
     } else {
-      hospitalLine = state.hospPref === 'Tenho Preferência' ? (state.hospital || '—') : 'Sem preferência';
+      hospDisplay = (state.hospPref === 'Tenho Preferência') ? (state.hospital || '—') : 'Sem preferência';
     }
+
     const rows = [
       ['Contato', state.nome + ' · ' + state.telefone, 0],
-      ['Participantes', (state.totalPessoas || '—') + (state.ages.length ? ' (idades: '+state.ages.join(', ')+')' : ''), 1],
-      ['Plano buscado', (state.tipoPlano||'').split(' - ')[0] + (state.temPlano === 'SIM' ? ' · tem plano: '+state.planoAtual : ' · sem plano atual'), 2],
-      ['CNPJ / Local', state.cnpj + (state.residesSP === 'NÃO' ? ' · '+state.cidade : ' · SP capital'), 3],
-      ['Hospital preferido', hospitalLine, 4],
+      ['Participantes', (state.totalPessoas || '—') + (state.ages.length ? ' (idades: ' + state.ages.join(', ') + ')' : ''), 1],
+      ['Plano buscado', (state.tipoPlano || '').split(' - ')[0] + (state.temPlano === 'SIM' ? ' · tem plano: ' + state.planoAtual : ' · sem plano atual'), 2],
+      ['CNPJ / Local', (state.cnpj === 'SIM' ? 'Possui CNPJ' : 'Sem CNPJ') + (state.residesSP === 'NÃO' ? ' · ' + state.cidade : ' · SP Capital'), 3],
+      ['Hospital preferido', hospDisplay, 4]
     ];
-    reviewList.innerHTML = rows.map(function(r){
-      return '<div class="review-row"><span class="k">'+r[0]+'</span>'+
-        '<span class="v">'+r[1]+'<button type="button" class="edit-link" data-goto="'+r[2]+'">editar</button></span></div>';
-    }).join('');
+
+    reviewList.innerHTML = rows.map(r => `
+      <div class="review-row">
+        <span class="k">${r[0]}</span>
+        <span class="v">${r[1]} <button type="button" class="edit-link" data-goto="${r[2]}">editar</button></span>
+      </div>
+    `).join('');
   }
 
-  function checkStep4Valid(){
-    let ok;
-    if(isPremium()){
-      ok = true;
-    } else if(state.hospPref === 'Tenho Preferência'){
-      ok = hospitalInput.value.trim().length >= 2;
-    } else if(state.hospPref === 'Não tenho Preferência'){
-      ok = true;
+  function checkStep4Valid() {
+    let valid;
+    if (isPremium()) {
+      valid = true;
+    } else if (state.hospPref === 'Tenho Preferência') {
+      valid = hospitalInput.value.trim().length >= 2;
+    } else if (state.hospPref === 'Não tenho Preferência') {
+      valid = true;
     } else {
-      ok = false;
+      valid = false;
     }
-    setNextReady(submitBtn, ok);
+    setNextReady(valid);
   }
 
-  hospGrid.addEventListener('click', function(e){
+  hospGrid.addEventListener('click', function(e) {
     const opt = e.target.closest('.opt');
-    if(!opt) return;
-    hospGrid.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    if (!opt) return;
+    hospGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     state.hospPref = opt.dataset.value;
-    if(state.hospPref === 'Tenho Preferência'){
+
+    if (state.hospPref === 'Tenho Preferência') {
       hospitalWrap.classList.add('open');
+      setTimeout(() => hospitalInput.focus(), 120);
     } else {
       hospitalWrap.classList.remove('open');
       state.hospital = '';
@@ -1053,59 +1480,119 @@
     buildReview();
     checkStep4Valid();
   });
-  hospitalInput.addEventListener('input', function(){
+  hospitalInput.addEventListener('input', function() {
     state.hospital = hospitalInput.value.trim();
     buildReview();
     checkStep4Valid();
   });
 
-  reviewList.addEventListener('click', function(e){
+  reviewList.addEventListener('click', function(e) {
     const btn = e.target.closest('[data-goto]');
-    if(!btn) return;
-    showStep(parseInt(btn.dataset.goto,10));
+    if (!btn) return;
+    showStep(parseInt(btn.dataset.goto, 10));
   });
-  steps[4].querySelector('[data-back]').addEventListener('click', function(){ showStep(3); });
 
-  submitBtn.addEventListener('click', function(){
-    if(state.hospPref === 'Tenho Preferência'){
-      const v = hospitalInput.value.trim();
-      if(v.length < 2){ setError('hospital', true); return; }
+  function validateCurrentStep() {
+    if (currentStep === 0) {
+      checkStep0LiveValidation();
+    } else if (currentStep === 1) {
+      checkStep1Valid();
+    } else if (currentStep === 2) {
+      checkStep2Valid();
+    } else if (currentStep === 3) {
+      checkStep3Valid();
+    } else if (currentStep === 4) {
+      checkStep4Valid();
     }
-    submitBtn.disabled = true;
-    submitBtn.classList.remove('ready');
-    submitBtn.innerHTML = '<span class="loader"></span>Enviando...';
-    sendFinalSubmission();
-    setTimeout(function(){
-      document.getElementById('successName').textContent = state.nome.split(' ')[0] + '!';
-      showStep(5);
-    }, 600);
+  }
+
+  // ==========================================
+  // DISPATCHERS & NAVEGAÇÃO
+  // ==========================================
+  nextBtn.addEventListener('click', function() {
+    if (currentStep === 0) {
+      handleStep0();
+    } else if (currentStep === 1) {
+      const inputs = ageGrid.querySelectorAll('input');
+      state.ages = Array.from(inputs).map(i => i.value);
+      state.totalPessoas = participantCount();
+      showStep(2);
+    } else if (currentStep === 2) {
+      if (state.temPlano === 'SIM') {
+        if (selectedOperator === 'Outros') {
+          const v = planoAtualInput.value.trim();
+          if (v.length < 2) { setError('planoAtual', true); return; }
+          state.planoAtual = v;
+        } else {
+          state.planoAtual = selectedOperator;
+        }
+      }
+      showStep(3);
+    } else if (currentStep === 3) {
+      if (state.residesSP === 'NÃO') {
+        const v = cidadeInput.value.trim();
+        if (v.length < 2) { setError('cidade', true); return; }
+        state.cidade = v;
+      }
+      setupStep4();
+      showStep(4);
+    } else if (currentStep === 4) {
+      if (!isPremium() && state.hospPref === 'Tenho Preferência') {
+        const v = hospitalInput.value.trim();
+        if (v.length < 2) { setError('hospital', true); return; }
+      }
+      nextBtn.disabled = true;
+      nextBtn.classList.remove('ready');
+      nextBtn.innerHTML = '<span class="loader"></span> Enviando...';
+      sendFinalSubmission();
+      setTimeout(function() {
+        document.getElementById('successName').textContent = state.nome.split(' ')[0] + '!';
+        showStep(5);
+      }, 700);
+    }
   });
 
-  const WEBHOOK_CAPTURE_URL = 'https://formulario-livecare.livecarebr.workers.dev/';
-  const WEBHOOK_SUBMIT_URL  = 'https://formulario-livecare.livecarebr.workers.dev/';
+  backBtn.addEventListener('click', function() {
+    if (currentStep > 0) {
+      showStep(currentStep - 1);
+    }
+  });
 
-  function sendLeadCapture(){
-    try{
-      fetch(WEBHOOK_CAPTURE_URL, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+  // ==========================================
+  // WEBHOOKS
+  // ==========================================
+  const WEBHOOK_URL = 'https://formulario-livecare.livecarebr.workers.dev/';
+
+  function sendLeadCapture() {
+    try {
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          evento:'lead_capturado',
-          nome: state.nome, telefone: state.telefone, email: state.email,
+          evento: 'lead_capturado',
+          nome: state.nome,
+          telefone: state.telefone,
+          email: state.email,
           origem: document.referrer || null,
           ts: new Date().toISOString()
         })
-      }).catch(function(){});
-    }catch(err){}
+      }).catch(() => {});
+    } catch(err) {}
   }
 
-  function sendFinalSubmission(){
-    return fetch(WEBHOOK_SUBMIT_URL, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(Object.assign({evento:'cotacao_completa', ts:new Date().toISOString()}, state))
-    }).catch(function(){});
+  function sendFinalSubmission() {
+    return fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({
+        evento: 'cotacao_completa',
+        ts: new Date().toISOString()
+      }, state))
+    }).catch(() => {});
   }
+
+  // Inicialização
+  showStep(0);
 })();
 </script>
 </body>
