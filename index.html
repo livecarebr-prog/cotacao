@@ -1147,6 +1147,46 @@
     .intro *, .intro { animation-duration:.01s !important; animation-delay:0s !important; }
   }
 </style>
+<style id="lc-desempenho">
+  /* celular: só animações leves (transform/opacity), sem sombra pulsando a cada quadro */
+  @keyframes needGlowLeve { 0%,100% { border-color: rgba(255,255,255,.28); } 50% { border-color: #f7952c; } }
+  @keyframes readyPulseLeve { 0%,100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+  @media (max-width: 580px) {
+    .card::before { animation: none !important; }
+    .option-grid.need .opt:not(.selected), .chip-grid.need .opt:not(.selected),
+    .plan-card-stack.need .plan-card:not(.selected), .logo-grid.need .logo-card:not(.selected) {
+      animation: needGlowLeve 1.5s steps(6) infinite, needLift 1.5s ease-in-out infinite !important; }
+    .field.need input { animation: none !important; box-shadow: 0 0 0 3px rgba(247,149,44,.55) !important; }
+    .btn-primary.ready { animation: readyPulseLeve 1.5s ease-in-out infinite !important; will-change: transform; }
+    .qs-chip.ghost { animation: none !important; opacity: .8; }
+    .step.active > * { animation-duration: .32s !important; }
+    .card-body { padding: 14px 16px 8px !important; overscroll-behavior: auto !important; }
+    .card-footer { padding: 10px 16px 14px !important; }
+    .step .eyebrow { margin-bottom: 4px !important; }
+    .step h2 { margin-bottom: 6px !important; }
+    .step.active > *:nth-child(n) { animation-delay: 0s !important; }
+    html, body { touch-action: manipulation; }
+  }
+</style>
+<style id="lc-sem-redundancia">
+  .step .eyebrow,
+  .step[data-step="1"] > h2, .step[data-step="2"] > h2, .step[data-step="3"] > h2, #hospQuestionWrap > h2,
+  .step .subhead, .step[data-step="3"] .subhint,
+  #f-cidade > label, #f-planoAtual > label {
+    position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important;
+    padding: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important;
+  }
+  .step[data-step="1"] > .hint { display: none !important; }
+  .step .buddy { margin-bottom: 12px; }
+</style>
+<style id="lc-progressivo">
+  /* sem a faixa "Montando sua cotação": o resumo aparece só na hora de enviar */
+  #quoteStrip { display: none !important; }
+  /* a pergunta de baixo só aparece depois de responder a de cima */
+  #hasPlanGrid:not(.lc-mostrar), #spGrid:not(.lc-mostrar) { display: none !important; }
+  .step[data-step="4"] #reviewList:not(.lc-mostrar), .step[data-step="4"] #waConfirm:not(.lc-mostrar), .step[data-step="4"] .lc-resumo-titulo:not(.lc-mostrar) { display: none !important; }
+  .lc-resumo-titulo { position: static !important; width: auto !important; height: auto !important; margin: 16px 0 8px !important; clip: auto !important; overflow: visible !important; white-space: normal !important; color: #FFB45C; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+</style>
 </head>
 <body>
 
@@ -1198,7 +1238,7 @@
       <div class="step active" data-step="0">
         <p class="eyebrow">Vamos começar</p>
         <h2>Compare planos empresariais e economize</h2>
-        <p class="hint"><strong style="color:var(--blue-deep);">⏱️ Leva menos de 1 minuto.</strong> Sem compromisso — compare valores com clareza.</p>
+        <p class="hint"><strong style="color:var(--blue-deep);">⏱️ Leva menos de 1 minuto e não custa nada</strong></p>
 
         <div class="field" id="f-nome">
           <label for="nome">Nome Completo</label>
@@ -1464,7 +1504,7 @@
           </div>
         </div>
 
-        <p class="subhead" style="margin-top:16px;">Confira e envie</p>
+        <p class="lc-resumo-titulo">Confira e envie</p>
         <div class="review-list" id="reviewList"></div>
         <p class="wa-confirm" id="waConfirm"></p>
       </div>
@@ -1542,7 +1582,7 @@
         setTimeout(() => {
           const activeEl = document.activeElement;
           if (activeEl && activeEl.tagName === 'INPUT') {
-            activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            (function(el){ var cb = el && el.closest('.card-body'); if (!cb || cb.scrollHeight <= cb.clientHeight) return; var r = el.getBoundingClientRect(), rc = cb.getBoundingClientRect(); cb.scrollTop += (r.top - rc.top) - 12; })(activeEl);
           }
         }, 100);
       } else {
@@ -2003,7 +2043,7 @@
     if (state.temPlano === 'SIM') {
       planoAtualWrap.classList.add('open');
       setTimeout(() => {
-        planoAtualWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        (function(el){ var cb = el && el.closest('.card-body'); if (!cb || cb.scrollHeight <= cb.clientHeight) return; var r = el.getBoundingClientRect(), rc = cb.getBoundingClientRect(); cb.scrollTop += (r.top - rc.top) - 12; })(planoAtualWrap);
         playOperatorWaveAnimation();
       }, 150);
     } else {
@@ -2285,33 +2325,53 @@
   // ==========================================
   const WEBHOOK_URL = 'https://formulario-livecare.livecarebr.workers.dev/';
 
-  function sendLeadCapture() {
+  // envio igual ao formulário que funcionava, mas sem depender de permissão de origem (CORS):
+  // o formulário agora roda dentro do site, e não mais no github.io
+  function enviarLead(dados) {
+    const corpo = JSON.stringify(dados);
+    // no GitHub (onde o formulário antigo funcionava) usa exatamente o envio original
+    if (/github\.io$/.test(location.hostname)) {
+      return fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: corpo }).catch(function () {});
+    }
     try {
-      fetch(WEBHOOK_URL, {
+      return fetch(WEBHOOK_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          evento: 'lead_capturado',
-          nome: state.nome,
-          telefone: state.telefone,
-          email: state.email,
-          origem: document.referrer || null,
-          campanha: state.campanha,
-          ts: new Date().toISOString()
-        })
-      }).catch(() => {});
-    } catch(err) {}
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: corpo
+      }).catch(function () {
+        try { navigator.sendBeacon && navigator.sendBeacon(WEBHOOK_URL, new Blob([corpo], { type: 'text/plain;charset=UTF-8' })); } catch (e) {}
+      });
+    } catch (err) {
+      try { navigator.sendBeacon && navigator.sendBeacon(WEBHOOK_URL, new Blob([corpo], { type: 'text/plain;charset=UTF-8' })); } catch (e) {}
+      return Promise.resolve();
+    }
+  }
+
+  function sendLeadCapture() {
+    enviarLead({
+      evento: 'lead_capturado',
+      nome: state.nome, telefone: state.telefone, email: state.email,
+      origem: document.referrer || null,
+      ts: new Date().toISOString()
+    });
+  }
+
+  // mesmos campos e valores do formulário original
+  function formatoOriginal(d) {
+    const saida = Object.assign({}, d);
+    const n = parseInt(saida.qty, 10);
+    if (saida.qty === '10+' || (!isNaN(n) && n >= 6)) {
+      if (!saida.totalPessoas && !isNaN(n)) saida.totalPessoas = n;
+      saida.qty = '6+';
+    }
+    delete saida.campanha;
+    return saida;
   }
 
   function sendFinalSubmission() {
-    return fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.assign({
-        evento: 'cotacao_completa',
-        ts: new Date().toISOString()
-      }, state))
-    }).catch(() => {});
+    return enviarLead(formatoOriginal(Object.assign({ evento: 'cotacao_completa', ts: new Date().toISOString() }, state)));
   }
 
   // Pré-preenchimento pelo link do e-mail: ?email=...&nome=...&op=template
@@ -2394,11 +2454,11 @@
       + '<i class="b-speed s1"></i><i class="b-speed s2"></i><i class="b-speed s3"></i></div>';
 
     const MSG = {
-      0: 'Oi! Eu te ajudo a achar o melhor plano para a sua empresa 💙',
-      1: 'Conte você e os dependentes que vão usar. Eu faço a conta! 👇',
-      2: 'Escolha o tipo de plano. Eu comparo as operadoras pra você 👇',
-      3: 'Com CNPJ o preço costuma ser bem melhor. Bora conferir? 💰',
-      4: 'Última etapa! Se tiver um hospital favorito, me conta 🏥'
+      0: 'Oi! Eu te ajudo a achar o melhor plano para a sua família e empresa 💙',
+      1: 'Quantas pessoas vão participar do plano? Conte você e os dependentes 👇',
+      2: 'Qual tipo de plano você busca? 👇',
+      3: 'Você tem CNPJ?',
+      4: 'Última pergunta: tem algum hospital ou laboratório de preferência? 🏥'
     };
     const ACTS = {
       0: ['wave','pointD','thumb'], 1: ['pointD','thumb','wave'], 2: ['pointD','thumb','dance'],
@@ -2469,14 +2529,14 @@
       }, 520);
       setTimeout(function(){
         run(nb, activeIdx, msg, 'pointD');
-        try { nb.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(e){}
+        try { var cb = nb.closest('.card-body'); if (cb && cb.scrollHeight > cb.clientHeight) { var r = nb.getBoundingClientRect(), rc = cb.getBoundingClientRect(); cb.scrollTop += (r.top - rc.top) - 8; } } catch(e){}
       }, 420);
     }
     (function(){
       const map = [
         ['ageWrap','Agora a idade de cada um. Pode ser aproximada 👇'],
-        ['planoAtualWrap','Qual é o plano que você tem hoje? Assim eu comparo melhor 👇'],
-        ['cidadeWrap','Em que cidade fica a empresa? 📍'],
+        ['planoAtualWrap','Qual é o seu plano de saúde atual? 👇'],
+        ['cidadeWrap','Em qual cidade você reside? 📍'],
         ['hospitalWrap','Toque nos que você quer. Pode marcar vários 🏥']
       ];
       map.forEach(function(m){
@@ -2485,8 +2545,8 @@
       });
     })();
     document.addEventListener('click', function(e){
-      if (e.target.closest('.plan-card')) handoff('hasPlan', document.getElementById('hasPlanSub'), 'Agora me diz: você já tem plano de saúde? 👇');
-      else if (e.target.closest('#cnpjGrid .opt')) handoff('sp', document.getElementById('spSub'), 'Agora a localização: a empresa fica em São Paulo capital? 📍');
+      if (e.target.closest('.plan-card')) handoff('hasPlan', document.getElementById('hasPlanSub'), 'Você já tem plano de saúde? 👇');
+      else if (e.target.closest('#cnpjGrid .opt')) handoff('sp', document.getElementById('spSub'), 'Você reside em São Paulo capital? 📍');
     });
     window.__buddyEnter = enter;
 
@@ -2509,6 +2569,134 @@
       if (e.target.closest('.opt, .plan-card, .logo-card')) act(Math.random() < .5 ? 'thumb' : 'cheer', 1500);
     });
   })();
+</script>
+<script id="lc-ponte">
+(function(){
+  if (window.parent === window) return;
+  var estreito = function(){ return window.innerWidth <= 580; };
+  var avisou = false;
+  document.addEventListener('pointerdown', function(){
+    if (avisou || !estreito()) return;
+    avisou = true;
+    try { window.parent.postMessage({ lcInicio: true }, '*'); } catch(e){}
+  }, { passive: true });
+  var pendente = null;
+  var evidenciar = function(){
+    clearTimeout(pendente);
+    pendente = setTimeout(function(){
+      if (!estreito()) return;
+      var passo = document.querySelector('.step.active');
+      if (!passo) return;
+      var botoes = passo.querySelectorAll('.btn-primary');
+      var b = botoes[botoes.length - 1];
+      if (!b || !b.offsetParent) return;
+      try { window.parent.postMessage({ lcEvidencia: true, y: b.getBoundingClientRect().bottom }, '*'); } catch(e){}
+    }, 280);
+  };
+  // só ajuda quando o teclado está aberto num campo; nunca puxa a página por conta própria
+  document.addEventListener('change', function(ev){ if (ev.target && ev.target.matches('input, select')) evidenciar(); });
+})();
+</script>
+<script id="lc-caber">
+(function(){
+  // celular: cada etapa encolhe o necessário para caber inteira na tela, sem rolagem
+  var estreito = function(){ return window.innerWidth <= 580; };
+  var agendado = false;
+  var ajustar = function(){
+    agendado = false;
+    var corpos = document.querySelectorAll('.card-body');
+    corpos.forEach(function(corpo){
+      var passo = corpo.querySelector('.step.active') || corpo.firstElementChild;
+      if (!passo) return;
+      passo.style.zoom = '';
+      if (!estreito()) return;
+      var z = 1;
+      while (corpo.scrollHeight > corpo.clientHeight + 1 && z > 0.68) {
+        z = Math.round((z - 0.03) * 100) / 100;
+        passo.style.zoom = z;
+      }
+      corpo.scrollTop = 0;
+    });
+  };
+  var pedir = function(){ if (agendado) return; agendado = true; setTimeout(ajustar, 40); };
+  var iniciar = function(){
+    var alvo = document.querySelector('.card') || document.body;
+    // ignora o balão do coração (o texto digitado mudava a cada 24ms e travava tudo)
+    new MutationObserver(function(lista){
+      for (var i = 0; i < lista.length; i++) {
+        var n = lista[i].target;
+        var el = n.nodeType === 1 ? n : n.parentElement;
+        if (el && !el.closest('.buddy')) { pedir(); return; }
+      }
+    }).observe(alvo, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'hidden'] });
+    window.addEventListener('resize', pedir);
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(function(){ agendado = false; ajustar(); });
+      document.querySelectorAll('.card-body').forEach(function(c){ ro.observe(c); });
+    }
+    pedir();
+    setTimeout(pedir, 600);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar); else iniciar();
+})();
+</script>
+<script id="lc-arrastar">
+(function(){
+  // celular: arrastar o dedo em cima do formulário rola a página do site
+  if (window.parent === window) return;
+  var estreito = function(){ return window.innerWidth <= 580; };
+  var y0 = 0, x0 = 0, ultimo = 0, vertical = null, amostras = [];
+  var enviar = function(m){ try { window.parent.postMessage(m, '*'); } catch(e){} };
+  document.addEventListener('touchstart', function(ev){
+    if (!estreito() || ev.touches.length !== 1) { vertical = false; return; }
+    var t = ev.touches[0];
+    y0 = ultimo = t.screenY; x0 = t.screenX; vertical = null; amostras = [];
+    enviar({ lcParar: true });
+  }, { passive: true });
+  document.addEventListener('touchmove', function(ev){
+    if (vertical === false || ev.touches.length !== 1) return;
+    var t = ev.touches[0];
+    if (vertical === null) {
+      var dx = Math.abs(t.screenX - x0), dy = Math.abs(t.screenY - y0);
+      if (dx < 6 && dy < 6) return;
+      vertical = dy > dx;
+      if (!vertical) return;
+    }
+    var delta = ultimo - t.screenY;
+    ultimo = t.screenY;
+    amostras.push({ d: delta, t: performance.now() });
+    if (amostras.length > 5) amostras.shift();
+    if (delta) enviar({ lcRolar: delta });
+  }, { passive: true });
+  document.addEventListener('touchend', function(){
+    if (!vertical || amostras.length < 2) { vertical = null; return; }
+    var a = amostras[0], b = amostras[amostras.length - 1];
+    var soma = 0; amostras.forEach(function(s){ soma += s.d; });
+    var dt = Math.max(16, b.t - a.t);
+    var v = soma / dt;
+    if (performance.now() - b.t < 80 && Math.abs(v) > 0.2) enviar({ lcInercia: v });
+    vertical = null;
+  }, { passive: true });
+})();
+</script>
+<script id="lc-revelar">
+(function(){
+  var marcado = function(sel){ return !!document.querySelector(sel); };
+  var mostrar = function(id, sim){ var el = document.getElementById(id); if (el) el.classList.toggle('lc-mostrar', !!sim); };
+  var atualizar = function(){
+    mostrar('hasPlanGrid', marcado('#planGrid .plan-card.selected'));
+    mostrar('spGrid', marcado('#cnpjGrid .opt.selected'));
+    var hosp = marcado('#hospGrid .opt.selected');
+    mostrar('reviewList', hosp); mostrar('waConfirm', hosp);
+    var tit = document.querySelector('.lc-resumo-titulo'); if (tit) tit.classList.toggle('lc-mostrar', hosp);
+  };
+  document.addEventListener('click', function(){ setTimeout(atualizar, 0); });
+  var iniciar = function(){
+    atualizar();
+    document.querySelectorAll('.step[data-step]').forEach(function(s){ new MutationObserver(atualizar).observe(s, { attributes: true, attributeFilter: ['class'] }); });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar); else iniciar();
+})();
 </script>
 </body>
 </html>
