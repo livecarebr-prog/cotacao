@@ -2,2700 +2,423 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Cotação Livecare | Planos de Saúde Empresariais</title>
-
 <meta property="og:type" content="website">
 <meta property="og:title" content="Planos de Saúde com o Seu CNPJ">
 <meta property="og:description" content="Peça sua cotação online. Leva menos de 1 minuto.">
-<meta property="og:image" content="https://livecarebr-prog.github.io/cotacao/cotacao.png">
-<meta property="og:url" content="https://livecarebr-prog.github.io/cotacao/">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0B1220;
-    --ink-soft: #4A5568;
-    --blue: #2F6FED;
-    --blue-deep: #1A4FC4;
-    --green: #22A06B;
-    --green-bright: #10B981;
-    --green-light: #E6F8F0;
-    --green-light-border: #B7EAD3;
-    --red: #E53E3E;
-    --red-light: #FDECEC;
-    --bg: #F5F7FB;
-    --card: #FFFFFF;
-    --border: #E4E9F2;
-    --border-strong: #CBD5E1;
-    --radius: 20px;
-    --radius-btn: 99px;
-    --shadow: 0 24px 50px -15px rgba(15, 35, 80, 0.22);
-  }
-
-  * { box-sizing: border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
-
-  /* FIXA A ALTURA DA TELA - NUNCA PULA NEM REDIMENSIONA O CARD */
-  html, body {
-    height: 100%;
-    height: 100dvh;
-    overflow: hidden;
-  }
-
-  body {
-    background: radial-gradient(120% 140% at 50% -10%, #EFF4FF 0%, var(--bg) 55%);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: var(--ink);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 16px;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  h1, h2, h3, .jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
-
-  /* CONTAINER ESTRUTURAL COM TAMANHO TRAVADO */
-  .shell {
-    width: 100%;
-    max-width: 580px;
-    height: 100%;
-    max-height: 840px;
-    min-height: 600px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* BARRA DE PROGRESSO FIXADA NO TOPO */
-  .progress-track {
-    flex: 0 0 8px;
-    height: 8px;
-    background: #EDF2F7;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    width: 20%;
-    background: linear-gradient(90deg, #f7952c, #ffb35c);
-    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* ÁREA INTERNA COM ROLAGEM INDEPENDENTE - ZERO OSCILAÇÃO DE ALTURA */
-  .card-body {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 26px 24px 16px;
-    display: flex;
-    flex-direction: column;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-  }
-
-  .step {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-  }
-  .step.active {
-    display: flex;
-    animation: stepIn 0.32s cubic-bezier(.25,.7,.3,1);
-  }
-
-  @keyframes stepIn {
-    from { opacity: 0; transform: translateX(12px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  /* TIPOGRAFIA */
-  .eyebrow {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--blue);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin: 0 0 6px;
-  }
-  .step h2 {
-    font-size: 22px;
-    font-weight: 800;
-    line-height: 1.3;
-    margin: 0 0 8px;
-    color: var(--ink);
-  }
-  .step p.hint {
-    font-size: 14.5px;
-    color: var(--ink-soft);
-    line-height: 1.55;
-    margin: 0 0 20px;
-  }
-  .subhead {
-    font-size: 14.5px;
-    font-weight: 700;
-    color: var(--ink);
-    margin: 20px 0 10px;
-  }
-  .subhead.first { margin-top: 4px; }
-  .subhint {
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin: -4px 0 12px;
-    line-height: 1.5;
-  }
-
-  /* INPUTS */
-  .field {
-    margin-bottom: 14px;
-  }
-  .field label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 7px;
-  }
-  .field input {
-    width: 100%;
-    padding: 14px 16px;
-    font-size: 15.5px;
-    font-family: inherit;
-    border: 1.5px solid var(--border-strong);
-    border-radius: 12px;
-    background: #FCFDFF;
-    color: var(--ink);
-    outline: none;
-    transition: border-color .18s, box-shadow .18s, background .18s;
-  }
-  .field input::placeholder { color: #A0AEC0; }
-  .field input:focus {
-    border-color: var(--blue);
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba(47,111,237,0.12);
-  }
-  .field.error input {
-    border-color: var(--red);
-    background: #FEF2F2;
-    box-shadow: 0 0 0 4px rgba(229,62,62,0.10);
-  }
-  .field .err-msg {
-    display: none;
-    font-size: 12.5px;
-    color: var(--red);
-    margin-top: 6px;
-    font-weight: 500;
-  }
-  .field.error .err-msg { display: block; }
-
-  /* ========================================================
-     ANIMAÇÕES DE ATENÇÃO (FLASH NAS OPÇÕES DAS PERGUNTAS)
-     ======================================================== */
-  @keyframes flashPositive {
-    0%, 100% { background-color: #FFFFFF; transform: scale(1); }
-    35% { background-color: #22A06B; border-color: #22A06B; color: #FFFFFF; transform: scale(1.03); box-shadow: 0 4px 14px rgba(34,160,107,0.35); }
-  }
-  @keyframes flashNegative {
-    0%, 100% { background-color: #FFFFFF; transform: scale(1); }
-    35% { background-color: #E53E3E; border-color: #E53E3E; color: #FFFFFF; transform: scale(1.03); box-shadow: 0 4px 14px rgba(229,62,62,0.3); }
-  }
-  @keyframes flashCardAttention {
-    0%, 100% { transform: scale(1); box-shadow: none; }
-    35% { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(47,111,237,0.22); border-color: var(--blue); }
-  }
-  @keyframes flashPillAttention {
-    0%, 100% { transform: scale(1); }
-    35% { transform: scale(1.06); border-color: var(--blue); background: #F0F6FF; color: var(--blue-deep); }
-  }
-
-  .opt.flash-attn.positive { animation: flashPositive 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  .opt.flash-attn.negative { animation: flashPositive 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  .opt.flash-attn.pill { animation: flashPillAttention 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  .plan-card.flash-attn, .logo-card.flash-attn { animation: flashCardAttention 0.65s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
-  /* ========================================================
-     BOTÕES DE ESCOLHA (SIM/NÃO, NÚMEROS)
-     ======================================================== */
-  .option-grid {
-    display: grid;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-  .option-grid.cols-2 { grid-template-columns: 1fr 1fr; }
-  .option-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
-  .option-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
-
-  .opt {
-    border: 1.5px solid var(--border-strong);
-    background: #FCFDFF;
-    border-radius: 12px;
-    padding: 14px 10px;
-    text-align: center;
-    font-size: 14.5px;
-    font-weight: 600;
-    color: var(--ink);
-    cursor: pointer;
-    transition: border-color .18s, background .18s, transform .12s, box-shadow .18s, color .18s;
-    user-select: none;
-  }
-  .opt:hover { border-color: #94A3B8; background: #F8FAFC; }
-  .opt:active { transform: scale(.96); }
-  .opt.small { padding: 13px 4px; font-size: 14px; }
-  .opt.selected {
-    border-color: var(--blue);
-    background: rgba(47,111,237,0.08);
-    color: var(--blue-deep);
-    font-weight: 700;
-    box-shadow: 0 0 0 2px rgba(47,111,237,0.22);
-  }
-  .opt.selected.positive {
-    border-color: var(--green);
-    background: var(--green-light);
-    color: #136B49;
-    box-shadow: 0 0 0 2px rgba(34,160,107,0.28);
-  }
-  .opt.selected.negative {
-    border-color: var(--green);
-    background: var(--green-light);
-    color: #136B49;
-    box-shadow: 0 0 0 2px rgba(34,160,107,0.28);
-  }
-
-  /* ========================================================
-     CARDS DE PLANO - SUPER EVIDENTES E CLAROS
-     ======================================================== */
-  .plan-card-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-
-  .plan-card {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 18px;
-    border-radius: 15px;
-    border: 2px solid var(--border-strong);
-    background: #FFFFFF;
-    cursor: pointer;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .plan-card:hover {
-    border-color: #94A3B8;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
-  }
-  .plan-card:active { transform: scale(0.985); }
-
-  .plan-info {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex: 1;
-  }
-
-  .plan-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-  }
-  .plan-avatar svg { width: 22px; height: 22px; }
-
-  .plan-details {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .plan-title-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .plan-name {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--ink);
-  }
-  .plan-tag {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 99px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-  }
-  .plan-subtitle {
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.4;
-  }
-
-  /* Seletor redondo de confirmação visual */
-  .plan-selector {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 2px solid #CBD5E1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 12px;
-    flex-shrink: 0;
-    background: #FFFFFF;
-    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .plan-selector svg {
-    width: 15px;
-    height: 15px;
-    color: #FFFFFF;
-    stroke-width: 3.2;
-    transform: scale(0);
-    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  /* Variações e Estados Selecionados */
-  .plan-card.plan-eco .plan-avatar { background: var(--green-light); color: var(--green); }
-  .plan-card.plan-eco .plan-tag { background: var(--green-light); color: #047857; border: 1px solid var(--green-light-border); }
-  .plan-card.plan-eco.selected {
-    border-color: var(--green);
-    background: #F4FDF8;
-    transform: scale(1.015);
-    box-shadow: 0 0 0 3px rgba(34,160,107,0.28), 0 10px 24px -4px rgba(34,160,107,0.25);
-  }
-  .plan-card.plan-eco.selected .plan-selector {
-    border-color: var(--green);
-    background: var(--green);
-    transform: scale(1.1);
-  }
-  .plan-card.plan-eco.selected .plan-selector svg { transform: scale(1); }
-
-  .plan-card.plan-inter .plan-avatar { background: #EEF3FC; color: var(--blue); }
-  .plan-card.plan-inter .plan-tag { background: #EEF3FC; color: var(--blue-deep); border: 1px solid #CFDDF6; }
-  .plan-card.plan-inter.selected {
-    border-color: var(--blue);
-    background: #F6F9FE;
-    transform: scale(1.015);
-    box-shadow: 0 0 0 3px rgba(47,111,237,0.28), 0 10px 24px -4px rgba(47,111,237,0.25);
-  }
-  .plan-card.plan-inter.selected .plan-selector {
-    border-color: var(--blue);
-    background: var(--blue);
-    transform: scale(1.1);
-  }
-  .plan-card.plan-inter.selected .plan-selector svg { transform: scale(1); }
-
-  .plan-card.plan-prem .plan-avatar { background: #0B0B10; color: #FFFFFF; }
-  .plan-card.plan-prem .plan-tag { background: #0B0B10; color: #FFFFFF; }
-  .plan-card.plan-prem.selected {
-    border-color: #0B0B10;
-    background: #0B0B10;
-    transform: scale(1.015);
-    box-shadow: 0 0 0 3px rgba(11,11,16,0.3), 0 12px 28px -4px rgba(0,0,0,0.4);
-  }
-  .plan-card.plan-prem.selected .plan-name { color: #FFFFFF; }
-  .plan-card.plan-prem.selected .plan-subtitle { color: #CBD5E1; }
-  .plan-card.plan-prem.selected .plan-tag { background: #FFFFFF; color: #0B0B10; }
-  .plan-card.plan-prem.selected .plan-avatar { background: #FFFFFF; color: #0B0B10; }
-  .plan-card.plan-prem.selected .plan-selector {
-    border-color: #FFFFFF;
-    background: #FFFFFF;
-    transform: scale(1.1);
-  }
-  .plan-card.plan-prem.selected .plan-selector svg { color: #0B0B10; transform: scale(1); }
-
-  /* ========================================================
-     LOGOTIPOS OFICIAIS & ONDA EM CASCATA
-     ======================================================== */
-  .logo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 9px;
-    margin-bottom: 6px;
-  }
-
-  .logo-card {
-    border: 1.5px solid var(--border-strong);
-    background: #FCFDFF;
-    border-radius: 12px;
-    padding: 8px 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 52px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: border-color .18s, background .18s, transform .15s, box-shadow .18s;
-  }
-  .logo-card:hover { border-color: #94A3B8; background: #F8FAFC; }
-  .logo-card:active { transform: scale(.96); }
-
-  .logo-card img {
-    max-width: 90%;
-    max-height: 28px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    transition: transform 0.2s ease;
-  }
-
-  /* Ajuste de escala específico para SulAmérica */
-  .logo-card img.logo-sulamerica {
-    max-height: 38px;
-    max-width: 98%;
-    transform: scale(1.35);
-    transform-origin: center;
-  }
-
-  .logo-card.selected {
-    border-color: var(--blue);
-    background: #F4F8FF;
-    box-shadow: 0 0 0 2.5px rgba(47,111,237,0.3), 0 4px 12px rgba(47,111,237,0.15);
-  }
-  .logo-card.selected img { transform: scale(1.08); }
-  .logo-card.selected img.logo-sulamerica { transform: scale(1.42); }
-
-  .logo-card.outros {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--ink-soft);
-  }
-  .logo-card.outros.selected { color: var(--blue-deep); }
-
-  /* Animação em onda para operadoras */
-  @keyframes logoWavePulse {
-    0% { transform: scale(1); box-shadow: none; border-color: var(--border-strong); }
-    40% { transform: scale(1.08); box-shadow: 0 0 0 3px rgba(47,111,237,0.45), 0 8px 18px rgba(47,111,237,0.25); border-color: var(--blue); background: #EFF6FF; }
-    100% { transform: scale(1); box-shadow: none; border-color: var(--border-strong); }
-  }
-  .logo-card.wave-active {
-    animation: logoWavePulse 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  }
-
-  /* Seções retráteis */
-  .collapsible {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.35s ease;
-  }
-  .collapsible.open {
-    max-height: 700px;
-    opacity: 1;
-    margin-top: 6px;
-  }
-
-  .age-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
-  .age-field label { font-size: 12px; }
-  .age-field input { padding: 11px 12px; font-size: 14.5px; }
-
-  /* Resumo */
-  .review-list {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: #F8FAFC;
-    overflow: hidden;
-    margin-bottom: 6px;
-  }
-  .review-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 11px 14px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13.5px;
-  }
-  .review-row:last-child { border-bottom: none; }
-  .review-row .k { color: var(--ink-soft); }
-  .review-row .v { font-weight: 600; text-align: right; color: var(--ink); display: flex; align-items: center; gap: 8px; }
-  .edit-link {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--blue);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 2px 4px;
-  }
-  .edit-link:hover { text-decoration: underline; }
-
-  /* ========================================================
-     RODAPÉ FIXO & BOTÃO CONTINUAR PULSANTE VERDE VIVO
-     ======================================================== */
-  .card-footer {
-    flex: 0 0 auto;
-    padding: 14px 24px 20px;
-    background: var(--card);
-    border-top: 1px solid #F1F5F9;
-    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.03);
-    z-index: 20;
-  }
-  .nav {
-    display: flex;
-    gap: 10px;
-  }
-  .btn {
-    flex: 1;
-    padding: 16px 22px;
-    border-radius: var(--radius-btn);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15.5px;
-    font-weight: 800;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: filter .15s, transform .12s, opacity .15s, background .25s, box-shadow .25s;
-    user-select: none;
-  }
-  .btn:active { transform: scale(0.98); }
-
-  .btn-primary {
-    background: #f7952c;
-    color: #FFFFFF;
-    box-shadow: 0 3px 0 #d9780d;
-  }
-  .btn-primary:disabled {
-    opacity: 0.45;
-    box-shadow: none;
-    cursor: not-allowed;
-    animation: none !important;
-  }
-
-  /* ANIMAÇÃO VERDE PULSANTE INTENSA COM GLOW */
-  @keyframes pulseGreen {
-    0%, 100% {
-      box-shadow: 0 10px 20px -6px rgba(34,160,107,0.5), 0 0 0 0 rgba(34,160,107,0.4);
-      transform: scale(1);
-    }
-    50% {
-      box-shadow: 0 18px 46px -2px rgba(34,160,107,0.95), 0 0 0 6px rgba(34,160,107,0.25);
-      transform: scale(1.035);
-    }
-  }
-
-  .btn-primary.ready {
-    background: #f7952c !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 3px 0 #d9780d !important;
-    animation: none !important;
-  }
-  .btn-primary.ready:active { transform: translateY(2px); box-shadow: 0 1px 0 #d9780d !important; }
-
-  .btn-ghost {
-    flex: 0 0 50px;
-    width: 50px;
-    height: 50px;
-    border-radius: var(--radius-btn);
-    background: #F1F5F9;
-    color: var(--ink-soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border);
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .btn-ghost:hover { background: #E2E8F0; }
-
-  .loader {
-    width: 18px;
-    height: 18px;
-    border: 2.5px solid rgba(255, 255, 255, 0.35);
-    border-top-color: #FFFFFF;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: inline-block;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Tela de Sucesso */
-  .success-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    padding: 30px 10px;
-    flex: 1;
-  }
-  .success-icon {
-    width: 74px;
-    height: 74px;
-    border-radius: 50%;
-    background: rgba(34,160,107,0.12);
-    border: 2px solid var(--green);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 22px;
-    animation: pop .5s cubic-bezier(.2,.9,.3,1.3);
-  }
-  @keyframes pop {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  .success-icon svg { width: 34px; height: 34px; }
-  .success-wrap h2 { font-size: 22px; margin-bottom: 8px; }
-  .success-wrap p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; max-width: 360px; margin-bottom: 16px; }
-
-  /* ===== NOVOS ELEMENTOS ===== */
-  .step-label {
-    flex: 0 0 auto;
-    padding: 10px 24px 0;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--ink-soft);
-    letter-spacing: .2px;
-  }
-  .trust-strip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 10px 14px;
-    margin-bottom: 18px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: #FAFBFD;
-  }
-  .trust-name { font-size: 13px; font-weight: 800; color: var(--ink); font-family: 'Plus Jakarta Sans', sans-serif; }
-  .trust-logos { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
-  .trust-logos img { height: 20px; width: auto; max-width: 72px; object-fit: contain; }
-  .trust-logos img.logo-sulamerica-s { height: 26px; max-width: 86px; }
-  .trust-link { font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none; }
-  .trust-link:hover { text-decoration: underline; }
-
-  .email-hint { display: none; font-size: 12.5px; color: var(--ink-soft); margin-top: 6px; }
-  .email-hint button { background: none; border: none; color: var(--blue); font-weight: 700; cursor: pointer; padding: 0; font-size: 12.5px; text-decoration: underline; }
-
-  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .chip-grid .opt { padding: 11px 14px; font-size: 14px; }
-  .chip-grid .opt.selected {
-    border-color: var(--green);
-    background: var(--green-light);
-    color: #136B49;
-    box-shadow: 0 0 0 2px rgba(34,160,107,0.28);
-  }
-
-  .wa-confirm { font-size: 13px; color: var(--ink-soft); margin: 8px 2px 0; line-height: 1.5; }
-  .wa-confirm strong { color: var(--ink); }
-
-  .foot-note { text-align: center; font-size: 12.5px; color: var(--ink-soft); margin-top: 10px; }
-
-  .btn-whatsapp {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; max-width: 340px;
-    padding: 16px 22px; border-radius: var(--radius-btn);
-    background: #25D366; color: #fff; text-decoration: none;
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 15.5px;
-    box-shadow: 0 3px 0 #1aa34f;
-    margin-bottom: 14px;
-  }
-  .btn-whatsapp:active { transform: translateY(2px); box-shadow: 0 1px 0 #1aa34f; }
-  .site-link { font-size: 13px; color: var(--ink-soft); text-decoration: none; font-weight: 600; }
-
-  /* ===== SEM QUEBRA DE LINHA EM NENHUM BOTÃO ===== */
-  .btn, .opt, .plan-tag, .logo-card.outros, .btn-whatsapp, .edit-link, .trust-link, .site-link, .qs-chip { white-space: nowrap; }
-  .btn { font-size: clamp(14px, 4.2vw, 15.5px); padding-left: 14px; padding-right: 14px; }
-  .opt { font-size: clamp(13px, 3.7vw, 14.5px); }
-  .opt:not(.small):not(.chip-grid .opt) { padding-left: 6px; padding-right: 6px; }
-  .btn-whatsapp { font-size: clamp(14px, 4.2vw, 15.5px); }
-  .plan-info { min-width: 0; }
-  .plan-title-row { flex-wrap: wrap; row-gap: 4px; }
-
-  /* ===== COTAÇÃO SENDO MONTADA ===== */
-  .quote-strip {
-    flex: 0 0 auto;
-    padding: 10px 24px 12px;
-    background: linear-gradient(180deg, #FFF6E9 0%, #FFFFFF 100%);
-    border-bottom: 1px solid #FBE2C0;
-  }
-  .qs-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-  .qs-title { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 800; color: #9A5B0E; font-family: 'Plus Jakarta Sans', sans-serif; min-width: 0; }
-  .qs-title span.t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .qs-spark { display: inline-block; animation: sparkSpin 2.6s ease-in-out infinite; }
-  @keyframes sparkSpin { 0%,100% { transform: rotate(0) scale(1); } 50% { transform: rotate(18deg) scale(1.2); } }
-  .qs-title.greet span.t { animation: greetIn .55s cubic-bezier(.2,.9,.3,1.2); color: #B24A00; }
-  @keyframes greetIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-  .qs-step { font-size: 12px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
-  .qs-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 1px 3px; }
-  @media (max-width: 380px) { .qs-step { display: none; } .qs-chip { font-size: 12px; padding: 6px 10px 6px 8px; } }
-  .qs-title.greet span.t { white-space: normal; }
-  .qs-chips::-webkit-scrollbar { display: none; }
-  .qs-chip {
-    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 12px 7px 9px; border-radius: 99px;
-    background: #fff; border: 1px solid #F3C98F; color: var(--ink);
-    font-size: 12.5px; font-weight: 700;
-    box-shadow: 0 1px 0 rgba(247,149,44,.18);
-  }
-  .qs-check { width: 14px; height: 14px; flex: 0 0 14px; fill: none; stroke: #16A34A; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
-  .qs-check path { stroke-dasharray: 24; stroke-dashoffset: 0; }
-  .qs-chip.new { animation: chipPop .6s cubic-bezier(.2,.9,.3,1.35); }
-  .qs-chip.new .qs-check path { stroke-dashoffset: 24; animation: drawCheck .45s ease-out .18s forwards; }
-  @keyframes chipPop {
-    0% { opacity: 0; transform: translateY(10px) scale(.6); box-shadow: 0 0 0 0 rgba(247,149,44,.55); }
-    55% { opacity: 1; transform: translateY(0) scale(1.08); box-shadow: 0 0 0 8px rgba(247,149,44,0); }
-    100% { opacity: 1; transform: scale(1); box-shadow: 0 1px 0 rgba(247,149,44,.18); }
-  }
-  @keyframes drawCheck { to { stroke-dashoffset: 0; } }
-  .qs-chip.ghost {
-    background: transparent; border: 1.5px dashed #E9A458; color: #B7701D;
-    box-shadow: none; animation: ghostPulse 1.8s ease-in-out infinite;
-  }
-  @keyframes ghostPulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
-
-  /* ===== BRILHO ÚNICO NO BOTÃO QUANDO FICA PRONTO ===== */
-  .btn-primary { position: relative; overflow: hidden; }
-  .btn-primary.shine::after {
-    content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 38%;
-    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.65) 50%, rgba(255,255,255,0) 100%);
-    transform: skewX(-20deg); pointer-events: none;
-    animation: shineSweep .95s ease-out 1 forwards;
-  }
-  @keyframes shineSweep { from { left: -60%; } to { left: 135%; } }
-
-  /* ===== COMEMORAÇÃO NA TELA FINAL ===== */
-  .confetti-wrap { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
-  .confetti {
-    position: absolute; top: -14px; width: 8px; height: 14px; opacity: 0;
-    animation: confettiFall var(--d, 2.2s) cubic-bezier(.25,.6,.35,1) var(--del, 0s) forwards;
-  }
-  @keyframes confettiFall {
-    0% { transform: translate3d(0,-14px,0) rotate(0); opacity: 1; }
-    85% { opacity: 1; }
-    100% { transform: translate3d(var(--x, 0), 760px, 0) rotate(var(--r, 360deg)); opacity: 0; }
-  }
-  .success-icon { position: relative; }
-  .success-icon::after {
-    content: ''; position: absolute; inset: -2px; border-radius: 50%;
-    border: 2px solid var(--green); opacity: 0;
-    animation: ringOut 1.1s ease-out .35s 1;
-  }
-  @keyframes ringOut { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(2.1); opacity: 0; } }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-    .confetti-wrap { display: none; }
-  }
-
-  /* MOBILE FULLSCREEN REAL SEM PULOS */
-  @media (max-width: 580px) {
-    body {
-      padding: 0;
-      background: var(--card);
-    }
-    .shell {
-      max-width: 100%;
-      height: 100%;
-      max-height: 100%;
-      min-height: 100%;
-    }
-    .card {
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      height: 100%;
-    }
-    .card-body {
-      padding: 20px 18px 10px;
-    }
-    .card-footer {
-      padding: 12px 18px 18px;
-    }
-    .step h2 { font-size: 20px; }
-    .logo-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; }
-    .logo-card { height: 48px; }
-  }
-
-  /* ===== TEMA ESCURO PREMIUM (mesma linguagem da abertura) ===== */
-  body { background: radial-gradient(120% 90% at 50% 0%, #17398F 0%, #0A1F55 60%, #071540 100%); }
-  .card { background: radial-gradient(120% 70% at 50% 0%, #1B47B0 0%, #0E2F7A 42%, #0A1F55 100%); border-color: rgba(255,255,255,.14);
-    box-shadow: 0 30px 70px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04) inset; }
-  .card::before { content:''; position:absolute; width:320px; height:320px; border-radius:50%; top:-130px; right:-110px; pointer-events:none;
-    background: radial-gradient(circle, rgba(247,149,44,.38), transparent 65%); animation: introGlow 4s ease-in-out infinite alternate; }
-  .card > * { position: relative; }
-  .card > .intro { position: absolute; }
-  .progress-track { background: rgba(255,255,255,.14); }
-  .step-label { color: #B9CBF5; }
-  .eyebrow { color: #FFB45C; }
-  .step h2, .success-wrap h2 { color: #fff; }
-  .step p.hint, .subhint, .success-wrap p { color: #D6E2FF; }
-  .step p.hint strong { color: #FFB45C !important; }
-  .subhead { color: #fff; }
-  .field label, .age-field label { color: #E7EEFF; }
-  .field input { background: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(0,0,0,.18); }
-  .field input:focus { border-color: #f7952c; box-shadow: 0 0 0 4px rgba(247,149,44,.35), 0 4px 12px rgba(0,0,0,.18); }
-  .field.error input { background: #FEF2F2; border-color: #FF8A8A; }
-  .field .err-msg { color: #FFB4B4; }
-  .email-hint, .wa-confirm, .foot-note { color: #C3D3F7; }
-  .wa-confirm strong { color: #fff; }
-  .email-hint button { color: #FFB45C; }
-  .edit-link { color: #FFB45C; }
-  .trust-strip { background: #fff; border-color: transparent; box-shadow: 0 10px 22px rgba(0,0,0,.28); }
-  .site-link { color: #C3D3F7; }
-
-  .opt, .chip-grid .opt { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.22); color: #fff; }
-  .opt:hover { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.4); }
-  .opt.selected { background: rgba(247,149,44,.22); border-color: #f7952c; color: #fff; box-shadow: 0 0 0 2px rgba(247,149,44,.35); }
-  .opt.selected.positive, .opt.selected.negative, .chip-grid .opt.selected { background: rgba(34,160,107,.32); border-color: #3DDC97; color: #fff; box-shadow: 0 0 0 2px rgba(61,220,151,.35); }
-  @keyframes flashPositive {
-    0%, 100% { background-color: rgba(255,255,255,.09); transform: scale(1); }
-    35% { background-color: #22A06B; border-color: #3DDC97; color: #fff; transform: scale(1.04); box-shadow: 0 4px 14px rgba(34,160,107,.5); }
-  }
-  @keyframes flashPillAttention {
-    0%, 100% { transform: scale(1); }
-    35% { transform: scale(1.06); border-color: #f7952c; background: rgba(247,149,44,.3); }
-  }
-
-  .plan-card, .logo-card { background: #fff; border-color: transparent; box-shadow: 0 8px 18px rgba(0,0,0,.28); }
-  .plan-card:hover, .logo-card:hover { background: #fff; border-color: #f7952c; box-shadow: 0 10px 22px rgba(0,0,0,.34); }
-  .logo-card.selected { background: #FFF8EF; border-color: #f7952c; box-shadow: 0 0 0 3px rgba(247,149,44,.55), 0 10px 22px rgba(0,0,0,.3); }
-  .logo-card.outros { color: var(--ink-soft); }
-  .plan-card.plan-prem.selected { border-color: #fff; }
-  .plan-card.plan-eco.selected, .plan-card.plan-inter.selected { box-shadow: 0 0 0 3px rgba(247,149,44,.6), 0 12px 26px rgba(0,0,0,.35); border-color: #f7952c; }
-  .plan-card.plan-eco.selected .plan-selector, .plan-card.plan-inter.selected .plan-selector { border-color: #f7952c; background: #f7952c; }
-  .plan-card.plan-prem.selected { box-shadow: 0 0 0 3px rgba(247,149,44,.6), 0 12px 26px rgba(0,0,0,.45); }
-
-  .review-list { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
-  .review-row { border-bottom-color: rgba(255,255,255,.14); }
-  .review-row .k { color: #B9CBF5; }
-  .review-row .v { color: #fff; }
-
-  .quote-strip { background: rgba(255,255,255,.07) !important; border-color: rgba(255,255,255,.16) !important; }
-  .qs-title { color: #FFB45C; }
-  .qs-title.greet span.t { color: #fff; }
-  .qs-step { color: #B9CBF5; }
-  .qs-chip { background: #fff; border-color: transparent; box-shadow: 0 4px 10px rgba(0,0,0,.25); }
-  .qs-chip.ghost { background: transparent; border: 1.5px dashed rgba(255,180,92,.7); color: #FFC986; box-shadow: none; }
-
-  .card-footer { background: linear-gradient(180deg, rgba(10,31,85,0) 0%, rgba(8,24,70,.92) 28%); border-top: 1px solid rgba(255,255,255,.1); box-shadow: none; }
-  .btn-primary, .btn-primary.ready { box-shadow: 0 5px 0 #c9731a, 0 12px 20px rgba(0,0,0,.3) !important; }
-  .btn-primary.ready:active { transform: translateY(3px); box-shadow: 0 2px 0 #c9731a !important; }
-  .btn-primary:disabled { opacity: .4; box-shadow: none !important; }
-  .btn-ghost { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.22); color: #fff; }
-  .btn-ghost:hover { background: rgba(255,255,255,.2); }
-  .success-icon { background: rgba(61,220,151,.16); border-color: #3DDC97; }
-  .btn-whatsapp { box-shadow: 0 5px 0 #1aa34f, 0 12px 20px rgba(0,0,0,.3); }
-
-  /* entrada em cascata dos blocos de cada etapa (igual à abertura) */
-  .step.active > * { opacity: 0; animation: introUp .5s ease-out forwards; }
-  .step.active > *:nth-child(1) { animation-delay: .02s; } .step.active > *:nth-child(2) { animation-delay: .08s; }
-  .step.active > *:nth-child(3) { animation-delay: .14s; } .step.active > *:nth-child(4) { animation-delay: .2s; }
-  .step.active > *:nth-child(5) { animation-delay: .26s; } .step.active > *:nth-child(6) { animation-delay: .32s; }
-  .step.active > *:nth-child(n+7) { animation-delay: .38s; }
-  @media (max-width: 580px) { body { background: #0A1F55; } .card { box-shadow: none; } }
-
-
-  /* ===== O QUE FALTA RESPONDER PULSA ATÉ SER RESPONDIDO ===== */
-  @keyframes needGlow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(247,149,44,0), 0 0 0 0 rgba(247,149,44,0); border-color: rgba(255,255,255,.28); }
-    50% { box-shadow: 0 0 0 4px rgba(247,149,44,.55), 0 0 22px 2px rgba(247,149,44,.45); border-color: #f7952c; }
-  }
-  @keyframes needLift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-  @keyframes needInput { 0%, 100% { box-shadow: 0 4px 12px rgba(0,0,0,.18), 0 0 0 0 rgba(247,149,44,0); } 50% { box-shadow: 0 4px 12px rgba(0,0,0,.18), 0 0 0 5px rgba(247,149,44,.6), 0 0 22px rgba(247,149,44,.5); } }
-  .option-grid.need .opt:not(.selected), .chip-grid.need .opt:not(.selected) { animation: needGlow 1.5s ease-in-out infinite, needLift 1.5s ease-in-out infinite; }
-  .plan-card-stack.need .plan-card:not(.selected), .logo-grid.need .logo-card:not(.selected) { animation: needGlow 1.5s ease-in-out infinite, needLift 1.5s ease-in-out infinite; border-color: transparent; }
-  .option-grid.need .opt:nth-child(2n), .logo-grid.need .logo-card:nth-child(2n), .chip-grid.need .opt:nth-child(2n), .plan-card-stack.need .plan-card:nth-child(2n) { animation-delay: .15s; }
-  .option-grid.need .opt:nth-child(3n), .logo-grid.need .logo-card:nth-child(3n), .chip-grid.need .opt:nth-child(3n) { animation-delay: .3s; }
-  .field.need input { animation: needInput 1.5s ease-in-out infinite; border-color: #f7952c; }
-  .field.need label { color: #FFB45C; }
-  .field.need label::after { content: ' ←'; display: inline-block; animation: needNudge 1s ease-in-out infinite; }
-  @keyframes needNudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-4px); } }
-
-  /* ===== BOTÃO PRONTO PULSA ===== */
-  @keyframes readyPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 5px 0 #c9731a, 0 12px 20px rgba(0,0,0,.3), 0 0 0 0 rgba(247,149,44,.65); }
-    50% { transform: scale(1.025); box-shadow: 0 5px 0 #c9731a, 0 16px 28px rgba(0,0,0,.35), 0 0 0 12px rgba(247,149,44,0); }
-  }
-  .btn-primary.ready { animation: readyPulse 1.5s ease-in-out infinite !important; }
-  .btn-primary.ready:active { animation: none !important; }
-
-  /* ===== MASCOTE (coração vermelho, braços e pernas) ===== */
-  .buddy { margin:0 0 12px; }
-  .buddy-run { display:flex; align-items:center; gap:6px; position:relative; }
-  .buddy:not(.in) .buddy-run { visibility:hidden; }
-  .buddy-fig { position:relative; flex:0 0 100px; width:100px; --ar:-12deg; --al:12deg; --lean:0deg; --ll:0deg; --lr:0deg; }
-  .buddy-fig svg { width:100%; display:block; overflow:visible; }
-  .step[data-step="5"] .buddy-fig { flex-basis:116px; width:116px; }
-  @media (max-width: 360px) { .buddy-fig { flex-basis:88px; width:88px; } .step[data-step="5"] .buddy-fig { flex-basis:100px; width:100px; } }
-
-  /* entrada: vem da direita pra esquerda, puxando a mensagem */
-  .buddy.enter .buddy-run { animation: buddyDash 1.05s cubic-bezier(.12,.7,.2,1) both; }
-  @keyframes buddyDash { from { transform: translateX(112%); } to { transform: translateX(0); } }
-  .buddy.enter .buddy-bubble { animation: bubbleDrag 1.05s cubic-bezier(.12,.7,.2,1) both; }
-  @keyframes bubbleDrag { 0% { transform: translateX(34px) skewX(-16deg) scaleX(1.1); } 62% { transform: translateX(2px) skewX(-5deg); } 82% { transform: translateX(-4px) skewX(3deg); } 100% { transform: none; } }
-  .b-speed { position:absolute; right:-6px; height:3px; border-radius:3px; background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.7)); opacity:0; pointer-events:none; }
-  .b-speed.s1 { top:22%; width:44px; } .b-speed.s2 { top:50%; width:62px; } .b-speed.s3 { top:76%; width:36px; }
-  .buddy.enter .b-speed { animation: speedLines 1.05s ease-out both; }
-  @keyframes speedLines { 0% { opacity:0; transform:translateX(20px) scaleX(.4); } 25% { opacity:1; } 80% { opacity:.9; } 100% { opacity:0; transform:translateX(-6px) scaleX(1); } }
-
-  .b-all { transform-origin:80px 134px; transform: rotate(var(--lean)); transition: transform .3s; animation: bFloat 3s ease-in-out infinite; }
-  @keyframes bFloat { 0%,100% { transform: translateY(0) rotate(var(--lean)); } 50% { transform: translateY(-4px) rotate(var(--lean)); } }
-  .b-shadow { transform-box:fill-box; transform-origin:center; }
-  .b-arm, .b-leg { transition: transform .38s cubic-bezier(.3,1.7,.5,1); }
-  .b-arm-r { transform: rotate(var(--ar)); } .b-arm-l { transform: rotate(var(--al)); }
-  .b-leg-l { transform: rotate(var(--ll)); } .b-leg-r { transform: rotate(var(--lr)); }
-  .b-finger, .b-thumb { opacity:0; transition: opacity .15s; }
-  .b-eyes { transform-box:fill-box; transform-origin:center; animation: bBlink 4.2s infinite; }
-  @keyframes bBlink { 0%,92%,100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
-  .b-eye, .b-brow { transform-box:fill-box; transform-origin:center; transition: transform .2s; }
-  .b-pupils { transition: transform .3s ease; }
-  .b-mo { opacity:0; }
-  .b-puff { opacity:0; transform-box:fill-box; transform-origin:center; }
-  .buddy.skid .b-puff { animation: bPuff .55s ease-out both; }
-  .buddy.skid .b-puff:nth-of-type(2) { animation-delay:.08s; } .buddy.skid .b-puff:nth-of-type(3) { animation-delay:.16s; }
-  @keyframes bPuff { 0% { opacity:.9; transform: translate(0,0) scale(.3); } 100% { opacity:0; transform: translate(14px,-8px) scale(1.8); } }
-
-  /* poses */
-  [data-pose="run"] { --ar:-98deg; --al:25deg; --lean:-10deg; }
-  [data-pose="run"] .b-all { animation: bRun .26s ease-in-out infinite; }
-  [data-pose="run"] .b-leg-l { animation: legA .26s linear infinite; transition:none; }
-  [data-pose="run"] .b-leg-r { animation: legB .26s linear infinite; transition:none; }
-  [data-pose="run"] .b-arm-l .b-arm-in { animation: armPump .26s ease-in-out infinite alternate; }
-  [data-pose="run"] .b-pupils { transform: translateX(-3px); }
-  [data-pose="run"] .b-brow-l { transform: rotate(10deg); } [data-pose="run"] .b-brow-r { transform: rotate(-10deg); }
-  [data-pose="run"] .b-ms { opacity:0; } [data-pose="run"] .b-mo { opacity:1; }
-  @keyframes bRun { 0%,100% { transform: translateY(0) rotate(var(--lean)); } 50% { transform: translateY(-4px) rotate(var(--lean)); } }
-  @keyframes legA { 0%,100% { transform: rotate(-58deg); } 50% { transform: rotate(58deg); } }
-  @keyframes legB { 0%,100% { transform: rotate(58deg); } 50% { transform: rotate(-58deg); } }
-  @keyframes armPump { from { transform: rotate(-42deg); } to { transform: rotate(42deg); } }
-
-  [data-pose="skid"] { --lean:13deg; --ar:-35deg; --al:45deg; --ll:-38deg; --lr:22deg; }
-  [data-pose="skid"] .b-all { animation:none; }
-  [data-pose="skid"] .b-pupils { transform: translateX(-2px); }
-
-  [data-pose="wave"] { --ar:-152deg; --al:14deg; }
-  [data-pose="wave"] .b-arm-r .b-arm-in { animation: waveA .45s ease-in-out infinite alternate; }
-  [data-pose="wave"] .b-ms { opacity:0; } [data-pose="wave"] .b-mo { opacity:1; }
-  @keyframes waveA { from { transform: rotate(-20deg); } to { transform: rotate(20deg); } }
-
-  [data-pose="pointB"] { --ar:-100deg; --al:14deg; --lean:-4deg; }
-  [data-pose="pointD"] { --ar:-40deg; --al:16deg; --lean:5deg; }
-  [data-pose^="point"] .b-finger { opacity:1; }
-  [data-pose^="point"] .b-arm-r .b-arm-in { animation: poke .55s ease-in-out infinite alternate; }
-  [data-pose="pointB"] .b-pupils { transform: translateX(3px); }
-  [data-pose="pointD"] .b-pupils { transform: translateY(3px); }
-  @keyframes poke { from { transform: translateY(-3px); } to { transform: translateY(4px); } }
-
-  [data-pose="thumb"] { --ar:-120deg; --al:12deg; --lean:-3deg; }
-  [data-pose="thumb"] .b-thumb { opacity:1; }
-  [data-pose="thumb"] .b-eye-r { transform: scaleY(.12); }
-  [data-pose="thumb"] .b-arm-r .b-arm-in { animation: poke .5s ease-in-out infinite alternate; }
-
-  [data-pose="shade"] { --ar:-170deg; --al:14deg; }
-  [data-pose="shade"] .b-pupils { animation: lookAround 1.3s ease-in-out infinite; }
-  @keyframes lookAround { 0%,100% { transform: translateX(-4px); } 50% { transform: translateX(4px); } }
-
-  [data-pose="cheer"] { --ar:-164deg; --al:164deg; --ll:-16deg; --lr:16deg; }
-  [data-pose="cheer"] .b-all { animation: bJump .55s ease-out infinite; }
-  [data-pose="cheer"] .b-arm .b-arm-in { animation: cheerArms .27s ease-in-out infinite alternate; }
-  [data-pose="cheer"] .b-ms, [data-pose="spin"] .b-ms, [data-pose="dance"] .b-ms { opacity:0; }
-  [data-pose="cheer"] .b-mo, [data-pose="spin"] .b-mo, [data-pose="dance"] .b-mo { opacity:1; }
-  @keyframes bJump { 0%,100% { transform: translateY(0) scale(1.04,.95) rotate(var(--lean)); } 45% { transform: translateY(-20px) scale(.96,1.05) rotate(var(--lean)); } }
-  @keyframes cheerArms { from { transform: rotate(-12deg); } to { transform: rotate(12deg); } }
-
-  [data-pose="spin"] { --ar:-150deg; --al:150deg; --ll:-20deg; --lr:20deg; }
-  [data-pose="spin"] .b-all { animation: bSpin .9s ease-in-out 1; }
-  @keyframes bSpin { 0% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-24px) rotate(200deg); } 100% { transform: translateY(0) rotate(360deg); } }
-
-  [data-pose="dance"] { --ar:-120deg; --al:120deg; }
-  [data-pose="dance"] .b-all { animation: bDance .42s ease-in-out infinite alternate; }
-  [data-pose="dance"] .b-leg-l { animation: legDance .42s ease-in-out infinite alternate; transition:none; }
-  [data-pose="dance"] .b-leg-r { animation: legDance .42s ease-in-out infinite alternate-reverse; transition:none; }
-  [data-pose="dance"] .b-arm-r .b-arm-in { animation: armUpDn .42s ease-in-out infinite alternate; }
-  [data-pose="dance"] .b-arm-l .b-arm-in { animation: armUpDn .42s ease-in-out infinite alternate-reverse; }
-  @keyframes bDance { from { transform: translateY(0) rotate(-9deg); } to { transform: translateY(-7px) rotate(9deg); } }
-  @keyframes legDance { from { transform: rotate(-24deg); } to { transform: rotate(24deg); } }
-  @keyframes armUpDn { from { transform: rotate(-30deg); } to { transform: rotate(30deg); } }
-
-  /* passa o bastão: sai de cima, aparece mais embaixo */
-  .buddy.leave .buddy-fig { animation: buddyLeave .5s cubic-bezier(.55,0,.9,.45) forwards; }
-  @keyframes buddyLeave { to { transform: translateX(-170%); } }
-  .buddy.leave .buddy-bubble { animation: bubblePop .28s ease-in forwards; }
-  @keyframes bubblePop { to { transform: scale(0) translateX(-20px); opacity:0; } }
-  .buddy-bubble { position:relative; flex:1; min-width:0; background:#fff; color:var(--ink); border-radius:16px; padding:12px 14px; font-size:14.5px; line-height:1.4; font-weight:600;
-    box-shadow:0 10px 22px rgba(0,0,0,.28); min-height:48px; transform-origin:left center; }
-  .buddy-bubble::before { content:''; position:absolute; left:-7px; top:50%; margin-top:-8px; border:8px solid transparent; border-left:0; border-right-color:#fff; }
-  .buddy-caret { display:inline-block; width:2px; height:1em; background:#E5172F; margin-left:2px; vertical-align:-2px; animation: caretBlink .7s steps(1) infinite; }
-  .buddy-caret.off { display:none; }
-  @keyframes caretBlink { 50% { opacity:0; } }
-  @media (max-width: 360px) { .buddy-bubble { font-size:13.5px; padding:10px 12px; } }
-  @media (prefers-reduced-motion: reduce) { .b-all,.b-eyes,.b-arm-in,.b-leg,.b-pupils,.b-puff,.b-speed,.buddy-run,.buddy-bubble { animation:none !important; } }
-
-  /* ===== INTRO (abertura cinematográfica) ===== */
-  .intro { position:absolute; inset:0; z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:26px 8px; text-align:center; color:#fff; overflow:hidden;
-    background: radial-gradient(130% 90% at 50% 10%, #1E55CC 0%, #0E2F7A 50%, #07163F 100%);
-    transition: opacity .6s ease, transform .6s ease, filter .6s ease; }
-  .intro.out { opacity:0; transform:scale(1.06); filter:blur(6px); pointer-events:none; }
-  .intro > * { position:relative; z-index:3; }
-  /* feixe de luz girando + grade + partículas */
-  .intro .beam { position:absolute !important; z-index:1; width:900px; height:900px; left:50%; top:38%; margin:-450px 0 0 -450px;
-    background: conic-gradient(from 0deg, transparent 0 30deg, rgba(255,180,92,.20) 60deg, transparent 95deg 210deg, rgba(120,170,255,.22) 245deg, transparent 280deg);
-    animation: beamSpin 14s linear infinite; filter: blur(22px); }
-  @keyframes beamSpin { to { transform: rotate(360deg); } }
-  .intro .grid { position:absolute !important; inset:0; z-index:1; opacity:.18;
-    background-image: linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px);
-    background-size: 38px 38px; transform: perspective(500px) rotateX(58deg) scale(2.2); transform-origin: 50% 100%;
-    -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 70%); mask-image: linear-gradient(to top, #000 0%, transparent 70%);
-    animation: gridMove 6s linear infinite; }
-  @keyframes gridMove { to { background-position: 0 38px; } }
-  .intro .dust { position:absolute !important; inset:0; z-index:2; pointer-events:none; }
-  .intro .dust i { position:absolute; bottom:-10px; width:4px; height:4px; border-radius:50%; background:rgba(255,200,130,.9); opacity:0;
-    box-shadow:0 0 8px 2px rgba(255,180,92,.6); animation: dustUp var(--d,7s) linear var(--del,0s) infinite; }
-  @keyframes dustUp { 0% { transform: translate3d(0,0,0) scale(.6); opacity:0; } 15% { opacity:.9; } 100% { transform: translate3d(var(--x,0), -900px, 0) scale(1.3); opacity:0; } }
-  /* cortinas (letterbox) que se abrem */
-  .intro .bar { position:absolute !important; left:0; right:0; z-index:6; background:#02060F; height:51%; }
-  .intro .bar.t { top:0; animation: barTop 1.15s cubic-bezier(.7,0,.2,1) .15s forwards; }
-  .intro .bar.b { bottom:0; animation: barBot 1.15s cubic-bezier(.7,0,.2,1) .15s forwards; }
-  @keyframes barTop { to { transform: translateY(-100%); } }
-  @keyframes barBot { to { transform: translateY(100%); } }
-
-  .intro-skip { position:absolute !important; top:12px; right:14px; z-index:8 !important; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
-    color:#fff; font:700 12px 'Plus Jakarta Sans',sans-serif; padding:7px 13px; border-radius:99px; cursor:pointer; white-space:nowrap; opacity:0; animation: introUp .4s ease-out 1.2s forwards; }
-
-  .intro-logos { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; width:100%; max-width:340px; margin-bottom:26px; }
-  .intro-logo { position:relative; overflow:hidden; background:#fff; border-radius:13px; height:48px; display:flex; align-items:center; justify-content:center; padding:8px;
-    box-shadow:0 10px 22px rgba(0,0,0,.35), 0 0 0 0 rgba(255,180,92,.0); opacity:0; transform:translateY(-26px) scale(.7) rotateX(60deg);
-    animation: logoDrop .7s cubic-bezier(.2,.9,.3,1.35) forwards, logoGlow 2.8s ease-in-out 2.4s infinite; }
-  .intro-logo img { max-width:100%; max-height:100%; display:block; }
-  .intro-logo::after { content:''; position:absolute; top:0; bottom:0; left:-70%; width:40%; background:linear-gradient(100deg, transparent, rgba(255,255,255,.9), transparent);
-    transform:skewX(-20deg); animation: logoShine 3.6s ease-in-out 2.2s infinite; }
-  .intro-logo:nth-of-type(1){animation-delay:1.0s,2.4s} .intro-logo:nth-of-type(2){animation-delay:1.15s,2.6s}
-  .intro-logo:nth-of-type(3){animation-delay:1.3s,2.8s} .intro-logo:nth-of-type(4){animation-delay:1.45s,3s}
-  .intro-logo:nth-of-type(2)::after{animation-delay:2.5s} .intro-logo:nth-of-type(3)::after{animation-delay:2.8s} .intro-logo:nth-of-type(4)::after{animation-delay:3.1s}
-  @keyframes logoDrop { to { opacity:1; transform:none; } }
-  @keyframes logoGlow { 0%,100% { box-shadow:0 10px 22px rgba(0,0,0,.35), 0 0 0 0 rgba(255,180,92,0); } 50% { box-shadow:0 10px 22px rgba(0,0,0,.35), 0 0 18px 3px rgba(255,180,92,.5); } }
-  @keyframes logoShine { 0%,55% { left:-70%; } 100% { left:140%; } }
-
-  /* títulos cinematográficos: uma linha cada */
-  .intro-titles { width:100%; margin-bottom:16px; }
-  .it { display:block; white-space:nowrap; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; letter-spacing:-.3px; line-height:1.25; opacity:0; will-change:transform,filter,opacity; }
-  .it.l1 { color:#fff; animation: cineIn 1.1s cubic-bezier(.16,1,.3,1) 1.7s forwards; }
-  .it.l2 { margin-top:6px; animation: cineIn 1.1s cubic-bezier(.16,1,.3,1) 2.5s forwards; }
-  .it .sweep { background-image: linear-gradient(100deg, currentColor 40%, #fff 50%, currentColor 60%); background-size:250% 100%; background-position:120% 0;
-    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation: textSweep 2.6s ease-in-out infinite; }
-  .it.l1 .sweep { color:#fff; background-image: linear-gradient(100deg, #fff 38%, #FFD39B 50%, #fff 62%); animation-delay:3s; }
-  .it.l2 .sweep { color:#FFB45C; background-image: linear-gradient(100deg, #FF9A2E 38%, #FFF1D6 50%, #FF9A2E 62%); animation-delay:3.6s; }
-  @keyframes textSweep { 0% { background-position:120% 0; } 55%,100% { background-position:-40% 0; } }
-  @keyframes cineIn { 0% { opacity:0; filter:blur(16px); transform:scale(1.28) translateY(8px); letter-spacing:.14em; }
-    60% { opacity:1; filter:blur(0); }
-    100% { opacity:1; filter:blur(0); transform:none; letter-spacing:-.3px; } }
-  .intro-rule { height:3px; width:0; margin:12px auto 0; border-radius:3px; background:linear-gradient(90deg, transparent, #f7952c, transparent); animation: ruleGrow .9s ease-out 3.2s forwards; }
-  @keyframes ruleGrow { to { width:70%; } }
-
-  .intro-sub { font-size:15px; line-height:1.45; color:#D6E2FF; width:100%; margin-bottom:16px; letter-spacing:-.01em; opacity:0; animation: introUp .7s ease-out 3.3s forwards; }
-  .intro-sub span { display:table; margin:0 auto; white-space:nowrap; }
-  .intro-sub span + span { margin-top:4px; }
-  .intro-perks { display:flex; flex-direction:column; gap:8px; width:100%; max-width:310px; margin-bottom:24px; }
-  .intro-perk { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(4px);
-    border-radius:12px; padding:10px 12px; font-size:13.5px; font-weight:700; text-align:left; white-space:nowrap; opacity:0; transform:translateX(-18px); animation: introSide .55s cubic-bezier(.2,.9,.3,1.2) forwards; }
-  .intro-perk:nth-child(1){animation-delay:3.7s} .intro-perk:nth-child(2){animation-delay:3.95s} .intro-perk:nth-child(3){animation-delay:4.2s}
-  .intro-perk b { flex:0 0 22px; height:22px; border-radius:50%; background:#22A06B; display:inline-flex; align-items:center; justify-content:center; font-size:12px; box-shadow:0 0 0 0 rgba(61,220,151,.7); animation: perkPing 1s ease-out forwards; }
-  .intro-perk:nth-child(1) b{animation-delay:4.1s} .intro-perk:nth-child(2) b{animation-delay:4.35s} .intro-perk:nth-child(3) b{animation-delay:4.6s}
-  @keyframes perkPing { 0% { box-shadow:0 0 0 0 rgba(61,220,151,.8); } 100% { box-shadow:0 0 0 12px rgba(61,220,151,0); } }
-  @keyframes introUp { to { opacity:1; transform:none; } }
-  @keyframes introSide { to { opacity:1; transform:none; } }
-  .intro-cta { position:relative; overflow:hidden; border:0; cursor:pointer; background:#f7952c; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-size:17px; font-weight:800;
-    padding:17px 36px; border-radius:99px; white-space:nowrap; box-shadow:0 6px 0 #c9731a, 0 14px 26px rgba(0,0,0,.35);
-    opacity:0; transform:translateY(14px) scale(.9); animation: introUp .6s cubic-bezier(.2,.9,.3,1.3) 4.7s forwards, ctaPulse 1.6s ease-in-out 5.4s infinite; }
-  .intro-cta::after { content:''; position:absolute; top:0; bottom:0; left:-60%; width:35%; background:linear-gradient(100deg, transparent, rgba(255,255,255,.7), transparent); transform:skewX(-20deg); animation: logoShine 2.6s ease-in-out 5.2s infinite; }
-  .intro-cta:active { transform:translateY(4px) !important; box-shadow:0 2px 0 #c9731a; }
-  @keyframes ctaPulse { 0%,100% { box-shadow:0 6px 0 #c9731a, 0 14px 26px rgba(0,0,0,.35), 0 0 0 0 rgba(247,149,44,.6); } 50% { box-shadow:0 6px 0 #c9731a, 0 14px 26px rgba(0,0,0,.35), 0 0 0 14px rgba(247,149,44,0); } }
-  .intro-timer { position:absolute !important; left:0; bottom:0; height:4px; width:100%; background:rgba(255,255,255,.12); z-index:7 !important; }
-  .intro-timer i { display:block; height:100%; width:0; background:#f7952c; animation: introTimer 7s linear 5.2s forwards; }
-  @keyframes introTimer { to { width:100%; } }
-  @media (prefers-reduced-motion: reduce) {
-    .intro .bar, .intro .beam, .intro .grid, .intro .dust { display:none; }
-    .intro *, .intro { animation-duration:.01s !important; animation-delay:0s !important; }
-  }
-</style>
-<style id="lc-desempenho">
-  /* celular: só animações leves (transform/opacity), sem sombra pulsando a cada quadro */
-  @keyframes needGlowLeve { 0%,100% { border-color: rgba(255,255,255,.28); } 50% { border-color: #f7952c; } }
-  @keyframes readyPulseLeve { 0%,100% { transform: scale(1); } 50% { transform: scale(1.025); } }
-  @media (max-width: 580px) {
-    .card::before { animation: none !important; }
-    .option-grid.need .opt:not(.selected), .chip-grid.need .opt:not(.selected),
-    .plan-card-stack.need .plan-card:not(.selected), .logo-grid.need .logo-card:not(.selected) {
-      animation: needGlowLeve 1.5s steps(6) infinite, needLift 1.5s ease-in-out infinite !important; }
-    .field.need input { animation: none !important; box-shadow: 0 0 0 3px rgba(247,149,44,.55) !important; }
-    .btn-primary.ready { animation: readyPulseLeve 1.5s ease-in-out infinite !important; will-change: transform; }
-    .qs-chip.ghost { animation: none !important; opacity: .8; }
-    .step.active > * { animation-duration: .32s !important; }
-    .card-body { padding: 14px 16px 8px !important; overscroll-behavior: auto !important; }
-    .card-footer { padding: 10px 16px 14px !important; }
-    .step .eyebrow { margin-bottom: 4px !important; }
-    .step h2 { margin-bottom: 6px !important; }
-    .step.active > *:nth-child(n) { animation-delay: 0s !important; }
-    html, body { touch-action: manipulation; }
-  }
-</style>
-<style id="lc-sem-redundancia">
-  .step .eyebrow,
-  .step[data-step="1"] > h2, .step[data-step="2"] > h2, .step[data-step="3"] > h2, #hospQuestionWrap > h2,
-  .step .subhead, .step[data-step="3"] .subhint,
-  #f-cidade > label, #f-planoAtual > label {
-    position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important;
-    padding: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important;
-  }
-  .step[data-step="1"] > .hint { display: none !important; }
-  .step .buddy { margin-bottom: 12px; }
-</style>
-<style id="lc-progressivo">
-  /* sem a faixa "Montando sua cotação": o resumo aparece só na hora de enviar */
-  #quoteStrip { display: none !important; }
-  /* a pergunta de baixo só aparece depois de responder a de cima */
-  #hasPlanGrid:not(.lc-mostrar), #spGrid:not(.lc-mostrar) { display: none !important; }
-  .step[data-step="4"] #reviewList:not(.lc-mostrar), .step[data-step="4"] #waConfirm:not(.lc-mostrar), .step[data-step="4"] .lc-resumo-titulo:not(.lc-mostrar) { display: none !important; }
-  .lc-resumo-titulo { position: static !important; width: auto !important; height: auto !important; margin: 16px 0 8px !important; clip: auto !important; overflow: visible !important; white-space: normal !important; color: #FFB45C; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+:root{--ink:#0B1220;--soft:#4A5568;--mute:#8793A6;--blue:#2F6FED;--blue-d:#1A4FC4;--blue-l:#EAF1FE;--green:#22A06B;--green-l:#E6F8F0;--red:#E53E3E;--bg:#F5F7FB;--card:#fff;--line:#E4E9F2;--line-s:#CBD5E1;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.4}
+.shell{max-width:520px;margin:0 auto;height:100%;display:flex;flex-direction:column;background:var(--card);overflow:hidden}
+@media(min-width:560px){.shell{height:min(700px,calc(100% - 32px));margin:16px auto;border:1px solid var(--line);border-radius:18px}}
+.top{padding:16px 20px 0;flex:none}
+.prog{display:flex;gap:6px}
+.prog i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.prog i.on{background:var(--blue)}
+.lbl{font-size:12px;color:var(--mute);margin-top:8px;font-weight:500}
+.body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 20px 12px}
+.step{display:none}
+.step.active{display:block}
+h1{font-size:22px;line-height:1.2;font-weight:700;margin-bottom:4px}
+.sub{font-size:14px;color:var(--soft);margin-bottom:16px}
+.q{font-size:14px;font-weight:600;margin:16px 0 8px}
+.q small{font-weight:400;color:var(--mute)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+input[type=text],input[type=tel],input[type=email],input[type=number]{width:100%;height:50px;border:1.5px solid var(--line-s);border-radius:var(--r);padding:0 14px;font:inherit;font-size:16px;color:var(--ink);background:#fff;outline:none;appearance:none}
+input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
+.field.err input{border-color:var(--red)}
+.em{display:none;color:var(--red);font-size:12px;margin-top:4px}
+.field.err .em{display:block}
+.hint{display:none;font-size:12px;margin-top:4px;color:var(--soft)}
+.hint button{background:none;border:0;color:var(--blue-d);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+.grid{display:grid;gap:8px}
+.g2{grid-template-columns:1fr 1fr}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.opt{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:6px 8px;border:1.5px solid var(--line-s);border-radius:var(--r);background:#fff;font-size:15px;font-weight:600;cursor:pointer;user-select:none}
+.opt.sm{font-size:14px;min-height:44px}
+.opt.sel{border-color:var(--blue);background:var(--blue-l);color:var(--blue-d)}
+.opt.need{border-color:var(--red)}
+.opt.pos{border-color:#9ADBBF;background:#F1FBF6;color:#0F7A4F}
+.opt.neg{border-color:#F3B4B4;background:#FFF5F5;color:#B42323}
+.opt.pos.sel{background:var(--green);border-color:var(--green);color:#fff}
+.opt.neg.sel{background:var(--red);border-color:var(--red);color:#fff}
+.q.vez{color:var(--blue-d)}
+.vez .opt:not(.sel),.vez .logo:not(.sel){animation:chama 1.5s ease-in-out infinite}
+.vez .opt.pos:not(.sel){--c:34,160,107}.vez .opt.neg:not(.sel){--c:229,62,62}.vez .opt:not(.pos):not(.neg):not(.sel),.vez .logo:not(.sel){--c:47,111,237}
+@keyframes chama{0%,100%{box-shadow:0 0 0 0 rgba(var(--c),0);transform:scale(1)}50%{box-shadow:0 0 0 4px rgba(var(--c),.25);transform:scale(1.025)}}
+@media(prefers-reduced-motion:reduce){.vez .opt:not(.sel),.vez .logo:not(.sel){animation:none}}
+.ages{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ages input{height:44px;text-align:center;padding:0 6px;font-size:15px}
+.more{display:none}
+.more.open{display:block}
+.logos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.logo{height:56px;border:1.5px solid var(--line-s);border-radius:var(--r);background:#fff;display:flex;align-items:center;justify-content:center;padding:8px 10px;cursor:pointer;font-size:13px;font-weight:700;color:var(--soft)}
+.logo{overflow:hidden}
+.logo img{max-width:90%;max-height:28px;object-fit:contain;pointer-events:none}
+.logo img.sul{max-height:38px;max-width:98%;transform:scale(1.5)}
+.logo.sel{border-color:var(--blue);background:var(--blue-l);box-shadow:0 0 0 2px var(--blue-l)}
+.logo.need{border-color:var(--red)}
+.foot{flex:none;padding:10px 20px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#fff}
+.nav{display:flex;gap:10px}
+.btn{height:52px;border-radius:var(--r);border:0;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.btn-p{flex:1;background:#CBD5E1;color:#fff;transition:background .15s}
+.btn-p.ready{background:var(--green);animation:pulso 1.6s ease-in-out infinite}
+.btn-p.ready:active{background:#168458}
+.btn-p[disabled]{opacity:.8;animation:none}
+@keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@media(prefers-reduced-motion:reduce){.btn-p.ready{animation:none}}
+.btn-b{width:52px;background:#fff;border:1.5px solid var(--line-s);color:var(--soft);display:none}
+.note{text-align:center;font-size:12px;color:var(--mute);margin-top:8px}
+.ok{text-align:center;padding:28px 0 8px}
+.ok .ic{width:60px;height:60px;border-radius:50%;background:var(--green-l);margin:0 auto 14px;display:flex;align-items:center;justify-content:center}
+.ok p{font-size:15px;color:var(--soft);margin:8px 0 20px}
+.wa{display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:var(--r);background:#25D366;color:#fff;font-weight:700;font-size:16px;text-decoration:none}
+.sr{position:absolute;left:-9999px}
+@media(max-width:580px){
+.top{padding:12px 16px 0}.body{padding:10px 16px 8px}.foot{padding:8px 16px calc(10px + env(safe-area-inset-bottom))}
+h1{font-size:19px;margin-bottom:2px}.sub{font-size:13px;margin-bottom:10px}
+.q{margin:10px 0 6px;font-size:13.5px}.opt{min-height:42px;font-size:14px}.opt.sm{min-height:38px;font-size:13px}
+.logo{height:46px}.grid,.logos{gap:6px}.ages input{height:40px}
+input[type=text],input[type=tel],input[type=email]{height:46px}.field{margin-bottom:8px}.field label{margin-bottom:3px}
+.btn{height:48px}.note{margin-top:5px;font-size:11px}.lbl{margin-top:5px}
+}
 </style>
 </head>
 <body>
+<div class="shell">
+  <div class="top" id="top">
+    <div class="prog"><i class="on"></i><i></i><i></i></div>
+    <div class="lbl" id="lbl">Passo 1 de 3</div>
+  </div>
+  <form class="body" id="body" novalidate onsubmit="return false">
 
-<div class="shell" id="appShell">
-  <form class="card" id="formCard" novalidate>
-
-    <!-- Barra de Progresso Superior Fixa -->
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <div class="step-label" id="stepLabel"></div>
-    <!-- Abertura animada -->
-    <div class="intro" id="intro" role="dialog" aria-label="Boas-vindas">
-      <div class="beam"></div><div class="grid"></div><div class="dust" id="introDust"></div>
-      <div class="bar t"></div><div class="bar b"></div>
-      <button type="button" class="intro-skip" id="introSkip">Pular</button>
-      <div class="intro-logos"><div class="intro-logo"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/logo-amil.svg" alt="Amil"></div><div class="intro-logo"><img src="https://github.com/livecarebr-prog/cotacao/blob/main/Sulam%C3%A9rica.png?raw=true" alt="SulAmérica"></div><div class="intro-logo"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/bradesco-logo.svg" alt="Bradesco Saúde"></div><div class="intro-logo"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/porto-saude.svg" alt="Porto Saúde"></div></div>
-      <div class="intro-titles" id="introTitles">
-        <span class="it l1"><span class="sweep">Todas as grandes operadoras.</span></span>
-        <span class="it l2"><span class="sweep">Uma cotação, menos de 1 minuto.</span></span>
-        <div class="intro-rule"></div>
-      </div>
-      <div class="intro-sub" id="introSub"><span>Compare os valores lado a lado com um corretor especialista,</span><span>sem pagar nada por isso.</span></div>
-      <div class="intro-perks">
-        <div class="intro-perk"><b>✓</b>Cotação 100% gratuita</div>
-        <div class="intro-perk"><b>✓</b>Sem compromisso e sem burocracia</div>
-        <div class="intro-perk"><b>✓</b>Atendimento direto pelo WhatsApp</div>
-      </div>
-      <button type="button" class="intro-cta" id="introCta">Começar minha cotação</button>
-      <div class="intro-timer"><i></i></div>
+    <div class="step active" data-step="0">
+      <h1>Cotação gratuita em 1 minuto</h1>
+      <p class="sub">Compare as principais operadoras com um corretor especialista.</p>
+      <div class="field" id="f-nome"><label for="nome">Nome completo</label><input type="text" id="nome" autocomplete="name" placeholder="Seu nome completo"><div class="em">Digite seu nome.</div></div>
+      <div class="field" id="f-telefone"><label for="telefone">WhatsApp com DDD</label><input type="tel" id="telefone" autocomplete="tel" inputmode="numeric" placeholder="11 91234-5678"><div class="em">Digite um telefone válido com DDD.</div></div>
+      <div class="field" id="f-email"><label for="email">E-mail</label><input type="email" id="email" autocomplete="email" placeholder="voce@empresa.com.br"><div class="em">Digite um e-mail válido.</div><div class="hint" id="emailHint"></div></div>
     </div>
 
-
-    <!-- Cotação sendo montada (aparece depois da primeira tela) -->
-    <div class="quote-strip" id="quoteStrip" style="display:none;">
-      <div class="qs-head">
-        <div class="qs-title" id="qsTitleWrap"><span class="qs-spark">✨</span><span class="t" id="qsTitle">Montando sua cotação</span></div>
-        <span class="qs-step" id="qsStep"></span>
+    <div class="step" data-step="1">
+      <h1>Sobre o plano</h1>
+      <p class="sub">Só o essencial para calcular sua cotação.</p>
+      <p class="q" style="margin-top:0">Quantas pessoas vão usar o plano?</p>
+      <div class="grid g4" id="qtyGrid">
+        <div class="opt" data-v="1">1</div><div class="opt" data-v="2">2</div><div class="opt" data-v="3">3</div><div class="opt" data-v="4">4</div>
+        <div class="opt" data-v="5">5</div><div class="opt" data-v="6">6</div><div class="opt" data-v="7+" style="grid-column:span 2">7 ou mais</div>
       </div>
-      <div class="qs-chips" id="qsChips"></div>
+      <div class="more" id="totalWrap"><div class="field" id="f-total" style="margin-top:12px"><label for="total">Quantas pessoas ao todo?</label><input type="tel" id="total" inputmode="numeric" enterkeyhint="done" maxlength="3" placeholder="Ex: 12"><div class="em">Digite um número a partir de 7.</div></div></div>
+      <div class="more" id="ageWrap"><p class="q">Idades <small>(opcional, agiliza a cotação)</small></p><div class="ages" id="ages"></div></div>
+      <p class="q">Você tem CNPJ?</p>
+      <div class="grid g2" id="cnpjGrid"><div class="opt pos" data-v="SIM">Sim</div><div class="opt neg" data-v="Não">Não</div></div>
+      <p class="q">Mora em São Paulo capital?</p>
+      <div class="grid g2" id="spGrid"><div class="opt pos" data-v="SIM">Sim</div><div class="opt neg" data-v="NÃO">Não</div></div>
+      <div class="more" id="cidadeWrap"><div class="field" id="f-cidade" style="margin-top:12px"><label for="cidade">Qual cidade?</label><input type="text" id="cidade" placeholder="Ex: Guarulhos, Barueri, Campinas"><div class="em">Digite sua cidade.</div></div></div>
     </div>
 
-    <!-- Área de Conteúdo Rolável (Zero pulos) -->
-    <div class="card-body" id="cardBody">
-
-      <!-- ==========================================
-           ETAPA 0 — CONTATO (SEM ESCUDO)
-           ========================================== -->
-      <div class="step active" data-step="0">
-        <p class="eyebrow">Vamos começar</p>
-        <h2>Compare planos empresariais e economize</h2>
-        <p class="hint"><strong style="color:var(--blue-deep);">⏱️ Leva menos de 1 minuto e não custa nada</strong></p>
-
-        <div class="field" id="f-nome">
-          <label for="nome">Nome Completo</label>
-          <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name">
-          <div class="err-msg">Por favor, digite seu nome.</div>
-        </div>
-        <div class="field" id="f-telefone">
-          <label for="telefone">Telefone / WhatsApp</label>
-          <input type="tel" id="telefone" placeholder="11 91234-5678" autocomplete="tel" inputmode="numeric">
-          <div class="err-msg">Digite um telefone válido com DDD.</div>
-        </div>
-        <div class="field" id="f-email">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" placeholder="voce@empresa.com.br" autocomplete="email">
-          <div class="err-msg">Digite um e-mail válido.</div>
-          <div class="email-hint" id="emailHint"></div>
-        </div>
+    <div class="step" data-step="2">
+      <h1>Falta pouco</h1>
+      <p class="sub">Duas perguntas rápidas e sua cotação é enviada.</p>
+      <p class="q" style="margin-top:0">Você já tem plano de saúde?</p>
+      <div class="grid g2" id="hasGrid"><div class="opt pos" data-v="SIM">Sim</div><div class="opt neg" data-v="Não">Não</div></div>
+      <div class="more" id="opWrap">
+        <p class="q">Qual é o plano atual?</p>
+        <div class="logos" id="opGrid">
+<div class="logo" data-v="Amil" title="Amil"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/logo-amil.svg" alt="Amil" loading="lazy" onerror="this.replaceWith(document.createTextNode('Amil'))"></div>
+<div class="logo" data-v="SulAmérica" title="SulAmérica"><img class="sul" src="https://github.com/livecarebr-prog/cotacao/blob/main/Sulam%C3%A9rica.png?raw=true" alt="SulAmérica" loading="lazy" onerror="this.replaceWith(document.createTextNode('SulAmérica'))"></div>
+<div class="logo" data-v="Bradesco Saúde" title="Bradesco Saúde"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/bradesco-logo.svg" alt="Bradesco Saúde" loading="lazy" onerror="this.replaceWith(document.createTextNode('Bradesco Saúde'))"></div>
+<div class="logo" data-v="Porto Saúde" title="Porto Saúde"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/porto-saude.svg" alt="Porto Saúde" loading="lazy" onerror="this.replaceWith(document.createTextNode('Porto Saúde'))"></div>
+<div class="logo" data-v="Hapvida NotreDame" title="Hapvida NotreDame"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/Hapvida_logo.svg" alt="Hapvida NotreDame" loading="lazy" onerror="this.replaceWith(document.createTextNode('Hapvida NotreDame'))"></div>
+<div class="logo" data-v="Alice" title="Alice"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/alice-logo.svg" alt="Alice" loading="lazy" onerror="this.replaceWith(document.createTextNode('Alice'))"></div>
+<div class="logo" data-v="Omint" title="Omint"><img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/57cd80d626014bbafa6c7f67fffaecad2a25116b/omint.svg" alt="Omint" loading="lazy" onerror="this.replaceWith(document.createTextNode('Omint'))"></div>
+<div class="logo" data-v="Seguros Unimed" title="Unimed"><span style="color:#00995D;font-weight:800">UNIMED</span></div>
+<div class="logo" data-v="Outros">Outro</div>
+</div>
+<div class="more" id="opOutroWrap"><div class="field" id="f-plano" style="margin-top:12px"><label for="plano">Qual o nome do plano?</label><input type="text" id="plano" placeholder="Ex: Prevent Senior, Care Plus"><div class="em">Digite o nome do plano atual.</div></div></div>
       </div>
-
-      <!-- ==========================================
-           ETAPA 1 — QUANTIDADE DE PESSOAS E IDADES
-           ========================================== -->
-      <div class="step" data-step="1">
-        <p class="eyebrow">Dados básicos</p>
-        <h2>Quantas pessoas vão participar do plano?</h2>
-        <p class="hint">Conte titular e dependentes que vão usar o plano.</p>
-
-        <div class="option-grid cols-5" id="qtyGrid">
-          <div class="opt small pill" data-value="1">1</div>
-          <div class="opt small pill" data-value="2">2</div>
-          <div class="opt small pill" data-value="3">3</div>
-          <div class="opt small pill" data-value="4">4</div>
-          <div class="opt small pill" data-value="5">5</div>
-          <div class="opt small pill" data-value="6">6</div>
-          <div class="opt small pill" data-value="7">7</div>
-          <div class="opt small pill" data-value="8">8</div>
-          <div class="opt small pill" data-value="9">9</div>
-          <div class="opt small pill" data-value="10+">10+</div>
+      <p class="q">Tem hospital ou laboratório de preferência?</p>
+      <div class="grid g2" id="hospGrid"><div class="opt pos" data-v="Tenho Preferência">Tenho</div><div class="opt neg" data-v="Não tenho Preferência">Não tenho</div></div>
+      <div class="more" id="hospWrap">
+        <div class="grid g2" id="hospChips" style="margin-top:12px">
+          <div class="opt sm" data-v="Albert Einstein">Albert Einstein</div><div class="opt sm" data-v="Sírio-Libanês">Sírio-Libanês</div>
+          <div class="opt sm" data-v="Rede D'Or São Luiz">Rede D'Or São Luiz</div><div class="opt sm" data-v="Fleury">Fleury</div>
+          <div class="opt sm" data-v="Samaritano">Samaritano</div><div class="opt sm" data-v="Outro">Outro</div>
         </div>
-
-        <div class="collapsible" id="totalWrap">
-          <div class="field" id="f-totalPessoas" style="margin-top:14px;">
-            <label for="totalPessoas">Quantas pessoas ao todo?</label>
-            <input type="tel" id="totalPessoas" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="Ex: 12">
-            <div class="err-msg">Digite um número a partir de 10.</div>
-          </div>
-        </div>
-
-        <div class="collapsible" id="ageWrap">
-          <p class="subhead">Idade de cada participante</p>
-          <div class="age-grid" id="ageGrid"></div>
-        </div>
-        <p class="subhint" id="skipAgesHint" style="display:none;">Pra grupos maiores, calculamos a faixa etária média na cotação — sem precisar digitar uma por uma.</p>
+        <div class="more" id="hospOutroWrap"><div class="field" id="f-hospital" style="margin-top:12px"><label for="hospital">Qual hospital ou laboratório?</label><input type="text" id="hospital" placeholder="Ex: Oswaldo Cruz, HCor, Alvorada"><div class="em">Digite o nome do hospital ou laboratório.</div></div></div>
       </div>
-
-      <!-- ==========================================
-           ETAPA 2 — TIPO DE PLANO + TEM PLANO + ATUAL
-           ========================================== -->
-      <div class="step" data-step="2">
-        <p class="eyebrow">Preferências</p>
-        <h2>Sobre o plano que você busca</h2>
-
-        <p class="subhead first">Qual tipo de plano você busca?</p>
-        <div class="plan-card-stack" id="planGrid">
-          
-          <!-- Econômico -->
-          <div class="plan-card plan-eco" data-value="Econômico - Enfermaria - baixo custo">
-            <div class="plan-info">
-              <div class="plan-avatar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="12"></line>
-                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-              </div>
-              <div class="plan-details">
-                <div class="plan-title-row">
-                  <span class="plan-name">Econômico</span>
-                  <span class="plan-tag">Custo-Benefício</span>
-                </div>
-                <span class="plan-subtitle">Enfermaria — Baixo custo e atendimento ágil</span>
-              </div>
-            </div>
-            <div class="plan-selector">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Intermediário -->
-          <div class="plan-card plan-inter" data-value="Intermediário - Apartamento - Ótimos hospitais">
-            <div class="plan-info">
-              <div class="plan-avatar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 21h18"/>
-                  <path d="M5 21V7l8-4v18"/>
-                  <path d="M19 21V11l-6-4"/>
-                </svg>
-              </div>
-              <div class="plan-details">
-                <div class="plan-title-row">
-                  <span class="plan-name">Intermediário</span>
-                  <span class="plan-tag">Mais Escolhido</span>
-                </div>
-                <span class="plan-subtitle">Apartamento (quarto privativo) — Ótimos hospitais</span>
-              </div>
-            </div>
-            <div class="plan-selector">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Premium -->
-          <div class="plan-card plan-prem" data-value="Premium - Albert Einstein, Sírio-Libanês, Fleury e Alta.">
-            <div class="plan-info">
-              <div class="plan-avatar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-              </div>
-              <div class="plan-details">
-                <div class="plan-title-row">
-                  <span class="plan-name">Premium</span>
-                  <span class="plan-tag">Linha Black</span>
-                </div>
-                <span class="plan-subtitle">Albert Einstein, Sírio-Libanês, Fleury, Alta e altos reembolsos</span>
-              </div>
-            </div>
-            <div class="plan-selector">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-          </div>
-
-        </div>
-
-        <p class="subhead" id="hasPlanSub">Você já tem plano de saúde?</p>
-        <div class="option-grid cols-2" id="hasPlanGrid">
-          <div class="opt positive" data-value="SIM">Sim</div>
-          <div class="opt negative" data-value="Não">Não</div>
-        </div>
-
-        <div class="collapsible" id="planoAtualWrap">
-          <p class="subhead">Qual é o seu plano de saúde atual?</p>
-          <div class="logo-grid" id="logoGrid">
-            
-            <!-- Amil -->
-            <div class="logo-card" data-name="Amil" title="Amil">
-              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/logo-amil.svg" alt="Amil" loading="lazy">
-            </div>
-
-            <!-- SulAmérica (Tamanho corrigido) -->
-            <div class="logo-card" data-name="SulAmérica" title="SulAmérica">
-              <img src="https://github.com/livecarebr-prog/cotacao/blob/main/Sulam%C3%A9rica.png?raw=true" alt="SulAmérica" class="logo-sulamerica" loading="lazy">
-            </div>
-
-            <!-- Bradesco Saúde -->
-            <div class="logo-card" data-name="Bradesco Saúde" title="Bradesco Saúde">
-              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/bradesco-logo.svg" alt="Bradesco Saúde" loading="lazy">
-            </div>
-
-            <!-- Porto Saúde -->
-            <div class="logo-card" data-name="Porto Saúde" title="Porto Saúde">
-              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/porto-saude.svg" alt="Porto Saúde" loading="lazy">
-            </div>
-
-            <!-- Hapvida NotreDame -->
-            <div class="logo-card" data-name="Hapvida NotreDame" title="Hapvida NotreDame">
-              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/Hapvida_logo.svg" alt="Hapvida NotreDame" loading="lazy">
-            </div>
-
-            <!-- Alice -->
-            <div class="logo-card" data-name="Alice" title="Alice">
-              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/df751423e035bca84eb0adbd63f98406a6b0a804/alice-logo.svg" alt="Alice" loading="lazy">
-            </div>
-
-            <!-- Omint -->
-            <div class="logo-card" data-name="Omint" title="Omint">
-              <img src="https://raw.githubusercontent.com/livecarebr-prog/cotacao/57cd80d626014bbafa6c7f67fffaecad2a25116b/omint.svg" alt="Omint" loading="lazy">
-            </div>
-
-            <!-- Seguros Unimed -->
-            <div class="logo-card" data-name="Seguros Unimed" title="Seguros Unimed">
-              <span style="font-weight:800; color:#00995D; font-size:13.5px;">UNIMED</span>
-            </div>
-
-            <!-- Outros -->
-            <div class="logo-card outros" data-name="Outros">Outros</div>
-          </div>
-
-          <div class="collapsible" id="planoOutroWrap">
-            <div class="field" id="f-planoAtual" style="margin-top:6px;">
-              <label for="planoAtual">Qual o nome do plano?</label>
-              <input type="text" id="planoAtual" placeholder="Ex: Prevent Senior, NotreDame, Care Plus...">
-              <div class="err-msg">Digite o nome do plano atual.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ==========================================
-           ETAPA 3 — CNPJ + CIDADE
-           ========================================== -->
-      <div class="step" data-step="3">
-        <p class="eyebrow">Dados da empresa e localização</p>
-        <h2>Um pouco mais sobre você</h2>
-
-        <p class="subhead first">Você tem CNPJ?</p>
-        <p class="subhint">Planos empresariais costumam ter condições e tabelas melhores que os individuais.</p>
-        <div class="option-grid cols-2" id="cnpjGrid">
-          <div class="opt positive" data-value="SIM">Sim</div>
-          <div class="opt negative" data-value="Não">Não</div>
-        </div>
-
-        <p class="subhead" id="spSub">Reside em São Paulo capital?</p>
-        <div class="option-grid cols-2" id="spGrid">
-          <div class="opt positive" data-value="SIM">Sim</div>
-          <div class="opt negative" data-value="NÃO">Não</div>
-        </div>
-
-        <div class="collapsible" id="cidadeWrap">
-          <div class="field" id="f-cidade" style="margin-top:14px;">
-            <label for="cidade">Qual cidade você reside?</label>
-            <input type="text" id="cidade" placeholder="Ex: Guarulhos, Barueri, Campinas...">
-            <div class="err-msg">Digite sua cidade.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ==========================================
-           ETAPA 4 — HOSPITAL + REVISÃO
-           ========================================== -->
-      <div class="step" data-step="4">
-        <div id="hospQuestionWrap">
-          <p class="eyebrow">Última pergunta</p>
-          <h2>Tem hospital ou laboratório de preferência?</h2>
-          <div class="option-grid cols-2" id="hospGrid">
-            <div class="opt positive" data-value="Tenho Preferência">Tenho preferência</div>
-            <div class="opt negative" data-value="Não tenho Preferência">Não tenho</div>
-          </div>
-
-          <div class="collapsible" id="hospitalWrap">
-            <p class="subhint" style="margin:12px 0 0;">Toque em quantos quiser:</p>
-            <div class="chip-grid" id="hospChips">
-              <div class="opt" data-name="Albert Einstein">Albert Einstein</div>
-              <div class="opt" data-name="Sírio-Libanês">Sírio-Libanês</div>
-              <div class="opt" data-name="Rede D'Or São Luiz">Rede D'Or São Luiz</div>
-              <div class="opt" data-name="Fleury">Fleury</div>
-              <div class="opt" data-name="Samaritano">Samaritano</div>
-              <div class="opt" data-name="Outro" data-outro="1">Outro</div>
-            </div>
-            <div class="collapsible" id="hospitalOutroWrap">
-              <div class="field" id="f-hospital" style="margin-top:12px;">
-                <label for="hospital">Qual outro hospital ou laboratório?</label>
-                <input type="text" id="hospital" placeholder="Ex: Oswaldo Cruz, HCor, Alvorada...">
-                <div class="err-msg">Digite o nome do hospital ou laboratório.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <p class="lc-resumo-titulo">Confira e envie</p>
-        <div class="review-list" id="reviewList"></div>
-        <p class="wa-confirm" id="waConfirm"></p>
-      </div>
-
-      <!-- ==========================================
-           ETAPA 5 — SUCESSO
-           ========================================== -->
-      <div class="step" data-step="5">
-        <div class="success-wrap">
-          <div class="success-icon">
-            <svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="#3DDC97" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h2>Tudo certo, <span id="successName">!</span></h2>
-          <p>Recebemos seus dados e já estamos preparando sua cotação.<br>Em breve, você receberá pelo WhatsApp as melhores opções para o seu perfil.<br>Obrigado pela confiança!</p>
-          <a class="btn-whatsapp" id="waBtn" href="#" target="_blank" rel="noopener">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.95L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2zm0 18a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.08.89.9-3-.2-.31A8.1 8.1 0 1 1 12.04 20zm4.45-6.06c-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06a6.6 6.6 0 0 1-3.28-2.87c-.25-.43.25-.4.71-1.33.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.8-.2-.47-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64 1.53.66 2.13.72 2.9.6.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28z"/></svg>
-            Falar agora no WhatsApp
-          </a>
-          <a class="site-link" href="https://www.livecare.top/" target="_blank" rel="noopener">Visitar livecare.top</a>
-        </div>
-      </div>
-
     </div>
 
-    <!-- RODAPÉ FIXO COM BOTÕES DE AÇÃO -->
-    <div class="card-footer" id="cardFooter">
-      <div class="nav">
-        <button type="button" class="btn btn-ghost" id="backBtn" data-back style="display:none;" aria-label="Voltar">&larr;</button>
-        <button type="button" class="btn btn-primary ready" id="nextBtn" data-next>Continuar</button>
+    <div class="step" data-step="3">
+      <div class="ok">
+        <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="#22A06B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h1>Tudo certo, <span id="okNome"></span></h1>
+        <p>Recebemos seus dados e já estamos preparando sua cotação. Em breve você recebe as melhores opções pelo WhatsApp.</p>
+        <a class="wa" id="waBtn" href="#" target="_blank" rel="noopener">Falar agora no WhatsApp</a>
       </div>
-      <div class="foot-note" id="footNote">🔒 Sem compromisso · Seus dados ficam seguros</div>
     </div>
-
   </form>
+  <div class="foot" id="foot">
+    <div class="nav"><button type="button" class="btn btn-b" id="back" aria-label="Voltar">&larr;</button><button type="button" class="btn btn-p" id="next">Continuar</button></div>
+    <div class="note">Sem compromisso · Seus dados ficam seguros</div>
+  </div>
 </div>
 
 <script>
 (function(){
-  // Estado central do formulário
-  const state = {
-    nome:'', telefone:'', email:'',
-    qty:null, totalPessoas:null, ages:[],
-    tipoPlano:null,
-    temPlano:null, planoAtual:'',
-    cnpj:null,
-    residesSP:null, cidade:'',
-    hospPref:null, hospital:'', campanha:''
-  };
+  var WHATSAPP_NUMERO='5511916644964';
+  var WEBHOOK_URL='https://formulario-livecare.livecarebr.workers.dev/';
+  var $=function(id){return document.getElementById(id)};
+  var state={nome:'',telefone:'',email:'',qty:null,totalPessoas:null,ages:[],tipoPlano:null,temPlano:null,planoAtual:'',cnpj:null,residesSP:null,cidade:'',hospPref:null,hospital:'',campanha:''};
+  var cur=0, hospSel=[], opSel=null;
+  var steps=[].slice.call(document.querySelectorAll('.step'));
+  var nextBtn=$('next'), backBtn=$('back'), bodyEl=$('body'), shell=document.querySelector('.shell');
+  var mobile=function(){return window.innerWidth<=580};
 
-  const steps = Array.from(document.querySelectorAll('.step'));
-  let currentStep = 0;
-  const progressFill = document.getElementById('progressFill');
-  const cardBody = document.getElementById('cardBody');
-  const cardFooter = document.getElementById('cardFooter');
-  const nextBtn = document.getElementById('nextBtn');
-  const backBtn = document.getElementById('backBtn');
-  const stepLabel = document.getElementById('stepLabel');
-  // TROCAR pelo WhatsApp da Livecare (somente números, com 55 + DDD). Sem isso o botão abre um número inválido.
-  const WHATSAPP_NUMERO = '5511916644964';
-  function autoAdvance(stepIdx) {
-    setTimeout(function() { if (currentStep === stepIdx && !nextBtn.disabled) nextBtn.click(); }, 500);
+  function toHost(m){try{window.parent!==window&&window.parent.postMessage(m,'*')}catch(e){}}
+  function setErr(id,on){$('f-'+id).classList.toggle('err',!!on)}
+  function pick(grid,el){[].forEach.call(grid.querySelectorAll('.opt,.logo'),function(o){o.classList.remove('sel','need')});el.classList.add('sel')}
+  function need(grid){[].forEach.call(grid.querySelectorAll('.opt,.logo'),function(o){o.classList.add('need')})}
+  function irPara(el){if(!el)return;var t=el.getBoundingClientRect().top-bodyEl.getBoundingClientRect().top+bodyEl.scrollTop-70;bodyEl.scrollTop=Math.max(0,t)}
+
+  // ----- regras (sem efeitos colaterais): usadas para habilitar o botão e para validar
+  var okMail=function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)};
+  var okTel=function(v){return v.replace(/\D/g,'').length>=10};
+  function ok0(){return $('nome').value.trim().length>=2&&okTel($('telefone').value)&&okMail($('email').value.trim())}
+  function ok1(){
+    if(!state.qty||!state.cnpj||!state.residesSP)return false;
+    if(state.qty==='7+'){var v=parseInt($('total').value,10);if(isNaN(v)||v<7)return false}
+    if(state.residesSP==='NÃO'&&$('cidade').value.trim().length<2)return false;
+    return true;
   }
-
-  // Suporte a teclado virtual no mobile sem alterar a estrutura da janela
-  function setupKeyboardAdaptation() {
-    if (!window.visualViewport) return;
-
-    function handleResize() {
-      const vh = window.visualViewport.height;
-      const totalH = window.innerHeight;
-      const keyboardOpen = totalH - vh > 140;
-
-      if (keyboardOpen) {
-        document.getElementById('appShell').style.height = `${vh}px`;
-        setTimeout(() => {
-          const activeEl = document.activeElement;
-          if (activeEl && activeEl.tagName === 'INPUT') {
-            (function(el){ var cb = el && el.closest('.card-body'); if (!cb || cb.scrollHeight <= cb.clientHeight) return; var r = el.getBoundingClientRect(), rc = cb.getBoundingClientRect(); cb.scrollTop += (r.top - rc.top) - 12; })(activeEl);
-          }
-        }, 100);
-      } else {
-        document.getElementById('appShell').style.height = '100%';
-      }
+  function ok2(){
+    if(!state.temPlano||!state.hospPref)return false;
+    if(state.temPlano==='SIM'){if(!opSel)return false;if(opSel==='Outros'&&$('plano').value.trim().length<2)return false}
+    if(state.hospPref==='Tenho Preferência'){
+      if(hospSel.length===0)return false;
+      if(hospSel.indexOf('Outro')>-1&&$('hospital').value.trim().length<2)return false;
     }
-
-    window.visualViewport.addEventListener('resize', handleResize);
-    window.visualViewport.addEventListener('scroll', handleResize);
+    return true;
   }
-  setupKeyboardAdaptation();
-
-  // ATIVA AS ANIMAÇÕES DE FLASH EM TODAS AS PERGUNTAS AO MUDAR DE TELA
-  function flashAnswerButtons(stepEl) {
-    const targets = stepEl.querySelectorAll('.opt.positive, .opt.negative, .opt.pill, .plan-card, .logo-card');
-    targets.forEach(function(t, i) {
-      t.classList.remove('flash-attn');
-      void t.offsetWidth; // Força repaint
-      setTimeout(function() {
-        t.classList.add('flash-attn');
-      }, 100 + i * 45);
-    });
-  }
-
-  function updateProgressBar(idx) {
-    const percentages = [20, 40, 60, 80, 100, 100];
-    progressFill.style.width = percentages[idx] + '%';
-  }
-
-
-  // ===== Destaque pulsante no que ainda precisa ser respondido =====
-  function pendingTarget() {
-    const $ = id => document.getElementById(id);
-    const emptyField = id => { const i = $(id); return i && i.value.trim() === ''; };
-    switch (currentStep) {
-      case 0:
-        for (const id of ['nome','telefone','email']) if (emptyField(id)) return $('f-' + id);
-        return null;
-      case 1: {
-        if (!state.qty) return $('qtyGrid');
-        if (state.qty === '10+') { const v = parseInt($('totalPessoas').value, 10); return (isNaN(v) || v < 10) ? $('f-totalPessoas') : null; }
-        const ins = Array.from($('ageGrid').querySelectorAll('input'));
-        const bad = ins.find(i => i.value.trim() === '');
-        return bad ? bad.closest('.field') : null;
-      }
-      case 2:
-        if (!state.tipoPlano) return $('planGrid');
-        if (!state.temPlano) return $('hasPlanGrid');
-        if (state.temPlano === 'SIM' && !selectedOperator) return $('logoGrid');
-        if (state.temPlano === 'SIM' && selectedOperator === 'Outros' && $('planoAtual').value.trim().length < 2) return $('f-planoAtual');
-        return null;
-      case 3:
-        if (!state.cnpj) return $('cnpjGrid');
-        if (!state.residesSP) return $('spGrid');
-        if (state.residesSP === 'NÃO' && $('cidade').value.trim().length < 2) return $('f-cidade');
-        return null;
-      case 4:
-        if (isPremium()) return null;
-        if (!state.hospPref) return $('hospGrid');
-        if (state.hospPref === 'Tenho Preferência') {
-          if (state.hospital.length < 2) return $('hospChips');
-          if (hospOutroSel && $('hospital').value.trim().length < 2) return $('f-hospital');
-        }
-        return null;
-    }
-    return null;
-  }
-  let needEl = null;
-  function updateAttention() {
-    let t = null;
-    try { t = pendingTarget(); } catch (e) {}
-    if (t === needEl) return;
-    if (needEl) needEl.classList.remove('need');
-    needEl = t;
-    if (t) t.classList.add('need');
-  }
-  document.addEventListener('input', function() { setTimeout(updateAttention, 0); });
-
-  // ATUALIZA O ESTADO DO BOTÃO E ATIVA O PULSO VERDE
-  let wasReady = false;
-  function setNextReady(ready) {
-    nextBtn.disabled = !ready;
-    setTimeout(updateAttention, 0);
-    nextBtn.classList.toggle('ready', ready);
-    // brilho único quando o botão passa de bloqueado para pronto
-    if (ready && !wasReady) {
-      nextBtn.classList.remove('shine');
-      void nextBtn.offsetWidth;
-      nextBtn.classList.add('shine');
-    }
-    wasReady = ready;
-  }
-  nextBtn.addEventListener('animationend', function(e) {
-    if (e.animationName === 'shineSweep') nextBtn.classList.remove('shine');
-  });
-
-  // ---- Cotação sendo montada ----
-  let greeted = false, greetTimer = null;
-  function quoteChipsFor(idx) {
-    const first = (state.nome || '').split(' ')[0];
-    const chips = [];
-    if (idx >= 1) chips.push({ k: 'c', t: first || 'Contato' });
-    if (idx >= 2) {
-      const n = state.totalPessoas || 0;
-      chips.push({ k: 'v', t: n + (n === 1 ? ' vida' : ' vidas') });
-    }
-    if (idx >= 3) {
-      chips.push({ k: 'p', t: (state.tipoPlano || '').split(' - ')[0] });
-      chips.push({ k: 'o', t: state.temPlano === 'SIM' ? ('Hoje: ' + (state.planoAtual || '')) : 'Sem plano atual' });
-    }
-    if (idx >= 4) {
-      chips.push({ k: 'e', t: state.cnpj === 'SIM' ? 'Com CNPJ' : 'Sem CNPJ' });
-      chips.push({ k: 'l', t: state.residesSP === 'NÃO' ? (state.cidade || 'Outra cidade') : 'São Paulo capital' });
-    }
-    return chips;
-  }
-  function makeChip(c, isNew) {
-    const el = document.createElement('span');
-    el.className = 'qs-chip' + (isNew ? ' new' : '');
-    el.dataset.k = c.k; el.dataset.t = c.t;
-    el.innerHTML = '<svg class="qs-check" viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>';
-    el.appendChild(document.createTextNode(c.t));
-    return el;
-  }
-  function renderQuote(idx) {
-    const strip = document.getElementById('quoteStrip');
-    const box = document.getElementById('qsChips');
-    if (idx < 1 || idx > 4) { strip.style.display = 'none'; return; }
-    strip.style.display = 'block';
-    document.getElementById('qsStep').textContent = 'Etapa ' + (idx + 1) + ' de 5';
-
-    const chips = quoteChipsFor(idx);
-    const prev = Array.from(box.querySelectorAll('.qs-chip:not(.ghost)'));
-    const prefixOk = prev.length <= chips.length && prev.every((el, i) => el.dataset.k === chips[i].k && el.dataset.t === chips[i].t);
-    box.querySelectorAll('.ghost').forEach(g => g.remove());
-    if (prefixOk) {
-      chips.slice(prev.length).forEach(c => box.appendChild(makeChip(c, true)));
-    } else {
-      box.innerHTML = '';
-      chips.forEach(c => box.appendChild(makeChip(c, false)));
-    }
-    const faltas = { 1: 'Vidas', 2: 'Plano', 3: 'Empresa', 4: (isPremium() ? 'Confirmar' : 'Hospital') };
-    const ghost = document.createElement('span');
-    ghost.className = 'qs-chip ghost';
-    ghost.textContent = 'Falta: ' + faltas[idx];
-    box.appendChild(ghost);
-
-    // saudação com o nome (uma vez) logo depois da primeira tela
-    const titleWrap = document.getElementById('qsTitleWrap');
-    const title = document.getElementById('qsTitle');
-    if (idx === 1 && !greeted) {
-      greeted = true;
-      const first = (state.nome || '').split(' ')[0];
-      title.textContent = 'Ótimo, ' + first + '! Montando sua cotação';
-      titleWrap.classList.add('greet');
-      clearTimeout(greetTimer);
-      greetTimer = setTimeout(function() {
-        titleWrap.classList.remove('greet');
-        title.textContent = 'Montando sua cotação';
-      }, 3600);
+  function aberto(g){var m=g.closest('.more');while(m){if(!m.classList.contains('open'))return false;m=m.parentElement&&m.parentElement.closest('.more')}return true}
+  function destacarVez(){
+    [].forEach.call(document.querySelectorAll('.vez'),function(x){x.classList.remove('vez')});
+    var st=document.querySelector('.step.active');if(!st)return;
+    var ids=cur===1?['qtyGrid','cnpjGrid','spGrid']:cur===2?['hasGrid','opGrid','hospGrid','hospChips']:[];
+    for(var k=0;k<ids.length;k++){
+      var g=$(ids[k]);if(!g||!aberto(g))continue;
+      if(!g.querySelector('.sel')){g.classList.add('vez');var q=g.previousElementSibling;if(q&&q.classList.contains('q'))q.classList.add('vez');return}
     }
   }
-
-  function launchConfetti() {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const wrap = document.createElement('div');
-    wrap.className = 'confetti-wrap';
-    const cols = ['#f7952c', '#22A06B', '#2F6FED', '#FFC857', '#E4572E', '#7C5CFF'];
-    for (let i = 0; i < 44; i++) {
-      const c = document.createElement('i');
-      c.className = 'confetti';
-      c.style.left = (Math.random() * 100) + '%';
-      c.style.background = cols[i % cols.length];
-      c.style.setProperty('--x', ((Math.random() - 0.5) * 180) + 'px');
-      c.style.setProperty('--r', ((Math.random() * 720) - 360) + 'deg');
-      c.style.setProperty('--d', (1.9 + Math.random() * 1.3) + 's');
-      c.style.setProperty('--del', (Math.random() * 0.55) + 's');
-      if (i % 3 === 0) { c.style.borderRadius = '50%'; c.style.width = '9px'; c.style.height = '9px'; }
-      wrap.appendChild(c);
-    }
-    document.getElementById('formCard').appendChild(wrap);
-    setTimeout(function() { wrap.remove(); }, 4200);
+  function atualizar(){destacarVez();
+    var ok=cur===0?ok0():cur===1?ok1():cur===2?ok2():false;
+    var antes=nextBtn.classList.contains('ready');
+    nextBtn.classList.toggle('ready',ok);
+    if(ok&&!antes)evidenciar();
+  }
+  // celular: avisa o site para manter o botão visível acima do teclado
+  var tEv=null;
+  function evidenciar(){
+    if(!mobile()||window.parent===window)return;
+    clearTimeout(tEv);
+    tEv=setTimeout(function(){toHost({lcEvidencia:true,y:nextBtn.getBoundingClientRect().bottom})},280);
   }
 
-  function showStep(idx) {
-    currentStep = idx;
-    steps.forEach(s => s.classList.remove('active'));
-    const target = steps.find(s => Number(s.dataset.step) === idx);
-    if (!target) return;
+  // ----- altura: a caixa nunca muda de tamanho entre etapas; com teclado aberto, ela encolhe e o botão fica logo acima dele
+  function ajustarAltura(){
+    if(!window.visualViewport||!mobile()){shell.style.height='';return}
+    var vh=window.visualViewport.height,total=window.innerHeight;
+    if(total-vh>140){shell.style.height=vh+'px';
+      var a=document.activeElement;if(a&&a.tagName==='INPUT')setTimeout(function(){irPara(a.closest('.field')||a)},60);
+      evidenciar();
+    }else shell.style.height='';
+  }
+  if(window.visualViewport){window.visualViewport.addEventListener('resize',ajustarAltura)}
+  document.addEventListener('focusin',function(e){if(e.target.tagName==='INPUT')evidenciar()});
 
-    target.classList.add('active');
-    updateProgressBar(idx);
-    stepLabel.textContent = idx < 5 ? ('Etapa ' + (idx + 1) + ' de 5') : '';
-    stepLabel.style.display = (idx >= 1 && idx < 5) ? 'none' : '';
-    wasReady = false;
-    renderQuote(idx);
-    cardBody.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Dispara animações de destaque
-    flashAnswerButtons(target);
-    if (window.__buddyEnter) window.__buddyEnter(idx);
-
-    // Controle do botão Voltar
-    backBtn.style.display = (idx > 0 && idx < 5) ? 'flex' : 'none';
-
-    // Gerenciamento de texto e prontidão do botão
-    if (idx === 4) {
-      nextBtn.innerHTML = 'Enviar e receber cotação';
-      checkStep4Valid();
-    } else if (idx === 5) {
-      cardFooter.style.display = 'none';
-      document.querySelector('.progress-track').style.display = 'none';
-      stepLabel.style.display = 'none';
-      launchConfetti();
-    } else {
-      nextBtn.innerHTML = 'Continuar';
-      validateCurrentStep();
-    }
+  function encaixar(){
+    var st=document.querySelector('.step.active');if(!st)return;
+    st.style.zoom='';
+    if(!mobile()||shell.style.height)return;
+    var z=1;
+    while(bodyEl.scrollHeight>bodyEl.clientHeight+1&&z>0.78){z=Math.round((z-0.02)*100)/100;st.style.zoom=z}
+  }
+  var tEnc=null;function pedirEncaixe(){clearTimeout(tEnc);tEnc=setTimeout(encaixar,30)}
+  new MutationObserver(pedirEncaixe).observe(bodyEl,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+  window.addEventListener('resize',pedirEncaixe);
+  function show(i){
+    cur=i;
+    steps.forEach(function(s,k){s.classList.toggle('active',k===i)});
+    [].forEach.call(document.querySelectorAll('.prog i'),function(b,k){b.classList.toggle('on',k<=Math.min(i,2))});
+    $('lbl').textContent=i<3?'Passo '+(i+1)+' de 3':'Concluído';
+    $('top').style.display=i===3?'none':'';
+    $('foot').style.display=i===3?'none':'';
+    backBtn.style.display=(i>0&&i<3)?'block':'none';
+    nextBtn.textContent=i===2?'Receber minha cotação':'Continuar';
+    nextBtn.disabled=false;
+    nextBtn.classList.remove('ready');
+    bodyEl.scrollTop=0;
+    atualizar();pedirEncaixe();
   }
 
-  function setError(fieldId, hasError) {
-    const el = document.getElementById('f-' + fieldId);
-    if (el) el.classList.toggle('error', hasError);
-  }
-
-  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-  function validPhone(v) { return v.replace(/\D/g, '').length >= 10; }
-
-  function maskPhone(v) {
-    v = v.replace(/\D/g, '');
-    if (v.length > 11 && v.startsWith('55')) {
-      v = v.slice(2);
-    }
-    v = v.slice(0, 11);
-    if (v.length > 7) return v.slice(0, 2) + ' ' + v.slice(2, 7) + '-' + v.slice(7);
-    if (v.length > 2) return v.slice(0, 2) + ' ' + v.slice(2);
-    return v;
-  }
-
-  document.getElementById('telefone').addEventListener('input', function(e) {
-    e.target.value = maskPhone(e.target.value);
-    checkStep0LiveValidation();
-  });
-  document.getElementById('nome').addEventListener('input', checkStep0LiveValidation);
-  document.getElementById('email').addEventListener('input', checkStep0LiveValidation);
-
-  const EMAIL_FIX = {
-    'hotmial.com':'hotmail.com','hotmal.com':'hotmail.com','hotmail.con':'hotmail.com','hotnail.com':'hotmail.com',
-    'gmial.com':'gmail.com','gmai.com':'gmail.com','gmail.con':'gmail.com','gamil.com':'gmail.com','gmail.com.br':'gmail.com',
-    'outlok.com':'outlook.com','outlook.con':'outlook.com','yaho.com.br':'yahoo.com.br','yahoo.con':'yahoo.com'
-  };
-  function showEmailHint(mail) {
-    const hint = document.getElementById('emailHint');
-    const at = mail.lastIndexOf('@');
-    const dom = at > -1 ? mail.slice(at + 1).toLowerCase() : '';
-    if (EMAIL_FIX[dom]) {
-      const fixed = mail.slice(0, at + 1) + EMAIL_FIX[dom];
-      hint.innerHTML = 'Você quis dizer <button type="button" id="emailFixBtn">' + fixed + '</button>?';
-      hint.style.display = 'block';
-      document.getElementById('emailFixBtn').onclick = function() {
-        document.getElementById('email').value = fixed;
-        hint.style.display = 'none';
-        checkStep0LiveValidation();
-      };
-    } else {
-      hint.style.display = 'none';
-    }
-  }
-
-  function checkStep0LiveValidation() {
-    if (currentStep !== 0) return;
-    const nome = document.getElementById('nome').value.trim();
-    const tel = document.getElementById('telefone').value.trim();
-    const mail = document.getElementById('email').value.trim();
-    const isValid = nome.length >= 2 && validPhone(tel) && validEmail(mail);
-    setNextReady(isValid);
-    showEmailHint(mail);
-  }
-
-  // ==========================================
-  // ANIMAÇÃO EM ONDA (RIPPLE WAVE NAS OPERADORAS)
-  // ==========================================
-  function playOperatorWaveAnimation() {
-    const cards = document.querySelectorAll('.logo-grid .logo-card');
-    cards.forEach((card, index) => {
-      card.classList.remove('wave-active');
-      setTimeout(() => {
-        card.classList.add('wave-active');
-      }, index * 80);
-      setTimeout(() => {
-        card.classList.remove('wave-active');
-      }, index * 80 + 700);
-    });
-  }
-
-  // ==========================================
-  // ETAPA 0 - VALIDAÇÃO & AVANÇO
-  // ==========================================
-  function handleStep0() {
-    const nome = document.getElementById('nome').value.trim();
-    const telefone = document.getElementById('telefone').value.trim();
-    const email = document.getElementById('email').value.trim();
-
-    let valid = true;
-    if (nome.length < 2) { setError('nome', true); valid = false; } else setError('nome', false);
-    if (!validPhone(telefone)) { setError('telefone', true); valid = false; } else setError('telefone', false);
-    if (!validEmail(email)) { setError('email', true); valid = false; } else setError('email', false);
-
-    if (!valid) return;
-
-    state.nome = nome;
-    state.telefone = telefone;
-    state.email = email;
-    sendLeadCapture();
-    showStep(1);
-  }
-
-  // ==========================================
-  // ETAPA 1 - QUANTIDADE & IDADES
-  // ==========================================
-  const qtyGrid = document.getElementById('qtyGrid');
-  const totalWrap = document.getElementById('totalWrap');
-  const totalPessoasInput = document.getElementById('totalPessoas');
-  const ageWrap = document.getElementById('ageWrap');
-  const ageGrid = document.getElementById('ageGrid');
-  const skipAgesHint = document.getElementById('skipAgesHint');
-
-  function participantCount() {
-    if (state.qty === '10+') {
-      const v = parseInt(totalPessoasInput.value, 10);
-      return (!isNaN(v) && v >= 10) ? v : 0;
-    }
-    return state.qty ? parseInt(state.qty, 10) : 0;
-  }
-
-  function buildAgeFields() {
-    const n = state.qty === '10+' ? 0 : participantCount();
-    ageGrid.innerHTML = '';
-    if (n <= 0) {
-      ageWrap.classList.remove('open');
-      return;
-    }
-    const labels = ['Titular'];
-    for (let i = 2; i <= n; i++) labels.push(i + 'ª pessoa');
-    for (let i = 0; i < n; i++) {
-      const div = document.createElement('div');
-      div.className = 'field age-field';
-      div.innerHTML = '<label>Idade (' + labels[i] + ')</label><input type="number" inputmode="numeric" min="0" max="120" placeholder="Ex: 35">';
-      ageGrid.appendChild(div);
-    }
-    ageWrap.classList.add('open');
-
-    // Dispara animação de flash escalonada nos campos de idade
-    setTimeout(() => {
-      const inputs = ageGrid.querySelectorAll('input');
-      inputs.forEach((input, idx) => {
-        input.classList.remove('flash-attn');
-        void input.offsetWidth;
-        setTimeout(() => {
-          input.classList.add('flash-attn');
-          if (idx === 0) input.focus();
-        }, idx * 60);
-      });
-    }, 150);
-  }
-
-  function checkStep1Valid() {
-    if (!state.qty) { setNextReady(false); return; }
-    if (state.qty === '10+') {
-      const v = parseInt(totalPessoasInput.value, 10);
-      setNextReady(!isNaN(v) && v >= 10);
-      return;
-    }
-    const inputs = ageGrid.querySelectorAll('input');
-    let ok = inputs.length > 0;
-    inputs.forEach(inp => {
-      const v = parseInt(inp.value, 10);
-      if (isNaN(v) || v < 0 || v > 120) ok = false;
-    });
-    setNextReady(ok);
-  }
-
-  qtyGrid.addEventListener('click', function(e) {
-    const opt = e.target.closest('.opt');
-    if (!opt) return;
-    qtyGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    state.qty = opt.dataset.value;
-
-    if (state.qty === '10+') {
-      totalWrap.classList.add('open');
-      ageGrid.innerHTML = '';
-      ageWrap.classList.remove('open');
-      skipAgesHint.style.display = 'block';
-
-      // Dispara animação de flash no campo de 6+ pessoas
-      setTimeout(() => {
-        totalPessoasInput.classList.remove('flash-attn');
-        void totalPessoasInput.offsetWidth;
-        totalPessoasInput.classList.add('flash-attn');
-        totalPessoasInput.focus();
-      }, 150);
-    } else {
-      totalWrap.classList.remove('open');
-      totalPessoasInput.value = '';
-      skipAgesHint.style.display = 'none';
-      buildAgeFields();
-    }
-    checkStep1Valid();
-  });
-  totalPessoasInput.addEventListener('input', checkStep1Valid);
-  ageGrid.addEventListener('input', checkStep1Valid);
-
-  // ==========================================
-  // ETAPA 2 - PLANOS & OPERADORAS
-  // ==========================================
-  const planGrid = document.getElementById('planGrid');
-  const hasPlanGrid = document.getElementById('hasPlanGrid');
-  const planoAtualWrap = document.getElementById('planoAtualWrap');
-  const logoGrid = document.getElementById('logoGrid');
-  const planoOutroWrap = document.getElementById('planoOutroWrap');
-  const planoAtualInput = document.getElementById('planoAtual');
-  let selectedOperator = null;
-
-  function checkStep2Valid() {
-    if (!state.tipoPlano) { setNextReady(false); return; }
-    if (state.temPlano === 'SIM') {
-      if (!selectedOperator) { setNextReady(false); return; }
-      if (selectedOperator === 'Outros') {
-        setNextReady(planoAtualInput.value.trim().length >= 2);
-      } else {
-        setNextReady(true);
-      }
-    } else if (state.temPlano === 'Não') {
-      setNextReady(true);
-    } else {
-      setNextReady(false);
-    }
-  }
-
-  planGrid.addEventListener('click', function(e) {
-    const card = e.target.closest('.plan-card');
-    if (!card) return;
-    planGrid.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    state.tipoPlano = card.dataset.value;
-    checkStep2Valid();
-    if (state.temPlano === 'Não') autoAdvance(2);
-  });
-
-  hasPlanGrid.addEventListener('click', function(e) {
-    const opt = e.target.closest('.opt');
-    if (!opt) return;
-    hasPlanGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    state.temPlano = opt.dataset.value;
-
-    if (state.temPlano === 'SIM') {
-      planoAtualWrap.classList.add('open');
-      setTimeout(() => {
-        (function(el){ var cb = el && el.closest('.card-body'); if (!cb || cb.scrollHeight <= cb.clientHeight) return; var r = el.getBoundingClientRect(), rc = cb.getBoundingClientRect(); cb.scrollTop += (r.top - rc.top) - 12; })(planoAtualWrap);
-        playOperatorWaveAnimation();
-      }, 150);
-    } else {
-      planoAtualWrap.classList.remove('open');
-      planoOutroWrap.classList.remove('open');
-      logoGrid.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
-      selectedOperator = null;
-      state.planoAtual = '';
-      planoAtualInput.value = '';
-      setError('planoAtual', false);
-    }
-    checkStep2Valid();
-    if (state.temPlano === 'Não' && state.tipoPlano) autoAdvance(2);
-  });
-
-  logoGrid.addEventListener('click', function(e) {
-    const card = e.target.closest('.logo-card');
-    if (!card) return;
-    logoGrid.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    selectedOperator = card.dataset.name;
-
-    if (selectedOperator === 'Outros') {
-      planoOutroWrap.classList.add('open');
-      setTimeout(() => planoAtualInput.focus(), 120);
-    } else {
-      planoOutroWrap.classList.remove('open');
-      planoAtualInput.value = '';
-      setError('planoAtual', false);
-    }
-    checkStep2Valid();
-  });
-  planoAtualInput.addEventListener('input', checkStep2Valid);
-
-  // ==========================================
-  // ETAPA 3 - CNPJ & CIDADE
-  // ==========================================
-  const cnpjGrid = document.getElementById('cnpjGrid');
-  const spGrid = document.getElementById('spGrid');
-  const cidadeWrap = document.getElementById('cidadeWrap');
-  const cidadeInput = document.getElementById('cidade');
-
-  function checkStep3Valid() {
-    if (!state.cnpj) { setNextReady(false); return; }
-    if (state.residesSP === 'NÃO') {
-      setNextReady(cidadeInput.value.trim().length >= 2);
-    } else if (state.residesSP === 'SIM') {
-      setNextReady(true);
-    } else {
-      setNextReady(false);
-    }
-  }
-
-  cnpjGrid.addEventListener('click', function(e) {
-    const opt = e.target.closest('.opt');
-    if (!opt) return;
-    cnpjGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    state.cnpj = opt.dataset.value;
-    checkStep3Valid();
-    if (state.residesSP === 'SIM') autoAdvance(3);
-  });
-
-  spGrid.addEventListener('click', function(e) {
-    const opt = e.target.closest('.opt');
-    if (!opt) return;
-    spGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    state.residesSP = opt.dataset.value;
-
-    if (state.residesSP === 'NÃO') {
-      cidadeWrap.classList.add('open');
-      setTimeout(() => cidadeInput.focus(), 150);
-    } else {
-      cidadeWrap.classList.remove('open');
-      state.cidade = '';
-      cidadeInput.value = '';
-      setError('cidade', false);
-    }
-    checkStep3Valid();
-    if (state.cnpj && state.residesSP === 'SIM') autoAdvance(3);
-  });
-  cidadeInput.addEventListener('input', checkStep3Valid);
-
-  // ==========================================
-  // ETAPA 4 - HOSPITAL & REVISÃO
-  // ==========================================
-  const hospQuestionWrap = document.getElementById('hospQuestionWrap');
-  const hospGrid = document.getElementById('hospGrid');
-  const hospitalWrap = document.getElementById('hospitalWrap');
-  const hospitalInput = document.getElementById('hospital');
-  const reviewList = document.getElementById('reviewList');
-
-  function isPremium() {
-    return (state.tipoPlano || '').indexOf('Premium') === 0;
-  }
-
-  function setupStep4() {
-    if (isPremium()) {
-      hospQuestionWrap.style.display = 'none';
-      state.hospPref = null;
-      state.hospital = '';
-    } else {
-      hospQuestionWrap.style.display = 'block';
-    }
-    buildReview();
-    checkStep4Valid();
-  }
-
-  function buildReview() {
-    let hospDisplay;
-    if (isPremium()) {
-      hospDisplay = 'Rede Premium (Einstein, Sírio-Libanês, Fleury, Alta)';
-    } else {
-      hospDisplay = (state.hospPref === 'Tenho Preferência') ? (state.hospital || '—') : 'Sem preferência';
-    }
-
-    const rows = [
-      ['Contato', state.nome + ' · ' + state.telefone, 0],
-      ['Participantes', (state.totalPessoas || '—') + (state.ages.length ? ' (idades: ' + state.ages.join(', ') + ')' : ''), 1],
-      ['Plano buscado', (state.tipoPlano || '').split(' - ')[0] + (state.temPlano === 'SIM' ? ' · tem plano: ' + state.planoAtual : ' · sem plano atual'), 2],
-      ['CNPJ / Local', (state.cnpj === 'SIM' ? 'Possui CNPJ' : 'Sem CNPJ') + (state.residesSP === 'NÃO' ? ' · ' + state.cidade : ' · SP Capital'), 3],
-      ['Hospital preferido', hospDisplay, 4]
-    ];
-
-    document.getElementById('waConfirm').innerHTML = '📱 A cotação chega no WhatsApp <strong>' + state.telefone + '</strong> <button type="button" class="edit-link" data-goto="0">corrigir</button>';
-    reviewList.innerHTML = rows.map(r => `
-      <div class="review-row">
-        <span class="k">${r[0]}</span>
-        <span class="v">${r[1]} <button type="button" class="edit-link" data-goto="${r[2]}">editar</button></span>
-      </div>
-    `).join('');
-  }
-
-  function checkStep4Valid() {
-    let valid;
-    if (isPremium()) {
-      valid = true;
-    } else if (state.hospPref === 'Tenho Preferência') {
-      valid = state.hospital.length >= 2 && !(hospOutroSel && hospitalInput.value.trim().length < 2);
-    } else if (state.hospPref === 'Não tenho Preferência') {
-      valid = true;
-    } else {
-      valid = false;
-    }
-    setNextReady(valid);
-  }
-
-  const hospChips = document.getElementById('hospChips');
-  const hospitalOutroWrap = document.getElementById('hospitalOutroWrap');
-  let hospOutroSel = false;
-
-  function recomputeHospital() {
-    const nomes = Array.from(hospChips.querySelectorAll('.opt.selected'))
-      .filter(c => !c.dataset.outro).map(c => c.dataset.name);
-    if (hospOutroSel && hospitalInput.value.trim().length >= 2) nomes.push(hospitalInput.value.trim());
-    state.hospital = nomes.join(', ');
-  }
-
-  hospGrid.addEventListener('click', function(e) {
-    const opt = e.target.closest('.opt');
-    if (!opt) return;
-    hospGrid.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    state.hospPref = opt.dataset.value;
-
-    if (state.hospPref === 'Tenho Preferência') {
-      hospitalWrap.classList.add('open');
-    } else {
-      hospitalWrap.classList.remove('open');
-      hospitalOutroWrap.classList.remove('open');
-      hospChips.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-      hospOutroSel = false;
-      state.hospital = '';
-      hospitalInput.value = '';
-      setError('hospital', false);
-    }
-    buildReview();
-    checkStep4Valid();
-  });
-
-  hospChips.addEventListener('click', function(e) {
-    const chip = e.target.closest('.opt');
-    if (!chip) return;
-    chip.classList.toggle('selected');
-    if (chip.dataset.outro) {
-      hospOutroSel = chip.classList.contains('selected');
-      hospitalOutroWrap.classList.toggle('open', hospOutroSel);
-      if (hospOutroSel) setTimeout(() => hospitalInput.focus(), 120);
-    }
-    recomputeHospital();
-    buildReview();
-    checkStep4Valid();
-  });
-  hospitalInput.addEventListener('input', function() {
-    recomputeHospital();
-    buildReview();
-    checkStep4Valid();
-  });
-
-  document.getElementById('waConfirm').addEventListener('click', function(e) {
-    const b = e.target.closest('[data-goto]');
-    if (b) showStep(parseInt(b.dataset.goto, 10));
-  });
-  reviewList.addEventListener('click', function(e) {
-    const btn = e.target.closest('[data-goto]');
-    if (!btn) return;
-    showStep(parseInt(btn.dataset.goto, 10));
-  });
-
-  function validateCurrentStep() {
-    if (currentStep === 0) {
-      checkStep0LiveValidation();
-    } else if (currentStep === 1) {
-      checkStep1Valid();
-    } else if (currentStep === 2) {
-      checkStep2Valid();
-    } else if (currentStep === 3) {
-      checkStep3Valid();
-    } else if (currentStep === 4) {
-      checkStep4Valid();
-    }
-  }
-
-  // ==========================================
-  // DISPATCHERS & NAVEGAÇÃO
-  // ==========================================
-  nextBtn.addEventListener('click', function() {
-    if (currentStep === 0) {
-      handleStep0();
-    } else if (currentStep === 1) {
-      const inputs = ageGrid.querySelectorAll('input');
-      state.ages = Array.from(inputs).map(i => i.value);
-      state.totalPessoas = participantCount();
-      showStep(2);
-    } else if (currentStep === 2) {
-      if (state.temPlano === 'SIM') {
-        if (selectedOperator === 'Outros') {
-          const v = planoAtualInput.value.trim();
-          if (v.length < 2) { setError('planoAtual', true); return; }
-          state.planoAtual = v;
-        } else {
-          state.planoAtual = selectedOperator;
-        }
-      }
-      showStep(3);
-    } else if (currentStep === 3) {
-      if (state.residesSP === 'NÃO') {
-        const v = cidadeInput.value.trim();
-        if (v.length < 2) { setError('cidade', true); return; }
-        state.cidade = v;
-      }
-      setupStep4();
-      showStep(4);
-    } else if (currentStep === 4) {
-      if (!isPremium() && state.hospPref === 'Tenho Preferência') {
-        if (state.hospital.length < 2 || (hospOutroSel && hospitalInput.value.trim().length < 2)) { setError('hospital', true); return; }
-      }
-      nextBtn.disabled = true;
-      nextBtn.classList.remove('ready');
-      nextBtn.innerHTML = '<span class="loader"></span> Enviando...';
-      sendFinalSubmission();
-      setTimeout(function() {
-        document.getElementById('successName').textContent = state.nome.split(' ')[0] + '!';
-        document.getElementById('waBtn').href = 'https://wa.me/' + WHATSAPP_NUMERO + '?text=' + encodeURIComponent('Olá! Acabei de pedir minha cotação pelo site. Meu nome é ' + state.nome + '.');
-        showStep(5);
-      }, 700);
-    }
-  });
-
-  backBtn.addEventListener('click', function() {
-    if (currentStep > 0) {
-      showStep(currentStep - 1);
-    }
-  });
-
-  // ==========================================
-  // WEBHOOKS
-  // ==========================================
-  const WEBHOOK_URL = 'https://formulario-livecare.livecarebr.workers.dev/';
-
-  // envio igual ao formulário que funcionava, mas sem depender de permissão de origem (CORS):
-  // o formulário agora roda dentro do site, e não mais no github.io
-  function enviarLead(dados) {
-    const corpo = JSON.stringify(dados);
-    // no GitHub (onde o formulário antigo funcionava) usa exatamente o envio original
-    if (/github\.io$/.test(location.hostname)) {
-      return fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: corpo }).catch(function () {});
-    }
-    try {
-      return fetch(WEBHOOK_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        keepalive: true,
-        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-        body: corpo
-      }).catch(function () {
-        try { navigator.sendBeacon && navigator.sendBeacon(WEBHOOK_URL, new Blob([corpo], { type: 'text/plain;charset=UTF-8' })); } catch (e) {}
-      });
-    } catch (err) {
-      try { navigator.sendBeacon && navigator.sendBeacon(WEBHOOK_URL, new Blob([corpo], { type: 'text/plain;charset=UTF-8' })); } catch (e) {}
-      return Promise.resolve();
-    }
-  }
-
-  function sendLeadCapture() {
-    enviarLead({
-      evento: 'lead_capturado',
-      nome: state.nome, telefone: state.telefone, email: state.email,
-      origem: document.referrer || null,
-      ts: new Date().toISOString()
-    });
-  }
-
-  // mesmos campos e valores do formulário original
-  function formatoOriginal(d) {
-    const saida = Object.assign({}, d);
-    const n = parseInt(saida.qty, 10);
-    if (saida.qty === '10+' || (!isNaN(n) && n >= 6)) {
-      if (!saida.totalPessoas && !isNaN(n)) saida.totalPessoas = n;
-      saida.qty = '6+';
-    }
-    delete saida.campanha;
-    return saida;
-  }
-
-  function sendFinalSubmission() {
-    return enviarLead(formatoOriginal(Object.assign({ evento: 'cotacao_completa', ts: new Date().toISOString() }, state)));
-  }
-
-  // Pré-preenchimento pelo link do e-mail: ?email=...&nome=...&op=template
-  try {
-    const p = new URLSearchParams(location.search);
-    if (p.get('email')) document.getElementById('email').value = p.get('email');
-    if (p.get('nome')) document.getElementById('nome').value = p.get('nome');
-    if (p.get('op')) state.campanha = p.get('op');
-  } catch (err) {}
-
-  // Inicialização
-  showStep(0);
-})();
-
-  (function(){
-    const intro = document.getElementById('intro');
-    if (!intro) return;
-    let closed = false;
-    // partículas
-    const dust = document.getElementById('introDust');
-    for (let i = 0; i < 22; i++) { const d = document.createElement('i');
-      d.style.left = (Math.random()*100) + '%'; d.style.setProperty('--x', (Math.random()*80-40) + 'px');
-      d.style.setProperty('--d', (6 + Math.random()*6) + 's'); d.style.setProperty('--del', (Math.random()*6) + 's');
-      d.style.width = d.style.height = (2 + Math.random()*3) + 'px'; dust.appendChild(d); }
-    // cada título numa linha só: ajusta a fonte pra caber na largura
-    function fit() {
-      const box = document.getElementById('introTitles'); if (!box) return;
-      const lines = box.querySelectorAll('.it'); const avail = box.clientWidth * 0.96;
-      let size = 30;
-      lines.forEach(l => { l.style.fontSize = '100px'; });
-      let widest = 0; lines.forEach(l => { widest = Math.max(widest, l.scrollWidth); });
-      if (widest > 0) size = Math.min(30, 100 * avail / widest);
-      lines.forEach(l => { l.style.fontSize = size.toFixed(2) + 'px'; });
-    }
-    function fitSub() {
-      const sub = document.getElementById('introSub'); if (!sub) return;
-      const sp = sub.querySelectorAll('span'); const avail = intro.clientWidth - 16;
-      sub.style.fontSize = '100px'; let widest = 0; sp.forEach(x => { widest = Math.max(widest, x.getBoundingClientRect().width); });
-      if (widest > 0) sub.style.fontSize = Math.min(15, 100 * avail / widest).toFixed(2) + 'px';
-    }
-    function fitAll() { fit(); fitSub(); }
-    fitAll(); window.addEventListener('resize', fitAll);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
-    function close(){ if (closed) return; closed = true; window.removeEventListener('resize', fitAll); intro.classList.add('out'); setTimeout(function(){ intro.remove(); try{ document.getElementById('nome').focus({preventScroll:true}); }catch(e){} }, 620); }
-    document.getElementById('introCta').addEventListener('click', close);
-    document.getElementById('introSkip').addEventListener('click', close);
-    setTimeout(close, 12600);
-  })();
-
-  // ===== Mascote: coração vermelho que corre da direita, puxa a mensagem e reage =====
-  (function(){
-    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const LEG = '<path d="M0 0 L0 17" stroke="#B80C24" stroke-width="9.5" stroke-linecap="round"/><path d="M0 0 L0 17" stroke="#F0243E" stroke-width="6" stroke-linecap="round"/><rect x="-5" y="12" width="10" height="6" rx="2.5" fill="#fff"/><path d="M-15 25 Q-15 19 -7 19 L3 19 Q9 19 9 24 L9 28 Q9 31 5 31 L-12 31 Q-16 31 -15 25Z" fill="#FF9A2E" stroke="#C9731A" stroke-width="1"/><rect x="-4" y="19" width="6" height="12" rx="2" fill="#fff" opacity=".95"/><rect x="-15" y="29.5" width="25" height="2.5" rx="1.2" fill="#fff"/>';
-    const ARM = '<path d="M0 0 Q5 11 0 23" stroke="#B80C24" stroke-width="10.5" stroke-linecap="round" fill="none"/><path d="M0 0 Q5 11 0 23" stroke="#F0243E" stroke-width="7" stroke-linecap="round" fill="none"/>';
-    const GLOVE = '<circle cx="0" cy="28" r="8.5" fill="#fff" stroke="#CBD5E1" stroke-width=".6"/>';
-    const TPL = '<div class="buddy-run"><div class="buddy-fig" data-pose="idle"><svg viewBox="0 0 160 144" aria-hidden="true">'
-      + '<ellipse class="b-shadow" cx="80" cy="138" rx="32" ry="4.5" fill="rgba(0,0,0,.35)"/>'
-      + '<g class="b-all"><g transform="translate(14 4)">'
-      + '<g transform="translate(76 98)"><g class="b-leg b-leg-r">' + LEG + '</g></g>'
-      + '<g transform="translate(48 98)"><g class="b-leg b-leg-l">' + LEG + '</g></g>'
-      + '<path d="M62 108 C20 80 6 56 6 38 C6 20 20 9 35 9 C46 9 56 15 62 25 C68 15 78 9 89 9 C104 9 118 20 118 38 C118 56 104 80 62 108Z" fill="#F0243E" stroke="#B80C24" stroke-width="2"/>'
-      + '<path d="M20 26 Q26 15 40 14" stroke="rgba(255,255,255,.6)" stroke-width="5" stroke-linecap="round" fill="none"/>'
-      + '<g transform="translate(14 62)"><g class="b-arm b-arm-l"><g class="b-arm-in">' + ARM + GLOVE + '</g></g></g>'
-      + '<g transform="translate(110 62)"><g class="b-arm b-arm-r"><g class="b-arm-in">' + ARM
-        + '<rect class="b-finger" x="-2.6" y="26" width="5.2" height="16" rx="2.6" fill="#fff" stroke="#CBD5E1" stroke-width=".6"/>' + GLOVE
-        + '<ellipse class="b-thumb" cx="-8" cy="23" rx="3.2" ry="6" fill="#fff" stroke="#CBD5E1" stroke-width=".6"/></g></g></g>'
-      + '<g class="b-eyes">'
-        + '<g class="b-eye b-eye-l"><ellipse cx="46" cy="45" rx="11" ry="13" fill="#fff"/><g class="b-pupils"><circle cx="48" cy="48" r="5.8" fill="#0B1220"/><circle cx="50.5" cy="45" r="2" fill="#fff"/></g></g>'
-        + '<g class="b-eye b-eye-r"><ellipse cx="78" cy="45" rx="11" ry="13" fill="#fff"/><g class="b-pupils"><circle cx="80" cy="48" r="5.8" fill="#0B1220"/><circle cx="82.5" cy="45" r="2" fill="#fff"/></g></g>'
-      + '</g>'
-      + '<path class="b-brow b-brow-l" d="M35 27 Q46 21 57 26" stroke="#8B0A1E" stroke-width="3.2" fill="none" stroke-linecap="round"/>'
-      + '<path class="b-brow b-brow-r" d="M67 26 Q78 21 89 27" stroke="#8B0A1E" stroke-width="3.2" fill="none" stroke-linecap="round"/>'
-      + '<ellipse cx="29" cy="66" rx="6.5" ry="4" fill="#FF8FA3" opacity=".6"/><ellipse cx="95" cy="66" rx="6.5" ry="4" fill="#FF8FA3" opacity=".6"/>'
-      + '<path class="b-ms" d="M50 63 Q62 62 74 63 Q70 78 62 78 Q54 78 50 63Z" fill="#fff" stroke="#5A0716" stroke-width="3" stroke-linejoin="round"/>'
-      + '<g class="b-mo"><path d="M48 62 Q62 66 76 62 Q72 90 62 90 Q52 90 48 62Z" fill="#5A0716"/><path d="M54 80 Q62 74 70 80 Q62 90 54 80Z" fill="#FF6F8A"/></g>'
-      + '</g></g>'
-      + '<circle class="b-puff" cx="118" cy="136" r="6" fill="#fff"/><circle class="b-puff" cx="126" cy="134" r="5" fill="#fff"/><circle class="b-puff" cx="112" cy="138" r="4" fill="#fff"/>'
-      + '</svg></div>'
-      + '<div class="buddy-bubble"><span class="buddy-text"></span><i class="buddy-caret off"></i></div>'
-      + '<i class="b-speed s1"></i><i class="b-speed s2"></i><i class="b-speed s3"></i></div>';
-
-    const MSG = {
-      0: 'Oi! Eu te ajudo a achar o melhor plano para a sua família e empresa 💙',
-      1: 'Quantas pessoas vão participar do plano? Conte você e os dependentes 👇',
-      2: 'Qual tipo de plano você busca? 👇',
-      3: 'Você tem CNPJ?',
-      4: 'Última pergunta: tem algum hospital ou laboratório de preferência? 🏥'
-    };
-    const ACTS = {
-      0: ['wave','pointD','thumb'], 1: ['pointD','thumb','wave'], 2: ['pointD','thumb','dance'],
-      3: ['pointB','thumb','wave'], 4: ['shade','pointD','thumb'], 5: ['cheer','spin','dance','thumb']
-    };
-    const FIRST = { 0:'wave', 1:'pointD', 2:'pointD', 3:'pointB', 4:'shade', 5:'cheer' };
-
-    const buddies = {};
-    document.querySelectorAll('.step[data-step]').forEach(function(st){
-      const el = document.createElement('div'); el.className = 'buddy'; el.innerHTML = TPL;
-      st.insertBefore(el, st.firstChild); buddies[Number(st.dataset.step)] = el;
-    });
-
-    let active = null, activeIdx = -1, hold = null, loop = null, typer = null, actI = 0;
-    const fig = b => b.querySelector('.buddy-fig');
-    function pose(b, name){ fig(b).setAttribute('data-pose', name); }
-    function setText(b, msg, typed){
-      const t = b.querySelector('.buddy-text'), c = b.querySelector('.buddy-caret');
-      clearInterval(typer);
-      if (!typed || reduce) { t.textContent = msg; c.classList.add('off'); return; }
-      t.textContent = ''; c.classList.remove('off'); let i = 0;
-      typer = setInterval(function(){ t.textContent = msg.slice(0, ++i); if (i >= msg.length) { clearInterval(typer); c.classList.add('off'); } }, 24);
-    }
-    function act(name, ms){
-      if (!active || reduce) return;
-      clearTimeout(hold); pose(active, name);
-      if (name === 'spin') { const f = fig(active); const svgAll = f.querySelector('.b-all'); svgAll.style.animation = 'none'; void svgAll.getBoundingClientRect(); svgAll.style.animation = ''; }
-      hold = setTimeout(function(){ if (active) pose(active, activeIdx === 5 ? 'cheer' : 'idle'); }, ms || 2200);
-    }
-    function say(msg, name){ if (!active) return; setText(active, msg, true); if (name) act(name, 2400); }
-    function startLoop(b, idx){
-      clearInterval(loop); const list = ACTS[idx]; actI = 0;
-      loop = setInterval(function(){ if (active !== b || document.hidden) return; act(list[actI++ % list.length], idx === 5 ? 2000 : 2300); }, idx === 5 ? 2600 : 5200);
-    }
-    let extras = [], handed = {};
-    function run(b, idx, msg, first){
-      clearTimeout(hold); clearInterval(loop); clearInterval(typer);
-      active = b; activeIdx = idx;
-      setText(b, msg, false);
-      b.classList.remove('enter','skid','leave','gone'); void b.offsetWidth; b.classList.add('in');
-      if (reduce) { pose(b, 'idle'); return; }
-      pose(b, 'run'); b.classList.add('enter');
-      setTimeout(function(){ if (active === b) { b.classList.add('skid'); pose(b, 'skid'); } }, 950);
-      setTimeout(function(){ if (active !== b) return; b.classList.remove('skid'); act(first, 2600); startLoop(b, idx); }, 1500);
-    }
-    function enter(idx){
-      if (document.getElementById('intro')) return;
-      const b = buddies[idx]; if (!b) return;
-      extras.forEach(function(x){ x.remove(); }); extras = []; handed = {};
-      Object.keys(buddies).forEach(function(k){ const x = buddies[k]; x.removeAttribute('style'); x.classList.remove('gone','leave'); if (x !== b) x.classList.remove('in','enter','skid'); });
-      let msg = MSG[idx];
-      if (idx === 5) { const n = (document.getElementById('successName') || {}).textContent || ''; msg = 'Pronto, ' + (n || 'tudo certo!') + ' Sua cotação já está a caminho 🎉'; }
-      run(b, idx, msg, FIRST[idx]);
-    }
-    // sai de cima (correndo pra esquerda) e reaparece, vindo da direita, ao lado da próxima pergunta
-    function handoff(key, target, msg){
-      if (!active || activeIdx < 1 || activeIdx > 4 || handed[key] || !target) return;
-      handed[key] = 1;
-      const old = active, nb = document.createElement('div'); nb.className = 'buddy'; nb.innerHTML = TPL;
-      target.parentNode.insertBefore(nb, target); extras.push(nb);
-      clearTimeout(hold); clearInterval(loop); clearInterval(typer);
-      active = nb; activeIdx = activeIdx;
-      if (reduce) { old.style.display = 'none'; run(nb, activeIdx, msg, 'pointD'); return; }
-      old.classList.remove('enter','skid'); old.classList.add('leave'); pose(old, 'run');
-      setTimeout(function(){
-        old.style.height = old.offsetHeight + 'px'; old.style.overflow = 'hidden'; old.style.transition = 'height .35s ease, margin .35s ease, opacity .35s';
-        requestAnimationFrame(function(){ old.style.height = '0px'; old.style.marginBottom = '0px'; old.style.opacity = '0'; });
-      }, 520);
-      setTimeout(function(){
-        run(nb, activeIdx, msg, 'pointD');
-        try { var cb = nb.closest('.card-body'); if (cb && cb.scrollHeight > cb.clientHeight) { var r = nb.getBoundingClientRect(), rc = cb.getBoundingClientRect(); cb.scrollTop += (r.top - rc.top) - 8; } } catch(e){}
-      }, 420);
-    }
-    (function(){
-      const map = [
-        ['ageWrap','Agora a idade de cada um. Pode ser aproximada 👇'],
-        ['planoAtualWrap','Qual é o seu plano de saúde atual? 👇'],
-        ['cidadeWrap','Em qual cidade você reside? 📍'],
-        ['hospitalWrap','Toque nos que você quer. Pode marcar vários 🏥']
-      ];
-      map.forEach(function(m){
-        const el = document.getElementById(m[0]); if (!el) return;
-        new MutationObserver(function(){ if (el.classList.contains('open')) handoff(m[0], el, m[1]); }).observe(el, { attributes:true, attributeFilter:['class'] });
-      });
-    })();
-    document.addEventListener('click', function(e){
-      if (e.target.closest('.plan-card')) handoff('hasPlan', document.getElementById('hasPlanSub'), 'Você já tem plano de saúde? 👇');
-      else if (e.target.closest('#cnpjGrid .opt')) handoff('sp', document.getElementById('spSub'), 'Você reside em São Paulo capital? 📍');
-    });
-    window.__buddyEnter = enter;
-
-    // primeira entrada: logo depois que a abertura some
-    const wait = setInterval(function(){ if (!document.getElementById('intro')) { clearInterval(wait); const cur = document.querySelector('.step.active'); enter(cur ? Number(cur.dataset.step) : 0); } }, 150);
-
-    // reações na etapa 1
-    const nome = document.getElementById('nome'), tel = document.getElementById('telefone'), mail = document.getElementById('email');
-    function first() { return (nome.value.trim().split(/\s+/)[0] || ''); }
-    nome.addEventListener('blur', function(){ if (first().length >= 2 && activeIdx === 0) say('Prazer, ' + first() + '! Agora seu WhatsApp 📱', 'pointD'); });
-    tel.addEventListener('focus', function(){ if (activeIdx === 0) say('Pode digitar com DDD, é só para falar com você 📱', 'pointB'); });
-    mail.addEventListener('focus', function(){ if (activeIdx === 0) say('É para onde mando a sua cotação ✉️', 'pointD'); });
-    document.addEventListener('input', function(){ setTimeout(function(){
-      const nb = document.getElementById('nextBtn');
-      if (nb && !nb.disabled && activeIdx === 0 && document.querySelector('.step.active[data-step="0"]')) say('Tudo certo! É só continuar 👇', 'cheer');
-    }, 60); });
-    // reage quando a pessoa escolhe uma opção
-    document.addEventListener('click', function(e){
-      if (activeIdx < 1 || activeIdx > 4) return;
-      if (e.target.closest('.opt, .plan-card, .logo-card')) act(Math.random() < .5 ? 'thumb' : 'cheer', 1500);
-    });
-  })();
-</script>
-<script id="lc-ponte">
-(function(){
-  if (window.parent === window) return;
-  var estreito = function(){ return window.innerWidth <= 580; };
-  var avisou = false;
-  document.addEventListener('pointerdown', function(){
-    if (avisou || !estreito()) return;
-    avisou = true;
-    try { window.parent.postMessage({ lcInicio: true }, '*'); } catch(e){}
-  }, { passive: true });
-  var pendente = null;
-  var evidenciar = function(){
-    clearTimeout(pendente);
-    pendente = setTimeout(function(){
-      if (!estreito()) return;
-      var passo = document.querySelector('.step.active');
-      if (!passo) return;
-      var botoes = passo.querySelectorAll('.btn-primary');
-      var b = botoes[botoes.length - 1];
-      if (!b || !b.offsetParent) return;
-      try { window.parent.postMessage({ lcEvidencia: true, y: b.getBoundingClientRect().bottom }, '*'); } catch(e){}
-    }, 280);
-  };
-  // só ajuda quando o teclado está aberto num campo; nunca puxa a página por conta própria
-  document.addEventListener('change', function(ev){ if (ev.target && ev.target.matches('input, select')) evidenciar(); });
-})();
-</script>
-<script id="lc-caber">
-(function(){
-  // celular: cada etapa encolhe o necessário para caber inteira na tela, sem rolagem
-  var estreito = function(){ return window.innerWidth <= 580; };
-  var agendado = false;
-  var ajustar = function(){
-    agendado = false;
-    var corpos = document.querySelectorAll('.card-body');
-    corpos.forEach(function(corpo){
-      var passo = corpo.querySelector('.step.active') || corpo.firstElementChild;
-      if (!passo) return;
-      passo.style.zoom = '';
-      if (!estreito()) return;
-      var z = 1;
-      while (corpo.scrollHeight > corpo.clientHeight + 1 && z > 0.68) {
-        z = Math.round((z - 0.03) * 100) / 100;
-        passo.style.zoom = z;
-      }
-      corpo.scrollTop = 0;
-    });
-  };
-  var pedir = function(){ if (agendado) return; agendado = true; setTimeout(ajustar, 40); };
-  var iniciar = function(){
-    var alvo = document.querySelector('.card') || document.body;
-    // ignora o balão do coração (o texto digitado mudava a cada 24ms e travava tudo)
-    new MutationObserver(function(lista){
-      for (var i = 0; i < lista.length; i++) {
-        var n = lista[i].target;
-        var el = n.nodeType === 1 ? n : n.parentElement;
-        if (el && !el.closest('.buddy')) { pedir(); return; }
-      }
-    }).observe(alvo, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'hidden'] });
-    window.addEventListener('resize', pedir);
-    if (window.ResizeObserver) {
-      var ro = new ResizeObserver(function(){ agendado = false; ajustar(); });
-      document.querySelectorAll('.card-body').forEach(function(c){ ro.observe(c); });
-    }
-    pedir();
-    setTimeout(pedir, 600);
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar); else iniciar();
-})();
-</script>
-<script id="lc-arrastar">
-(function(){
-  // celular: arrastar o dedo em cima do formulário rola a página do site
-  if (window.parent === window) return;
-  var estreito = function(){ return window.innerWidth <= 580; };
-  var y0 = 0, x0 = 0, ultimo = 0, vertical = null, amostras = [];
-  var enviar = function(m){ try { window.parent.postMessage(m, '*'); } catch(e){} };
-  document.addEventListener('touchstart', function(ev){
-    if (!estreito() || ev.touches.length !== 1) { vertical = false; return; }
-    var t = ev.touches[0];
-    y0 = ultimo = t.screenY; x0 = t.screenX; vertical = null; amostras = [];
-    enviar({ lcParar: true });
-  }, { passive: true });
-  document.addEventListener('touchmove', function(ev){
-    if (vertical === false || ev.touches.length !== 1) return;
-    var t = ev.touches[0];
-    if (vertical === null) {
-      var dx = Math.abs(t.screenX - x0), dy = Math.abs(t.screenY - y0);
-      if (dx < 6 && dy < 6) return;
-      vertical = dy > dx;
-      if (!vertical) return;
-    }
-    var delta = ultimo - t.screenY;
-    ultimo = t.screenY;
-    amostras.push({ d: delta, t: performance.now() });
-    if (amostras.length > 5) amostras.shift();
-    if (delta) enviar({ lcRolar: delta });
-  }, { passive: true });
-  document.addEventListener('touchend', function(){
-    if (!vertical || amostras.length < 2) { vertical = null; return; }
-    var a = amostras[0], b = amostras[amostras.length - 1];
-    var soma = 0; amostras.forEach(function(s){ soma += s.d; });
-    var dt = Math.max(16, b.t - a.t);
-    var v = soma / dt;
-    if (performance.now() - b.t < 80 && Math.abs(v) > 0.2) enviar({ lcInercia: v });
-    vertical = null;
-  }, { passive: true });
-})();
-</script>
-<script id="lc-revelar">
-(function(){
-  var marcado = function(sel){ return !!document.querySelector(sel); };
-  var mostrar = function(id, sim){ var el = document.getElementById(id); if (el) el.classList.toggle('lc-mostrar', !!sim); };
-  var atualizar = function(){
-    mostrar('hasPlanGrid', marcado('#planGrid .plan-card.selected'));
-    mostrar('spGrid', marcado('#cnpjGrid .opt.selected'));
-    var hosp = marcado('#hospGrid .opt.selected');
-    mostrar('reviewList', hosp); mostrar('waConfirm', hosp);
-    var tit = document.querySelector('.lc-resumo-titulo'); if (tit) tit.classList.toggle('lc-mostrar', hosp);
-  };
-  document.addEventListener('click', function(){ setTimeout(atualizar, 0); });
-  var iniciar = function(){
+  function maskPhone(v){v=v.replace(/\D/g,'');if(v.length>11&&v.indexOf('55')===0)v=v.slice(2);v=v.slice(0,11);
+    if(v.length>7)return v.slice(0,2)+' '+v.slice(2,7)+'-'+v.slice(7);if(v.length>2)return v.slice(0,2)+' '+v.slice(2);return v}
+  $('telefone').addEventListener('input',function(e){e.target.value=maskPhone(e.target.value);setErr('telefone',false);atualizar()});
+  $('nome').addEventListener('input',function(){setErr('nome',false);atualizar()});
+  var FIX={'hotmial.com':'hotmail.com','hotmal.com':'hotmail.com','hotmail.con':'hotmail.com','hotnail.com':'hotmail.com','gmial.com':'gmail.com','gmai.com':'gmail.com','gmail.con':'gmail.com','gamil.com':'gmail.com','gmail.com.br':'gmail.com','outlok.com':'outlook.com','outlook.con':'outlook.com','yaho.com.br':'yahoo.com.br','yahoo.con':'yahoo.com'};
+  $('email').addEventListener('input',function(e){
+    setErr('email',false);
+    var m=e.target.value.trim(),at=m.lastIndexOf('@'),dom=at>-1?m.slice(at+1).toLowerCase():'',h=$('emailHint');
+    if(FIX[dom]){var fx=m.slice(0,at+1)+FIX[dom];h.innerHTML='Você quis dizer <button type="button" id="fx">'+fx+'</button>?';h.style.display='block';
+      $('fx').onclick=function(){$('email').value=fx;h.style.display='none';atualizar()}}else h.style.display='none';
     atualizar();
-    document.querySelectorAll('.step[data-step]').forEach(function(s){ new MutationObserver(atualizar).observe(s, { attributes: true, attributeFilter: ['class'] }); });
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar); else iniciar();
+  });
+
+  // ----- idades: 2 a 9 como primeiro dígito => pula ao completar 2 dígitos; começando com 1 => espera o 2º dígito (2 ou mais pula; 0 ou 1 espera o 3º)
+  function buildAges(n){
+    var box=$('ages');box.innerHTML='';
+    if(n<1||n>6){$('ageWrap').classList.remove('open');return}
+    for(var i=1;i<=n;i++){var inp=document.createElement('input');inp.type='tel';inp.inputMode='numeric';inp.maxLength=3;inp.placeholder=i===1?'Titular':i+'ª pessoa';inp.setAttribute('aria-label','Idade da pessoa '+i);inp.setAttribute('enterkeyhint',i===n?'done':'next');box.appendChild(inp)}
+    $('ageWrap').classList.add('open');
+    box.firstChild.focus();
+  }
+  function proxIdade(inp){
+    var l=[].slice.call($('ages').querySelectorAll('input')),k=l.indexOf(inp);
+    if(k>-1&&k<l.length-1)l[k+1].focus();else inp.blur();
+  }
+  $('ages').addEventListener('input',function(e){
+    var inp=e.target,v=inp.value.replace(/\D/g,'').slice(0,3);inp.value=v;
+    var avanca=(v.length===2&&(v[0]!=='1'||parseInt(v[1],10)>=2))||v.length===3;
+    if(avanca)proxIdade(inp);
+  });
+  $('ages').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();e.stopPropagation();proxIdade(e.target)}});
+
+  $('qtyGrid').addEventListener('click',function(e){
+    var o=e.target.closest('.opt');if(!o)return;pick($('qtyGrid'),o);state.qty=o.dataset.v;
+    if(state.qty==='7+'){$('totalWrap').classList.add('open');$('ageWrap').classList.remove('open');$('ages').innerHTML='';setTimeout(function(){$('total').focus()},50)}
+    else{$('totalWrap').classList.remove('open');$('total').value='';buildAges(parseInt(state.qty,10))}
+    atualizar();
+  });
+  $('total').addEventListener('input',function(e){e.target.value=e.target.value.replace(/\D/g,'');setErr('total',false);atualizar()});
+  $('cnpjGrid').addEventListener('click',function(e){var o=e.target.closest('.opt');if(!o)return;pick($('cnpjGrid'),o);state.cnpj=o.dataset.v;atualizar()});
+  $('spGrid').addEventListener('click',function(e){var o=e.target.closest('.opt');if(!o)return;pick($('spGrid'),o);state.residesSP=o.dataset.v;
+    $('cidadeWrap').classList.toggle('open',o.dataset.v==='NÃO');if(o.dataset.v==='NÃO')setTimeout(function(){$('cidade').focus()},50);else document.activeElement&&document.activeElement.blur();atualizar()});
+  $('cidade').addEventListener('input',function(){setErr('cidade',false);atualizar()});
+
+  $('hasGrid').addEventListener('click',function(e){var o=e.target.closest('.opt');if(!o)return;pick($('hasGrid'),o);state.temPlano=o.dataset.v;
+    $('opWrap').classList.toggle('open',o.dataset.v==='SIM');
+    if(o.dataset.v!=='SIM'){opSel=null;state.planoAtual='';$('plano').value='';$('opOutroWrap').classList.remove('open');[].forEach.call($('opGrid').querySelectorAll('.logo'),function(x){x.classList.remove('sel','need')})}
+    atualizar()});
+  $('opGrid').addEventListener('click',function(e){var o=e.target.closest('.logo');if(!o)return;pick($('opGrid'),o);opSel=o.dataset.v;
+    $('opOutroWrap').classList.toggle('open',opSel==='Outros');if(opSel==='Outros')setTimeout(function(){$('plano').focus()},50);atualizar()});
+  $('plano').addEventListener('input',function(){setErr('plano',false);atualizar()});
+  $('hospGrid').addEventListener('click',function(e){var o=e.target.closest('.opt');if(!o)return;pick($('hospGrid'),o);state.hospPref=o.dataset.v;
+    $('hospWrap').classList.toggle('open',o.dataset.v==='Tenho Preferência');
+    if(o.dataset.v!=='Tenho Preferência'){hospSel=[];state.hospital='';$('hospital').value='';$('hospOutroWrap').classList.remove('open');[].forEach.call($('hospChips').querySelectorAll('.opt'),function(x){x.classList.remove('sel','need')})}
+    atualizar()});
+  $('hospChips').addEventListener('click',function(e){var o=e.target.closest('.opt');if(!o)return;o.classList.toggle('sel');o.classList.remove('need');
+    var v=o.dataset.v,k=hospSel.indexOf(v);if(k>-1)hospSel.splice(k,1);else hospSel.push(v);
+    $('hospOutroWrap').classList.toggle('open',hospSel.indexOf('Outro')>-1);setErr('hospital',false);atualizar()});
+  $('hospital').addEventListener('input',function(){setErr('hospital',false);atualizar()});
+
+  // ----- ao clicar com algo faltando: mostra o que falta (sem pular a tela)
+  function valid0(){
+    var nome=$('nome').value.trim(),tel=$('telefone').value.trim(),mail=$('email').value.trim();
+    setErr('nome',nome.length<2);setErr('telefone',!okTel(tel));setErr('email',!okMail(mail));
+    if(!ok0()){irPara(document.querySelector('.field.err'));return false}
+    state.nome=nome;state.telefone=tel;state.email=mail;return true;
+  }
+  function valid1(){
+    if(!ok1()){
+      if(!state.qty)need($('qtyGrid'));
+      if(state.qty==='7+'){var v=parseInt($('total').value,10);setErr('total',isNaN(v)||v<7)}
+      if(!state.cnpj)need($('cnpjGrid'));
+      if(!state.residesSP)need($('spGrid'));
+      if(state.residesSP==='NÃO')setErr('cidade',$('cidade').value.trim().length<2);
+      irPara(document.querySelector('.step.active .need, .step.active .err'));return false;
+    }
+    state.totalPessoas=state.qty==='7+'?parseInt($('total').value,10):parseInt(state.qty,10);
+    state.ages=[].map.call($('ages').querySelectorAll('input'),function(i){return i.value}).filter(function(v){var n=parseInt(v,10);return v!==''&&n>=0&&n<=120});
+    state.cidade=state.residesSP==='SIM'?'São Paulo':$('cidade').value.trim();
+    return true;
+  }
+  function valid2(){
+    if(!ok2()){
+      if(!state.temPlano)need($('hasGrid'));
+      if(state.temPlano==='SIM'){if(!opSel)need($('opGrid'));else if(opSel==='Outros')setErr('plano',$('plano').value.trim().length<2)}
+      if(!state.hospPref)need($('hospGrid'));
+      if(state.hospPref==='Tenho Preferência'){if(hospSel.length===0)need($('hospChips'));else if(hospSel.indexOf('Outro')>-1)setErr('hospital',$('hospital').value.trim().length<2)}
+      irPara(document.querySelector('.step.active .need, .step.active .err'));return false;
+    }
+    state.planoAtual=state.temPlano==='SIM'?(opSel==='Outros'?$('plano').value.trim():opSel):'';
+    if(state.hospPref==='Tenho Preferência'){
+      var l=hospSel.filter(function(x){return x!=='Outro'});
+      if(hospSel.indexOf('Outro')>-1)l.push($('hospital').value.trim());
+      state.hospital=l.join(', ');
+    } else state.hospital='';
+    return true;
+  }
+
+  // Envio com confirmação: lê a resposta do Worker e tenta de novo (3x) se falhar; por último usa o envio sem resposta + beacon
+  function reserva(corpo){
+    try{fetch(WEBHOOK_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:corpo}).catch(function(){})}catch(e){}
+    try{navigator.sendBeacon&&navigator.sendBeacon(WEBHOOK_URL,new Blob([corpo],{type:'text/plain;charset=UTF-8'}))}catch(e){}
+  }
+  function enviar(dados,n){
+    n=n||1;var corpo=JSON.stringify(dados);
+    try{
+      return fetch(WEBHOOK_URL,{method:'POST',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:corpo})
+        .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.text()})
+        .then(function(t){if(/"status"\s*:\s*"error"/i.test(t))throw new Error('worker');window.__lcEnvios=(window.__lcEnvios||[]).concat([dados.evento+':ok'])})
+        .catch(function(){
+          window.__lcEnvios=(window.__lcEnvios||[]).concat([dados.evento+':falha'+n]);
+          if(n<3)setTimeout(function(){enviar(dados,n+1)},1500*n);else reserva(corpo);
+        });
+    }catch(err){reserva(corpo)}
+  }
+  function formatoOriginal(d){
+    var s=Object.assign({},d),n=parseInt(s.qty,10);
+    if(s.qty==='7+'||(!isNaN(n)&&n>=6)){if(!s.totalPessoas&&!isNaN(n))s.totalPessoas=n;s.qty='6+'}
+    delete s.campanha;return s;
+  }
+
+  nextBtn.addEventListener('click',function(){
+    if(cur===0){
+      if(!valid0())return;
+      enviar({evento:'lead_capturado',nome:state.nome,telefone:state.telefone,email:state.email,origem:document.referrer||null,ts:new Date().toISOString()});
+      toHost({lcPixel:'Lead'});show(1);
+    }else if(cur===1){
+      if(!valid1())return;show(2);
+    }else if(cur===2){
+      if(!valid2())return;
+      nextBtn.disabled=true;nextBtn.textContent='Enviando...';
+      enviar(formatoOriginal(Object.assign({evento:'cotacao_completa',ts:new Date().toISOString()},state)));
+      toHost({lcPixel:'CompleteRegistration'});
+      $('okNome').textContent=state.nome.split(' ')[0]+'!';
+      $('waBtn').href='https://wa.me/'+WHATSAPP_NUMERO+'?text='+encodeURIComponent('Olá! Acabei de pedir minha cotação pelo site. Meu nome é '+state.nome+'.');
+      setTimeout(function(){show(3)},500);
+    }
+  });
+  backBtn.addEventListener('click',function(){if(cur>0&&cur<3)show(cur-1)});
+  document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();if(nextBtn.classList.contains('ready'))nextBtn.click();else e.target.blur()}});
+
+  var avisou=false;
+  document.addEventListener('pointerdown',function(){if(avisou||window.innerWidth>580)return;avisou=true;toHost({lcInicio:true})},{passive:true});
+  window.addEventListener('message',function(ev){if(ev.data&&ev.data.lc==='reset')location.reload()});
+
+  try{var p=new URLSearchParams(location.search);
+    if(p.get('email'))$('email').value=p.get('email');
+    if(p.get('nome'))$('nome').value=p.get('nome');
+    if(p.get('op'))state.campanha=p.get('op')}catch(e){}
+  show(0);
 })();
 </script>
 </body>
