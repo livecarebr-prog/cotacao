@@ -57,6 +57,8 @@ input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
 @media(prefers-reduced-motion:reduce){.vez .opt:not(.sel),.vez .logo:not(.sel){animation:none}}
 .ages{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ages input{height:44px;text-align:center;padding:0 6px;font-size:15px}
+.ages input.need{border-color:var(--red);box-shadow:0 0 0 3px #FDE8E8}
+.vez .ages input:placeholder-shown{animation:chama 1.5s ease-in-out infinite;--c:47,111,237}
 .more{display:none}
 .more.open{display:block}
 .logos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -117,7 +119,7 @@ input[type=text],input[type=tel],input[type=email]{height:46px}.field{margin-bot
         <div class="opt" data-v="5">5</div><div class="opt" data-v="6">6</div><div class="opt" data-v="7+" style="grid-column:span 2">7 ou mais</div>
       </div>
       <div class="more" id="totalWrap"><div class="field" id="f-total" style="margin-top:12px"><label for="total">Quantas pessoas ao todo?</label><input type="tel" id="total" inputmode="numeric" enterkeyhint="done" maxlength="3" placeholder="Ex: 12"><div class="em">Digite um número a partir de 7.</div></div></div>
-      <div class="more" id="ageWrap"><p class="q">Idades <small>(opcional, agiliza a cotação)</small></p><div class="ages" id="ages"></div></div>
+      <div class="more" id="ageWrap"><p class="q">Idade de cada pessoa <small>(obrigatório)</small></p><div class="ages" id="ages"></div></div>
       <p class="q">Você tem CNPJ?</p>
       <div class="grid g2" id="cnpjGrid"><div class="opt pos" data-v="SIM">Sim</div><div class="opt neg" data-v="Não">Não</div></div>
       <p class="q">Mora em São Paulo capital?</p>
@@ -193,8 +195,11 @@ input[type=text],input[type=tel],input[type=email]{height:46px}.field{margin-bot
   var okMail=function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)};
   var okTel=function(v){return v.replace(/\D/g,'').length>=10};
   function ok0(){return $('nome').value.trim().length>=2&&okTel($('telefone').value)&&okMail($('email').value.trim())}
+  // idades obrigatórias (1 a 6 pessoas): um campo por pessoa, número de 0 a 120
+  function idadesOk(){var l=[].slice.call($('ages').querySelectorAll('input')),n=parseInt(state.qty,10);if(!l.length||l.length!==n)return false;return l.every(function(i){var v=parseInt(i.value,10);return i.value!==''&&!isNaN(v)&&v>=0&&v<=120})}
   function ok1(){
     if(!state.qty||!state.cnpj||!state.residesSP)return false;
+    if(state.qty!=='7+'&&!idadesOk())return false;
     if(state.qty==='7+'){var v=parseInt($('total').value,10);if(isNaN(v)||v<7)return false}
     if(state.residesSP==='NÃO'&&$('cidade').value.trim().length<2)return false;
     return true;
@@ -212,9 +217,10 @@ input[type=text],input[type=tel],input[type=email]{height:46px}.field{margin-bot
   function destacarVez(){
     [].forEach.call(document.querySelectorAll('.vez'),function(x){x.classList.remove('vez')});
     var st=document.querySelector('.step.active');if(!st)return;
-    var ids=cur===1?['qtyGrid','cnpjGrid','spGrid']:cur===2?['hasGrid','opGrid','hospGrid','hospChips']:[];
+    var ids=cur===1?['qtyGrid','ages','cnpjGrid','spGrid']:cur===2?['hasGrid','opGrid','hospGrid','hospChips']:[];
     for(var k=0;k<ids.length;k++){
       var g=$(ids[k]);if(!g||!aberto(g))continue;
+      if(ids[k]==='ages'){if(!aberto(g)||idadesOk())continue;g.classList.add('vez');var qa=g.previousElementSibling;if(qa&&qa.classList.contains('q'))qa.classList.add('vez');return}
       if(!g.querySelector('.sel')){g.classList.add('vez');var q=g.previousElementSibling;if(q&&q.classList.contains('q'))q.classList.add('vez');return}
     }
   }
@@ -295,7 +301,7 @@ input[type=text],input[type=tel],input[type=email]{height:46px}.field{margin-bot
     if(k>-1&&k<l.length-1)l[k+1].focus();else inp.blur();
   }
   $('ages').addEventListener('input',function(e){
-    var inp=e.target,v=inp.value.replace(/\D/g,'').slice(0,3);inp.value=v;
+    var inp=e.target,v=inp.value.replace(/\D/g,'').slice(0,3);inp.value=v;inp.classList.remove('need');atualizar();
     var avanca=(v.length===2&&(v[0]!=='1'||parseInt(v[1],10)>=2))||v.length===3;
     if(avanca)proxIdade(inp);
   });
@@ -340,6 +346,7 @@ input[type=text],input[type=tel],input[type=email]{height:46px}.field{margin-bot
     if(!ok1()){
       if(!state.qty)need($('qtyGrid'));
       if(state.qty==='7+'){var v=parseInt($('total').value,10);setErr('total',isNaN(v)||v<7)}
+      if(state.qty&&state.qty!=='7+'&&!idadesOk())[].forEach.call($('ages').querySelectorAll('input'),function(i){var v=parseInt(i.value,10);if(i.value===''||isNaN(v)||v>120)i.classList.add('need')});
       if(!state.cnpj)need($('cnpjGrid'));
       if(!state.residesSP)need($('spGrid'));
       if(state.residesSP==='NÃO')setErr('cidade',$('cidade').value.trim().length<2);
@@ -367,22 +374,17 @@ input[type=text],input[type=tel],input[type=email]{height:46px}.field{margin-bot
     return true;
   }
 
-  // Envio com confirmação: lê a resposta do Worker e tenta de novo (3x) se falhar; por último usa o envio sem resposta + beacon
-  function reserva(corpo){
-    try{fetch(WEBHOOK_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:corpo}).catch(function(){})}catch(e){}
-    try{navigator.sendBeacon&&navigator.sendBeacon(WEBHOOK_URL,new Blob([corpo],{type:'text/plain;charset=UTF-8'}))}catch(e){}
-  }
-  function enviar(dados,n){
-    n=n||1;var corpo=JSON.stringify(dados);
+  // Envio IGUAL ao do site original (que chegava no Telegram): POST sem resposta (no-cors, text/plain), 1 vez, sem repetir (repetir duplicaria o aviso)
+  function enviar(dados){
+    var corpo=JSON.stringify(dados);
+    window.__lcEnvios=(window.__lcEnvios||[]).concat([dados.evento]);
     try{
-      return fetch(WEBHOOK_URL,{method:'POST',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:corpo})
-        .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.text()})
-        .then(function(t){if(/"status"\s*:\s*"error"/i.test(t))throw new Error('worker');window.__lcEnvios=(window.__lcEnvios||[]).concat([dados.evento+':ok'])})
-        .catch(function(){
-          window.__lcEnvios=(window.__lcEnvios||[]).concat([dados.evento+':falha'+n]);
-          if(n<3)setTimeout(function(){enviar(dados,n+1)},1500*n);else reserva(corpo);
-        });
-    }catch(err){reserva(corpo)}
+      return fetch(WEBHOOK_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:corpo})
+        .catch(function(){try{navigator.sendBeacon&&navigator.sendBeacon(WEBHOOK_URL,new Blob([corpo],{type:'text/plain;charset=UTF-8'}))}catch(e){}});
+    }catch(err){
+      try{navigator.sendBeacon&&navigator.sendBeacon(WEBHOOK_URL,new Blob([corpo],{type:'text/plain;charset=UTF-8'}))}catch(e){}
+      return Promise.resolve();
+    }
   }
   function formatoOriginal(d){
     var s=Object.assign({},d),n=parseInt(s.qty,10);
